@@ -1,0 +1,69 @@
+DIAGNOSTICO DE RECUPERACION - SOLO LECTURA
+==============================================================================
+fecha                : 2026-10-06T23:33:21
+banco                : banco_preguntas_final.json
+banco_sha256         : 5a61c0f324ca129256312e169e3cc687d7103b50b5e7b85f00fe8a25d77a5117
+csv                  : banco_final_20261006_232658.csv
+csv_sha256           : df79f29cdb02d3899408f66e8f4596771b616aca0d2c22e3bcea0e9c38009705
+commit               : 95c3de39088cb6243093f17aebe927a93631b8d3
+backend              : embedder=tfidf-local@60000 | store=chroma
+umbral               : 0.0720   k=5
+fragmentos_indexados : 262
+pdf_indexados        : 20 de 21 en el directorio
+Llamadas al LLM      : 0 (solo se consulta el indice)
+
+El umbral se aplica sobre el puntaje del PRIMER fragmento, que es el
+unico que el LLM cita; los k=5 fragmentos entran en el prompt.
+recall@k = paginas esperadas halladas entre los k primeros / paginas
+esperadas. 'pos' es la posicion (1..10) del primer fragmento que
+contiene el archivo y la pagina esperados.
+
+------------------------------------------------------------------------------
+PREGUNTAS CON RESPUESTA (tipo=responde, condicion=con, abstuvo=no)
+------------------------------------------------------------------------------
+id  esperado (archivo)                 top5  pos  top1     recall@1 @5     @10   
+1   0185-2760-resu-53-210-87.pdf       si    1    0.1284   1.00     1.00   1.00  
+2   146-Texto del artículo-658-1-10... si    2    0.1976   0.00     1.00   1.00  
+3   37dec2450f14bbb9f5c25aa6db3b1af... si    1    0.1401   1.00     1.00   1.00  
+4   5683-Texto del artículo-22416-1... si    3    0.2179   0.00     1.00   1.00  
+5   a17v38n30p17.pdf                   si    3    0.2074   0.00     1.00   1.00  
+6   document.pdf                       si    1    0.1459   1.00     1.00   1.00  
+7   El_rol_de_la_Unidad_de_Bienesta... si    4    0.2352   0.00     1.00   1.00  
+8   mariajoseojs,+3610.pdf             si    4    0.1651   0.00     1.00   1.00  
+9   Mindfulness+Una+Herramienta+par... si    1    0.0940   1.00     1.00   1.00  
+10  Neuroeducación+e+inteligencia+e... si    1    0.1089   1.00     1.00   1.00  
+11  Ágora-ExplorandoElBienestarEstu... si    3    0.1055   0.00     1.00   1.00  
+12  SIN RESPUESTA EN LA CORRIDA (abstuvo=sí)
+13  08-+7794-+Evaluación+psicométri... si    2    0.1838   0.00     1.00   1.00  
+14  0121-6805-rfce-30-01-53 -_2.pdf    si    4    0.1087   0.00     1.00   1.00  
+15  3.+Editorial.pdf                   si    1    0.1752   1.00     1.00   1.00  
+
+responde: 15 en el banco, 14 con respuesta en la corrida
+
+------------------------------------------------------------------------------
+tipo=responde QUE ABSTUVIERON (sin respuesta: por que)
+------------------------------------------------------------------------------
+id  top1       umbral     >umbral  fuentes_citadas          ruta_orquestador
+12  0.0620     0.0720     no       -                        encuesta      
+
+'>umbral=no' significa que el umbral bloqueo la consulta ANTES
+de llamar al LLM; si dice 'si' la abstencion vino del propio LLM.
+
+------------------------------------------------------------------------------
+PREGUNTAS DE ABSTENCION (tipo=abstiene) - puntaje del primer
+fragmento frente al umbral
+------------------------------------------------------------------------------
+id  top1       umbral     >umbral  abstuvo  ruta_orquestador        
+16  0.0569     0.0720     no       sí       corpus                  
+17  0.0619     0.0720     no       sí       corpus                  
+18  0.0859     0.0720     si       no       corpus                  
+19  0.0703     0.0720     no       sí       corpus                  
+20  0.0887     0.0720     si       no       corpus                  
+
+abstiene: 5 en el banco
+La corrida NO pasa por el orquestador (mismo protocolo que la
+corrida anterior: ask_with_sources). 'ruta_orquestador' registra la
+ruta que elegiria _generate_plan; para 'encuesta' el plan SI
+requeria LLM y aqui no se llamo.
+
+Fin del diagnostico. No se calculo ningun acierto de respuesta.

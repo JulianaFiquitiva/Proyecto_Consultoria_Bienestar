@@ -1,0 +1,142 @@
+{
+  "fecha": "2026-10-06T23:36:17",
+  "corrida": "banco_final",
+  "condiciones": [
+    "sin",
+    "con"
+  ],
+  "banco": "tests/banco_preguntas_final.json",
+  "banco_preguntas": 20,
+  "banco_sha256": "5a61c0f324ca129256312e169e3cc687d7103b50b5e7b85f00fe8a25d77a5117",
+  "csv_origen": "banco_final_20261006_232658.csv",
+  "csv_sha256": "df79f29cdb02d3899408f66e8f4596771b616aca0d2c22e3bcea0e9c38009705",
+  "filas_csv": 40,
+  "modelo_llm": "gpt-4",
+  "temperatura": 0.3,
+  "max_tokens_llm": 2000,
+  "timeout_llm": 30,
+  "max_retries_llm": 3,
+  "backend_embeddings": "embedder=tfidf-local@60000 | store=chroma",
+  "dim_vector": 60000,
+  "fragmentos_indexados": 262,
+  "umbral": 0.072,
+  "umbral_defecto": 0.072,
+  "k": 5,
+  "MAX_TOKENS_RAG": 700,
+  "PRESUPUESTO_PROMPT_CHARS": 18000,
+  "commit": "95c3de39088cb6243093f17aebe927a93631b8d3",
+  "git_agent_prompts_sucio": false,
+  "git_logs_rag_consultas_sucio": true,
+  "sha256_prompts_rag_v1": "8daae51b878cbb16ee3e66c5e032d1c37f7e8be1f913522e689dbdf4a00bf267",
+  "semilla_orden_hoja": 20261004,
+  "corpus_dir": "docs/rag_corpus",
+  "pdf_en_corpus": 21,
+  "pdf_indexados_n": 20,
+  "pdf_indexados": [
+    {
+      "archivo": "0121-6805-rfce-30-01-53 -_2.pdf",
+      "sha256": "f68e5d73d811f534c86bc236cf2bb43dbe477d7a15593f13d7c151f526efef4d"
+    },
+    {
+      "archivo": "0185-2760-resu-53-210-87.pdf",
+      "sha256": "5dd483ee13f6ad5ec9355018b3ddc1b688fe31640f5b33f0b99c3fafe31d11b9"
+    },
+    {
+      "archivo": "08-+7794-+Evaluación+psicométrica+preliminar+de+la+Escala+de+Bienestar+Mental+de+W.pdf",
+      "sha256": "cc1aaa603269e06dbd5d33804e551525513f1943a6850099eaa2d44b2954a312"
+    },
+    {
+      "archivo": "12198-Texto del artículo-61308-1-10-20240725.pdf",
+      "sha256": "3d232953686ede91f58bc5f8fd4dcbfb42768127e82f53c9b9a04df6f4cf1f20"
+    },
+    {
+      "archivo": "146-Texto del artículo-658-1-10-20230731.pdf",
+      "sha256": "afd0a35a5dedfdabc4c4df1ecb664d0f2b52198ba6fbab39942c3fd40094c80c"
+    },
+    {
+      "archivo": "3.+Editorial.pdf",
+      "sha256": "1177a7a194ffaa34c5e980ad8b22213c9dc5f541977ead4c7a730ba7c37fb242"
+    },
+    {
+      "archivo": "37dec2450f14bbb9f5c25aa6db3b1af95931.pdf",
+      "sha256": "b83ea4dd648f686cdc17b1990aa4b09dca2462abcb00aea5681a0bb39aa5e766"
+    },
+    {
+      "archivo": "5683-Texto del artículo-22416-1-10-20230504.pdf",
+      "sha256": "355b618c64443f57eb2eee6d9ac5f1ca67ecbeab6e115c869ef0c0156ad52555"
+    },
+    {
+      "archivo": "7631.pdf",
+      "sha256": "bdd83c7eadfd7cb98ee429796f9c973d66b0962a3b335b1f9eff9234d99cfb94"
+    },
+    {
+      "archivo": "a17v38n30p17.pdf",
+      "sha256": "891a516f00223eeaec6f61d785dc2509c834ef334078c87dcdaf9ae6660b7fa3"
+    },
+    {
+      "archivo": "Assessing-student-mental-health-and-wellbeing-in-higher-e_2026_Educational-R.pdf",
+      "sha256": "63732bfa4d5a8be716a41386f06c123e3c2c30befe214f4a0bebae5d7f9c3724"
+    },
+    {
+      "archivo": "document.pdf",
+      "sha256": "6396310a69a58009e5ddec27c1627947f3f5af77ec65fed984f9003892dce028"
+    },
+    {
+      "archivo": "El_rol_de_la_Unidad_de_Bienestar_Estudia.pdf",
+      "sha256": "2591267c332d0bde01e48077488631e8e7d8d67f0eeb3d6cb3457397e649ec62"
+    },
+    {
+      "archivo": "mariajoseojs,+3610.pdf",
+      "sha256": "43d3702014f690811e167bcdca0d8d413c3c5f5dbfba8d7ca021f9fb2ba14714"
+    },
+    {
+      "archivo": "Mendez+Duran.pdf",
+      "sha256": "aa1245603e22edf969b9267c57800a0114a4f3a2f8e070f5a12651884de6bedc"
+    },
+    {
+      "archivo": "Mindfulness+Una+Herramienta+para+Mejorar.pdf",
+      "sha256": "89c04c13ec4e6a5a533b1637056ed1bef85786379c140f201dda307bb22a5ea1"
+    },
+    {
+      "archivo": "Neuroeducación+e+inteligencia+emocional+estrategias+pedagógicas+para+mejorar+el+rendimiento+académico+y+el+bienestar+estudiantil.pdf",
+      "sha256": "f9a02c2f0df5dcdfa8173a76ac53d5903c1f03d5a20aef372177d2586301e42a"
+    },
+    {
+      "archivo": "p.24-42_t02_herrera-lopez_ries49.pdf",
+      "sha256": "819abd870242aa1bc6ad1ec8a03f18133fe50d508d0bf04edde500eea2fa8243"
+    },
+    {
+      "archivo": "Student-well-being-in-higher-education--Scale-deve_2024_The-International-Jo.pdf",
+      "sha256": "21635fe0130d114af7b1d4e05979359a5a191b67d70a6e1737f1e745e50c9c14"
+    },
+    {
+      "archivo": "Ágora-ExplorandoElBienestarEstudiantil-9800794.pdf",
+      "sha256": "29aebe800c5f3a380274e976acd19bde032d0eba013bb2ddd669f8f30c9f33de"
+    }
+  ],
+  "ruta_orquestador": {
+    "1": "encuesta",
+    "2": "encuesta",
+    "3": "busqueda",
+    "4": "busqueda",
+    "5": "encuesta",
+    "6": "encuesta",
+    "7": "encuesta",
+    "8": "encuesta",
+    "9": "encuesta",
+    "10": "abstencion(ambigua)",
+    "11": "encuesta",
+    "12": "encuesta",
+    "13": "encuesta",
+    "14": "encuesta",
+    "15": "abstencion(ambigua)",
+    "16": "corpus",
+    "17": "corpus",
+    "18": "corpus",
+    "19": "corpus",
+    "20": "corpus"
+  },
+  "ruta_orquestador_nota": "La corrida NO pasa por el orquestador (mismo protocolo que la corrida anterior: ask_with_sources). Esta columna registra la ruta que elegiria _generate_plan; para 'encuesta' el plan SI requeria LLM y aqui no se llamó.",
+  "hoja_revision_ciega": "hoja_revision_ciega_20261006_232658.csv",
+  "clave_condicion": "clave_condicion_20261006_232658.csv"
+}
