@@ -17,6 +17,8 @@ automatico es ejecutar el banco y ordenar el archivo.
 Uso:
     python tests/correr_banco_rag.py
     python tests/correr_banco_rag.py --completar   # solo filas sin respuesta
+    python tests/correr_banco_rag.py --banco tests/banco_preguntas_final.json \
+        --salida resultados/banco_final_20261006_120000.csv
 """
 from __future__ import annotations
 
@@ -50,11 +52,11 @@ ESPERA_429 = 65
 REINTENTOS = 3
 
 
-def cargar_banco() -> List[Dict]:
-    with open(BANCO, encoding="utf-8") as fh:
+def cargar_banco(ruta: Path = BANCO) -> List[Dict]:
+    with open(ruta, encoding="utf-8") as fh:
         datos = json.load(fh)
     if not isinstance(datos, list) or not datos:
-        raise SystemExit("El banco esta vacio o no es una lista: %s" % BANCO)
+        raise SystemExit("El banco esta vacio o no es una lista: %s" % ruta)
     requeridos = {"id", "pregunta", "tipo"}
     faltantes = requeridos - set(datos[0])
     if faltantes:
@@ -154,11 +156,11 @@ def ordenar(fila: Dict) -> Tuple[int, int]:
     return (num_id, pos)
 
 
-def _cargar_existentes() -> Dict[Tuple[int, str], Dict]:
-    if not SALIDA.exists():
-        raise SystemExit("--completar: no existe %s" % SALIDA)
+def _cargar_existentes(salida: Path) -> Dict[Tuple[int, str], Dict]:
+    if not salida.exists():
+        raise SystemExit("--completar: no existe %s" % salida)
     existentes: Dict[Tuple[int, str], Dict] = {}
-    with open(SALIDA, encoding="utf-8-sig", newline="") as fh:
+    with open(salida, encoding="utf-8-sig", newline="") as fh:
         for fila in csv.DictReader(fh):
             existentes[(int(fila["id"]), fila["condicion"])] = fila
     return existentes
@@ -175,16 +177,26 @@ def main(argv=None) -> int:
                         help="no llama al LLM: llena respuestas vacias")
     parser.add_argument("--completar", action="store_true",
                         help="conserva el CSV y solo reejecuta filas sin respuesta")
+    parser.add_argument("--banco", type=Path, default=BANCO,
+                        help="ruta al banco JSON (por defecto: %s)" % BANCO.name)
+    parser.add_argument("--salida", type=Path, default=SALIDA,
+                        help="ruta al CSV de salida (por defecto: %s)"
+                             % SALIDA.name)
     args = parser.parse_args(argv)
 
-    banco = cargar_banco()
+    banco_ruta = Path(args.banco)
+    salida = Path(args.salida)
+
+    banco = cargar_banco(banco_ruta)
     filas: List[Dict] = []
     existentes: Dict[Tuple[int, str], Dict] = {}
     if args.completar:
-        existentes = _cargar_existentes()
+        existentes = _cargar_existentes(salida)
         pend = sum(1 for v in existentes.values() if not v["respuesta"])
         print("CSV existente: %d filas, %d sin respuesta -> a reejecutar"
               % (len(existentes), pend))
+
+    print("banco       : %s  (%d preguntas)" % (banco_ruta, len(banco)))
 
     client = None
     ask = None
@@ -268,9 +280,9 @@ def main(argv=None) -> int:
 
     filas.sort(key=ordenar)
 
-    SALIDA.parent.mkdir(parents=True, exist_ok=True)
+    salida.parent.mkdir(parents=True, exist_ok=True)
     # utf-8-sig: Excel abre los acentos correctos al hacer doble clic.
-    with open(SALIDA, "w", newline="", encoding="utf-8-sig") as fh:
+    with open(salida, "w", newline="", encoding="utf-8-sig") as fh:
         escritor = csv.DictWriter(fh, fieldnames=CAMPOS)
         escritor.writeheader()
         for fila in filas:
@@ -280,7 +292,7 @@ def main(argv=None) -> int:
 
     pendientes = sum(1 for f in filas if not f["correcta"])
     print("-" * 74)
-    print("filas escritas        : %d  ->  %s" % (len(filas), SALIDA))
+    print("filas escritas        : %d  ->  %s" % (len(filas), salida))
     print("columnas de revision  : correcta, cita_correcta, observacion "
           "(vacias)")
     print("llamadas con error    : %d" % errores)
