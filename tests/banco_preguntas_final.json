@@ -1,0 +1,202 @@
+[
+  {
+    "id": 1,
+    "pregunta": "¿Cuántos becarios conformaron la muestra del estudio sobre la Beca Permanencia en la Universidad Nacional del Altiplano (Quispe Mamani et al., 2024)?",
+    "respuesta_esperada": "146 becarios de 35 escuelas profesionales",
+    "documento": "0185-2760-resu-53-210-87.pdf",
+    "pagina_pdf": "1",
+    "paginas_alternativas": "",
+    "tipo": "responde",
+    "cita_textual": "acional. Se utilizó una muestra estratificada con 146 becarios de 35 escuelas profesionales, a quienes se aplicó"
+  },
+  {
+    "id": 2,
+    "pregunta": "¿Qué tipo de investigación empleó el estudio sobre la importancia del bienestar estudiantil y la seguridad en la Universidad de Guayaquil?",
+    "respuesta_esperada": "Investigación documental de tipo bibliográfica",
+    "documento": "146-Texto_del_artículo-658-1-10-20230731.pdf",
+    "pagina_pdf": "1",
+    "paginas_alternativas": "",
+    "tipo": "responde",
+    "cita_textual": "ntes de la Universidad de Guayaquil. Metodología. Investigación documental de tipo bibliográfica. Resultados. la importancia del bienestar estudia"
+  },
+  {
+    "id": 3,
+    "pregunta": "¿Cuántas investigaciones empíricas revisó el artículo sobre inteligencia artificial y bienestar estudiantil de Díaz-Guerra (2024), y de qué base de datos y años?",
+    "respuesta_esperada": "89 investigaciones empíricas, de Scopus, publicadas entre 2019 y 2024",
+    "documento": "37dec2450f14bbb9f5c25aa6db3b1af95931.pdf",
+    "pagina_pdf": "1",
+    "paginas_alternativas": "",
+    "tipo": "responde",
+    "cita_textual": "o, se realizó una revisión documental que estudió 89 investigaciones empíricas publicadas en Scopus entre 2019 y 2024 en idioma inglés. Se obtuvo como resultado que es"
+  },
+  {
+    "id": 4,
+    "pregunta": "¿En qué bases de datos se buscaron los artículos de la revisión sobre inteligencia emocional en el aula en Latinoamérica (Moreno Quinto et al., 2023)?",
+    "respuesta_esperada": "Scopus, Scielo y Latindex",
+    "documento": "5683-Texto_del_artículo-22416-1-10-20230504.pdf",
+    "pagina_pdf": "1",
+    "paginas_alternativas": "4",
+    "tipo": "responde",
+    "cita_textual": "artículos originales y de revisión publicados en Scopus, Scielo y Latindex en los últimos 5 años. Se seleccionaron al menos"
+  },
+  {
+    "id": 5,
+    "pregunta": "¿Qué tamaños de muestra se calcularon para las dos universidades de la provincia de El Oro en el estudio sobre unidades de bienestar estudiantil?",
+    "respuesta_esperada": "380 estudiantes (Universidad Técnica de Machala) y 226 (Universidad Metropolitana, sede Machala)",
+    "documento": "a17v38n30p17.pdf",
+    "pagina_pdf": "9",
+    "paginas_alternativas": "",
+    "tipo": "responde",
+    "cita_textual": "a población de la Universidad Técnica de Machala: n = 380 estudiantes Cálculo de la muestra para la población de la Uni"
+  },
+  {
+    "id": 6,
+    "pregunta": "¿Cuántas estudiantes participaron en el estudio de bienestar psicológico de universitarias madres y no madres colombianas, y cómo se dividieron?",
+    "respuesta_esperada": "435 estudiantes: 247 madres y 188 no madres",
+    "documento": "document.pdf",
+    "pagina_pdf": "1",
+    "paginas_alternativas": "",
+    "tipo": "responde",
+    "cita_textual": "desarrolló un muestreo a conveniencia, en el cual participaron 435 estudiantes de pregrado de distintas carreras de una universi"
+  },
+  {
+    "id": 7,
+    "pregunta": "¿Qué tipo de metodología usó el estudio sobre la unidad de bienestar estudiantil de la Universidad Estatal del Sur de Manabí (UNESUM)?",
+    "respuesta_esperada": "Exploratoria y descriptiva",
+    "documento": "El_rol_de_la_Unidad_de_Bienestar_Estudia.pdf",
+    "pagina_pdf": "1",
+    "paginas_alternativas": "5",
+    "tipo": "responde",
+    "cita_textual": "estudiantil, la metodología utilizada fue de tipo exploratoria y descriptiva, donde se obtuvo información clave para determina"
+  },
+  {
+    "id": 8,
+    "pregunta": "¿Qué técnicas de recolección de información usó el diagnóstico del bienestar estudiantil en las carreras de Educación de la PUCE?",
+    "respuesta_esperada": "La encuesta y el grupo focal",
+    "documento": "mariajoseojs__3610.pdf",
+    "pagina_pdf": "2",
+    "paginas_alternativas": "",
+    "tipo": "responde",
+    "cita_textual": "de investigación de campo y se usó como técnicas la encuesta y el grupo focal. En cuanto a los resultados se identificó dispari"
+  },
+  {
+    "id": 9,
+    "pregunta": "¿Qué tipo de investigación utilizó el estudio sobre mindfulness como herramienta para el bienestar estudiantil universitario?",
+    "respuesta_esperada": "Investigación documental",
+    "documento": "Mindfulness_Una_Herramienta_para_Mejorar.pdf",
+    "pagina_pdf": "1",
+    "paginas_alternativas": "",
+    "tipo": "responde",
+    "cita_textual": "tudiante de una manera íntegral, por medio de una investigación documental. Palabras Claves: atención plena, bienestar psico"
+  },
+  {
+    "id": 10,
+    "pregunta": "¿En qué nivel educativo se realizó el estudio de neuroeducación e inteligencia emocional de Tabango Puente et al. (2025)?",
+    "respuesta_esperada": "En una sexta escuela primaria (nivel primario, no universitario)",
+    "documento": "Neuroeducación_e_inteligencia_emocional_estrategias_pedagógicas_para_mejorar_el_rendimiento_académico_y_el_bienestar_estudiantil.pdf",
+    "pagina_pdf": "1",
+    "paginas_alternativas": "",
+    "tipo": "responde",
+    "cita_textual": "igencia emocional afectan a los estudiantes en la sexta escuela primaria. Exploramos cómo una combinación de estos métodos"
+  },
+  {
+    "id": 11,
+    "pregunta": "¿Cuántos estudiantes participaron en el estudio sobre autonomía y bienestar en estudiantes de Psicología (Cobo-Rendón et al., 2024) y qué instrumento evaluó el bienestar?",
+    "respuesta_esperada": "202 estudiantes; PERMA-Profiler",
+    "documento": "Ágora-ExplorandoElBienestarEstudiantil-9800794.pdf",
+    "pagina_pdf": "2",
+    "paginas_alternativas": "6",
+    "tipo": "responde",
+    "cita_textual": "ociativo de tipo predictivo, con participación de 202 estudiantes (Mujeres=170; Hombres=32; edad M=19.0; DE=1.77)."
+  },
+  {
+    "id": 12,
+    "pregunta": "¿Cuántas dimensiones tenía inicialmente la escala EBUP y cuál se eliminó?",
+    "respuesta_esperada": "Seis; se eliminó «fomento de la economía»",
+    "documento": "p_24-42_t02_herrera-lopez_ries49.pdf",
+    "pagina_pdf": "7",
+    "paginas_alternativas": "",
+    "tipo": "responde",
+    "cita_textual": "la comprensión. En especial, tras este proceso se eliminó la dimensión fomento de la economía, pues los jueces no lograron un consenso respecto"
+  },
+  {
+    "id": 13,
+    "pregunta": "¿Qué fiabilidad test-retest obtuvo la WEMWBS-E en estudiantes universitarios colombianos?",
+    "respuesta_esperada": "0.663 (coeficiente de correlación intraclase)",
+    "documento": "08-_7794-_Evaluación_psicométrica_preliminar_de_la_Escala_de_Bienestar_Mental_de_W.pdf",
+    "pagina_pdf": "5",
+    "paginas_alternativas": "",
+    "tipo": "responde",
+    "cita_textual": "n el coeficiente de correlación intraclase fue de 0.663 (p < 0.001), lo que sugiere una consistencia mode"
+  },
+  {
+    "id": 14,
+    "pregunta": "¿Qué R² se obtuvo en la regresión con el promedio académico acumulado en el estudio de la Universidad del Magdalena?",
+    "respuesta_esperada": "0,5832",
+    "documento": "0121-6805-rfce-30-01-53_-_2.pdf",
+    "pagina_pdf": "9",
+    "paginas_alternativas": "",
+    "tipo": "responde",
+    "cita_textual": "notable, porque pasa de un R 2 =0,0439 a un R 2= 0,5832 lo que muestra que, en conjunto, los programas de"
+  },
+  {
+    "id": 15,
+    "pregunta": "¿Qué papel le atribuye el editorial de Duazary (2025) a la enfermería escolar?",
+    "respuesta_esperada": "La primera línea de defensa para que la niñez sea feliz, saludable y esté lista para aprender",
+    "documento": "3__Editorial.pdf",
+    "pagina_pdf": "1",
+    "paginas_alternativas": "",
+    "tipo": "responde",
+    "cita_textual": "aidy Oviedo-Córdoba 3 La enfermería escolar es la primera línea de defensa para asegurar que la niñez sea feliz, saludable y"
+  },
+  {
+    "id": 16,
+    "pregunta": "¿Qué prevalencia de consumo de cannabis reportan los documentos en estudiantes universitarios?",
+    "respuesta_esperada": "NO está en el corpus (0 menciones del tema): debe abstenerse",
+    "documento": "(ninguno)",
+    "pagina_pdf": "",
+    "paginas_alternativas": "",
+    "tipo": "abstiene",
+    "cita_textual": ""
+  },
+  {
+    "id": 17,
+    "pregunta": "¿Qué relación reportan los documentos entre el cambio climático y el bienestar estudiantil?",
+    "respuesta_esperada": "NO está en el corpus (0 menciones del tema): debe abstenerse",
+    "documento": "(ninguno)",
+    "pagina_pdf": "",
+    "paginas_alternativas": "",
+    "tipo": "abstiene",
+    "cita_textual": ""
+  },
+  {
+    "id": 18,
+    "pregunta": "¿Qué dicen los documentos sobre el bienestar de los estudiantes migrantes o refugiados?",
+    "respuesta_esperada": "NO está en el corpus (0 menciones del tema): debe abstenerse",
+    "documento": "(ninguno)",
+    "pagina_pdf": "",
+    "paginas_alternativas": "",
+    "tipo": "abstiene",
+    "cita_textual": ""
+  },
+  {
+    "id": 19,
+    "pregunta": "¿Qué efecto reportan los documentos del consumo de cafeína sobre el rendimiento de los estudiantes?",
+    "respuesta_esperada": "NO está en el corpus (0 menciones del tema): debe abstenerse",
+    "documento": "(ninguno)",
+    "pagina_pdf": "",
+    "paginas_alternativas": "",
+    "tipo": "abstiene",
+    "cita_textual": ""
+  },
+  {
+    "id": 20,
+    "pregunta": "¿Qué dicen los documentos sobre las dietas de ayuno o vegetarianas y el bienestar de los estudiantes?",
+    "respuesta_esperada": "NO está en el corpus (0 menciones del tema): debe abstenerse",
+    "documento": "(ninguno)",
+    "pagina_pdf": "",
+    "paginas_alternativas": "",
+    "tipo": "abstiene",
+    "cita_textual": ""
+  }
+]
