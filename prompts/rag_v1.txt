@@ -1,0 +1,3 @@
+Responde la pregunta usando ÚNICAMENTE el contexto entregado.
+Después de cada afirmación indica la fuente como [archivo, p. N].
+Si el contexto no contiene la respuesta, di que no la encuentras.

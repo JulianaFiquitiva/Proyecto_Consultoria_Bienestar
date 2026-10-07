@@ -1,0 +1,31 @@
+# Dependencias base del proyecto original
+pandas>=2.0
+numpy>=1.24
+scipy>=1.10
+openpyxl>=3.1
+matplotlib>=3.7
+seaborn>=0.12
+plotly>=5.14
+ipywidgets>=8.0
+girth>=0.8
+statsmodels>=0.14
+jupyter>=1.0
+nbformat>=5.9
+python-docx>=0.8
+
+# Dependencias del agente IA
+openai>=1.0
+pytest>=7.0
+pytest-cov>=4.0
+
+# Modulo RAG (agent/rag/) - opcion 2 del enunciado: TF-IDF local
+pypdf>=6.0          # extraccion de texto de los PDF
+scikit-learn>=1.4   # TfidfVectorizer
+joblib>=1.3         # persiste el vectorizador en rag_store/
+chromadb>=1.5       # almacenes de vectores
+
+# Opcion 1 del enunciado (sentence-transformers + Chroma) - OPCIONAL.
+# En este equipo Smart App Control bloquea torch\_C.cp314-win_amd64.pyd, asi
+# que el RAG usa el respaldo TF-IDF. Descomentar solo si ese modulo carga:
+# sentence-transformers>=6.0
+# torch>=2.4

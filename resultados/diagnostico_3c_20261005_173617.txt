@@ -1,0 +1,297 @@
+PROMPT 3c - DIAGNOSTICO DE CAUSAS (solo lectura)
+fecha        : 2026-10-05T17:37:02
+backend      : embedder=sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2@seq512 | store=chroma
+archivos en el corpus: 9
+umbral/k/chunker/prompts NO se modificaron; agent/rag/ intacto.
+
+========================================================================================================
+GRUPO A - ABSTENCION EN DURO (umbral: el LLM no se llamó)
+========================================================================================================
+
+--------------------------------------------------------------------------------------------------------
+id 2   tipo=responde
+  pregunta          : ¿Con cuántos ítems y dimensiones quedó la versión final de la EBUP?
+  documento banco   : p_24-42_t02_herrera-lopez_ries49.pdf
+  fuentes esperadas : ['p.24-42_t02_herrera-lopez_ries49.pdf -> p.8']
+  pagina_pdf banco  : [8]
+
+   #  archivo                                  paginas     palabras  puntaje  marca
+  [1] p.24-42_t02_herrera-lopez_ries49.pdf     11-12-13         619   0.3823  <== fuente correcta (otra pagina)
+  [2] p.24-42_t02_herrera-lopez_ries49.pdf     8-9              645   0.3427  <== FUENTE+PAGINA correctas
+  [3] p.24-42_t02_herrera-lopez_ries49.pdf     7-8              633   0.3065  <== FUENTE+PAGINA correctas
+  [4] 7631.pdf                                 8-9-10           639   0.2814  <== pág. [8], pero no de la fuente que pide
+  [5] 0121-6805-rfce-30-01-53 -_2.pdf          10-11            622   0.2803  
+  (b) fuente+pagina esperadas SI estan -> fragmento #2 de 5
+
+--------------------------------------------------------------------------------------------------------
+id 3   tipo=responde
+  pregunta          : ¿Qué omega de McDonald obtuvo la EBUP?
+  documento banco   : p_24-42_t02_herrera-lopez_ries49.pdf
+  fuentes esperadas : ['p.24-42_t02_herrera-lopez_ries49.pdf -> p.12']
+  pagina_pdf banco  : [12]
+
+   #  archivo                                  paginas     palabras  puntaje  marca
+  [1] 0121-6805-rfce-30-01-53 -_2.pdf          10-11            622   0.1604  
+  [2] p.24-42_t02_herrera-lopez_ries49.pdf     11-12-13         619   0.1409  <== FUENTE+PAGINA correctas
+  [3] p.24-42_t02_herrera-lopez_ries49.pdf     8-9              645   0.1362  <== fuente correcta (otra pagina)
+  [4] 12198-Texto del artículo-61308-1-10-2024 7-8-9            649   0.1198  
+  [5] p.24-42_t02_herrera-lopez_ries49.pdf     7-8              639   0.1177  <== fuente correcta (otra pagina)
+  (b) fuente+pagina esperadas SI estan -> fragmento #2 de 5
+
+--------------------------------------------------------------------------------------------------------
+id 4   tipo=responde
+  pregunta          : ¿Encontró el estudio de la EBUP diferencias por género en el puntaje total?
+  documento banco   : p_24-42_t02_herrera-lopez_ries49.pdf
+  fuentes esperadas : ['p.24-42_t02_herrera-lopez_ries49.pdf -> p.8']
+  pagina_pdf banco  : [8]
+
+   #  archivo                                  paginas     palabras  puntaje  marca
+  [1] p.24-42_t02_herrera-lopez_ries49.pdf     8-9              645   0.4001  <== FUENTE+PAGINA correctas
+  [2] 12198-Texto del artículo-61308-1-10-2024 7-8-9            649   0.3999  <== pág. [8], pero no de la fuente que pide
+  [3] 7631.pdf                                 8-9-10           639   0.3861  <== pág. [8], pero no de la fuente que pide
+  [4] p.24-42_t02_herrera-lopez_ries49.pdf     7-8              639   0.3727  <== FUENTE+PAGINA correctas
+  [5] Student-well-being-in-higher-education-- 8-9              648   0.3719  <== pág. [8], pero no de la fuente que pide
+  (b) fuente+pagina esperadas SI estan -> fragmento #1 de 5
+
+--------------------------------------------------------------------------------------------------------
+id 6   tipo=responde
+  pregunta          : ¿Qué alfa de Cronbach obtuvo la WEMWBS-E en estudiantes universitarios colombianos?
+  documento banco   : 08-_7794-_Evaluación_psicométrica_preliminar_de_la_Escala_de_Bienestar_Mental_de_W.pdf
+  fuentes esperadas : ['08-+7794-+Evaluación+psicométrica+preliminar+de+la+Escala+de+Bienestar+Mental+de+W.pdf -> p.5']
+  pagina_pdf banco  : [5]
+
+   #  archivo                                  paginas     palabras  puntaje  marca
+  [1] 08-+7794-+Evaluación+psicométrica+prelim 2-3              649   0.4074  <== fuente correcta (otra pagina)
+  [2] 0121-6805-rfce-30-01-53 -_2.pdf          13               429   0.3111  
+  [3] Mendez+Duran.pdf                         19-20            481   0.3029  
+  [4] p.24-42_t02_herrera-lopez_ries49.pdf     1-2-3            606   0.2837  
+  [5] 7631.pdf                                 1-2              641   0.2823  
+  (b) fuente+pagina esperadas NO estan en el top 5
+      (la fuente correcta si aparece, pero sin la pagina esperada: fragmentos [1])
+
+--------------------------------------------------------------------------------------------------------
+id 7   tipo=responde
+  pregunta          : ¿Qué diferencia por sexo encontró el estudio de la WEMWBS-E y con qué prueba?
+  documento banco   : 08-_7794-_Evaluación_psicométrica_preliminar_de_la_Escala_de_Bienestar_Mental_de_W.pdf
+  fuentes esperadas : ['08-+7794-+Evaluación+psicométrica+preliminar+de+la+Escala+de+Bienestar+Mental+de+W.pdf -> p.4']
+  pagina_pdf banco  : [4]
+
+   #  archivo                                  paginas     palabras  puntaje  marca
+  [1] p.24-42_t02_herrera-lopez_ries49.pdf     7-8              639   0.3580  
+  [2] p.24-42_t02_herrera-lopez_ries49.pdf     8-9              645   0.3319  
+  [3] Student-well-being-in-higher-education-- 8-9              648   0.3274  
+  [4] p.24-42_t02_herrera-lopez_ries49.pdf     7-8              633   0.3129  
+  [5] 12198-Texto del artículo-61308-1-10-2024 7-8-9            649   0.3052  
+  (b) fuente+pagina esperadas NO estan en el top 5
+      (ni la fuente ni la pagina aparecen en el top 5)
+
+--------------------------------------------------------------------------------------------------------
+id 15  tipo=responde
+  pregunta          : ¿Cuántos documentos conformaron el universo de la revisión documental de Méndez Durán y de la Ossa Montes?
+  documento banco   : Mendez_Duran.pdf
+  fuentes esperadas : ['Mendez+Duran.pdf -> p.13']
+  pagina_pdf banco  : [13]
+
+   #  archivo                                  paginas     palabras  puntaje  marca
+  [1] 08-+7794-+Evaluación+psicométrica+prelim 7-8              645   0.2709  
+  [2] p.24-42_t02_herrera-lopez_ries49.pdf     17-18            646   0.2664  
+  [3] p.24-42_t02_herrera-lopez_ries49.pdf     11-12-13         619   0.2619  <== pág. [13], pero no de la fuente que pide
+  [4] p.24-42_t02_herrera-lopez_ries49.pdf     7-8              639   0.2585  
+  [5] 08-+7794-+Evaluación+psicométrica+prelim 3-4              625   0.2520  
+  (b) fuente+pagina esperadas NO estan en el top 5
+      (la pagina [13] aparece, pero de otra fuente: fragmentos [3])
+
+========================================================================================================
+GRUPO B - EL LLM DIJO QUE EL CONTEXTO NO LO CONTIENE
+========================================================================================================
+
+--------------------------------------------------------------------------------------------------------
+id 1   tipo=responde
+  pregunta          : ¿Con cuántos estudiantes se validó la escala EBUP (Escala de Bienestar Universitario Psicosocial)?
+  documento banco   : p_24-42_t02_herrera-lopez_ries49.pdf
+  fuentes esperadas : ['p.24-42_t02_herrera-lopez_ries49.pdf -> p.5']
+  pagina_pdf banco  : [5]
+
+   #  archivo                                  paginas     palabras  puntaje  marca
+  [1] 08-+7794-+Evaluación+psicométrica+prelim 2-3              649   0.5550  
+  [2] 12198-Texto del artículo-61308-1-10-2024 7-8-9            649   0.5291  
+  [3] 7631.pdf                                 8-9-10           639   0.5210  
+  [4] 0121-6805-rfce-30-01-53 -_2.pdf          10-11            622   0.5044  
+  [5] p.24-42_t02_herrera-lopez_ries49.pdf     6-7              639   0.4582  <== fuente correcta (otra pagina)
+  (b) fuente+pagina esperadas NO estan en el top 5
+      (la fuente correcta si aparece, pero sin la pagina esperada: fragmentos [5])
+  (c) PRESUPUESTO_PROMPT_CHARS = 18000
+      disponible para fragmentos : 17668 caracteres
+      fragmentos ENVIADOS al LLM : [1, 2, 3, 4]     (4 de 5, 16926 chars)
+      fragmentos DESCARTADOS     : [5]
+      verificacion vs _texto_fragmentos/_armar_prompt : COINCIDE
+      ¿pagina esperada descartada por presupuesto? NO (el fragmento buscado no estaba en el top 5)
+
+--------------------------------------------------------------------------------------------------------
+id 5   tipo=responde
+  pregunta          : ¿Cuántos de los 14 ítems de la Escala de Warwick-Edinburgh (WEMWBS-E) se conservaron en estudiantes colombianos?
+  documento banco   : 08-_7794-_Evaluación_psicométrica_preliminar_de_la_Escala_de_Bienestar_Mental_de_W.pdf
+  fuentes esperadas : ['08-+7794-+Evaluación+psicométrica+preliminar+de+la+Escala+de+Bienestar+Mental+de+W.pdf -> p.1']
+  pagina_pdf banco  : [1]
+
+   #  archivo                                  paginas     palabras  puntaje  marca
+  [1] 08-+7794-+Evaluación+psicométrica+prelim 2-3              649   0.5665  <== fuente correcta (otra pagina)
+  [2] 7631.pdf                                 8-9-10           639   0.4058  
+  [3] p.24-42_t02_herrera-lopez_ries49.pdf     7-8              633   0.4055  
+  [4] 0121-6805-rfce-30-01-53 -_2.pdf          10-11            622   0.4019  
+  [5] Mendez+Duran.pdf                         19-20            481   0.3903  
+  (b) fuente+pagina esperadas NO estan en el top 5
+      (la fuente correcta si aparece, pero sin la pagina esperada: fragmentos [1])
+  (c) PRESUPUESTO_PROMPT_CHARS = 18000
+      disponible para fragmentos : 17654 caracteres
+      fragmentos ENVIADOS al LLM : [1, 2, 3, 4]     (4 de 5, 16808 chars)
+      fragmentos DESCARTADOS     : [5]
+      verificacion vs _texto_fragmentos/_armar_prompt : COINCIDE
+      ¿pagina esperada descartada por presupuesto? NO (el fragmento buscado no estaba en el top 5)
+
+--------------------------------------------------------------------------------------------------------
+id 8   tipo=responde
+  pregunta          : ¿Qué escala usó el estudio con estudiantes universitarios de psicología de Bucaramanga y cuántos ítems tiene?
+  documento banco   : 12198-Texto_del_artículo-61308-1-10-20240725.pdf
+  fuentes esperadas : ['12198-Texto del artículo-61308-1-10-20240725.pdf -> p.2']
+  pagina_pdf banco  : [2]
+
+   #  archivo                                  paginas     palabras  puntaje  marca
+  [1] 08-+7794-+Evaluación+psicométrica+prelim 2-3              649   0.4625  <== pág. [2], pero no de la fuente que pide
+  [2] p.24-42_t02_herrera-lopez_ries49.pdf     7-8              633   0.4567  
+  [3] 12198-Texto del artículo-61308-1-10-2024 7-8-9            649   0.4564  <== fuente correcta (otra pagina)
+  [4] p.24-42_t02_herrera-lopez_ries49.pdf     8-9              645   0.4535  
+  [5] Assessing-student-mental-health-and-well 11-12            631   0.4261  
+  (b) fuente+pagina esperadas NO estan en el top 5
+      (la fuente correcta si aparece, pero sin la pagina esperada: fragmentos [3])
+      (la pagina [2] aparece, pero de otra fuente: fragmentos [1])
+  (c) PRESUPUESTO_PROMPT_CHARS = 18000
+      disponible para fragmentos : 17657 caracteres
+      fragmentos ENVIADOS al LLM : [1, 2, 3, 4]     (4 de 5, 16484 chars)
+      fragmentos DESCARTADOS     : [5]
+      verificacion vs _texto_fragmentos/_armar_prompt : COINCIDE
+      ¿pagina esperada descartada por presupuesto? NO (el fragmento buscado no estaba en el top 5)
+
+--------------------------------------------------------------------------------------------------------
+id 12  tipo=responde
+  pregunta          : ¿Cuáles son las cinco dimensiones de la escala de bienestar estudiantil de Khatri et al. (2024)?
+  documento banco   : Student-well-being-in-higher-education--Scale-deve_2024_The-International-Jo.pdf
+  fuentes esperadas : ['Student-well-being-in-higher-education--Scale-deve_2024_The-International-Jo.pdf -> p.1']
+  pagina_pdf banco  : [1]
+
+   #  archivo                                  paginas     palabras  puntaje  marca
+  [1] 12198-Texto del artículo-61308-1-10-2024 7-8-9            649   0.4833  
+  [2] 08-+7794-+Evaluación+psicométrica+prelim 7-8              645   0.4720  
+  [3] 0121-6805-rfce-30-01-53 -_2.pdf          8-9-10           636   0.4705  
+  [4] 0121-6805-rfce-30-01-53 -_2.pdf          10-11            622   0.4648  
+  [5] 0121-6805-rfce-30-01-53 -_2.pdf          4-5              644   0.4638  
+  (b) fuente+pagina esperadas NO estan en el top 5
+      (ni la fuente ni la pagina aparecen en el top 5)
+  (c) PRESUPUESTO_PROMPT_CHARS = 18000
+      disponible para fragmentos : 17670 caracteres
+      fragmentos ENVIADOS al LLM : [1, 2, 3, 4]     (4 de 5, 17350 chars)
+      fragmentos DESCARTADOS     : [5]
+      verificacion vs _texto_fragmentos/_armar_prompt : COINCIDE
+      ¿pagina esperada descartada por presupuesto? NO (el fragmento buscado no estaba en el top 5)
+
+--------------------------------------------------------------------------------------------------------
+id 14  tipo=responde
+  pregunta          : ¿Qué técnica estadística y qué muestra usó el estudio sobre autoconcepto y rendimiento (Pedraja-Rejas et al.)?
+  documento banco   : 7631.pdf
+  fuentes esperadas : ['7631.pdf -> p.1']
+  pagina_pdf banco  : [1]
+
+   #  archivo                                  paginas     palabras  puntaje  marca
+  [1] p.24-42_t02_herrera-lopez_ries49.pdf     8-9              645   0.4991  
+  [2] p.24-42_t02_herrera-lopez_ries49.pdf     7-8              633   0.4570  
+  [3] p.24-42_t02_herrera-lopez_ries49.pdf     7-8              639   0.4534  
+  [4] p.24-42_t02_herrera-lopez_ries49.pdf     11-12-13         619   0.4525  
+  [5] 12198-Texto del artículo-61308-1-10-2024 7-8-9            649   0.4432  
+  (b) fuente+pagina esperadas NO estan en el top 5
+      (ni la fuente ni la pagina aparecen en el top 5)
+  (c) PRESUPUESTO_PROMPT_CHARS = 18000
+      disponible para fragmentos : 17656 caracteres
+      fragmentos ENVIADOS al LLM : [1, 2, 3, 4]     (4 de 5, 16336 chars)
+      fragmentos DESCARTADOS     : [5]
+      verificacion vs _texto_fragmentos/_armar_prompt : COINCIDE
+      ¿pagina esperada descartada por presupuesto? NO (el fragmento buscado no estaba en el top 5)
+
+--------------------------------------------------------------------------------------------------------
+id 16  tipo=responde
+  pregunta          : ¿Qué encuentran los estudios del corpus sobre diferencias de bienestar entre hombres y mujeres universitarios colombianos?
+  documento banco   : p_24-42_t02_herrera-lopez_ries49.pdf | 08-_7794-_Evaluación_psicométrica_preliminar_de_la_Escala_de_Bienestar_Mental_de_W.pdf | 12198-Texto_del_artículo-61308-1-10-20240725.pdf
+  fuentes esperadas : ['p.24-42_t02_herrera-lopez_ries49.pdf -> p.8', '08-+7794-+Evaluación+psicométrica+preliminar+de+la+Escala+de+Bienestar+Mental+de+W.pdf -> p.4', '12198-Texto del artículo-61308-1-10-20240725.pdf -> p.2']
+  pagina_pdf banco  : [8, 4, 2]
+
+   #  archivo                                  paginas     palabras  puntaje  marca
+  [1] 08-+7794-+Evaluación+psicométrica+prelim 2-3              649   0.5241  <== pág. [8, 4, 2], pero no de la fuente que pide
+  [2] 08-+7794-+Evaluación+psicométrica+prelim 7-8              645   0.4481  <== pág. [8, 4, 2], pero no de la fuente que pide
+  [3] 0121-6805-rfce-30-01-53 -_2.pdf          4-5              644   0.4087  <== pág. [8, 4, 2], pero no de la fuente que pide
+  [4] p.24-42_t02_herrera-lopez_ries49.pdf     1-2-3            606   0.3992  <== pág. [8, 4, 2], pero no de la fuente que pide
+  [5] 08-+7794-+Evaluación+psicométrica+prelim 5-6              625   0.3986  <== fuente correcta (otra pagina)
+  (b) fuente+pagina esperadas NO estan en el top 5
+      (la fuente correcta si aparece, pero sin la pagina esperada: fragmentos [1, 2, 4, 5])
+      (la pagina [8, 4, 2] aparece, pero de otra fuente: fragmentos [1, 2, 3, 4])
+  (c) PRESUPUESTO_PROMPT_CHARS = 18000
+      disponible para fragmentos : 17644 caracteres
+      fragmentos ENVIADOS al LLM : [1, 2, 3]        (3 de 5, 13366 chars)
+      fragmentos DESCARTADOS     : [4, 5]
+      verificacion vs _texto_fragmentos/_armar_prompt : COINCIDE
+      ¿pagina esperada descartada por presupuesto? NO (el fragmento buscado no estaba en el top 5)
+
+--------------------------------------------------------------------------------------------------------
+id 17  tipo=abstiene
+  pregunta          : ¿Qué tamaño de muestra tuvo el estudio de validación de Pineda Roa, Castro Muñoz y Chaparro Clavijo (2017)?
+  documento banco   : (ninguno)
+  fuentes esperadas : (sin fuente)
+  pagina_pdf banco  : (sin pagina)
+
+   #  archivo                                  paginas     palabras  puntaje  marca
+  [1] p.24-42_t02_herrera-lopez_ries49.pdf     8-9              645   0.5521  
+  [2] p.24-42_t02_herrera-lopez_ries49.pdf     11-12-13         619   0.5364  
+  [3] 08-+7794-+Evaluación+psicométrica+prelim 2-3              649   0.4828  
+  [4] p.24-42_t02_herrera-lopez_ries49.pdf     7-8              639   0.4733  
+  [5] 7631.pdf                                 8-9-10           639   0.4635  
+  (b) no aplica: el banco no da documento ni pagina para este id
+  (c) PRESUPUESTO_PROMPT_CHARS = 18000
+      disponible para fragmentos : 17659 caracteres
+      fragmentos ENVIADOS al LLM : [1, 2, 3, 4]     (4 de 5, 16711 chars)
+      fragmentos DESCARTADOS     : [5]
+      verificacion vs _texto_fragmentos/_armar_prompt : COINCIDE
+      ¿pagina esperada descartada por presupuesto? NO (el fragmento buscado no estaba en el top 5)
+
+========================================================================================================
+(d) ID 7 - fragmento de 08-7794 con la p. 4  vs  top 1 (herrera p. 7-8)
+========================================================================================================
+consulta        : ¿Qué diferencia por sexo encontró el estudio de la WEMWBS-E y con qué prueba?
+documento banco : 08-_7794-_Evaluación_psicométrica_preliminar_de_la_Escala_de_Bienestar_Mental_de_W.pdf  pagina 4
+
+TOP 1:
+   archivo : p.24-42_t02_herrera-lopez_ries49.pdf
+   paginas : 7-8
+   palabras: 639
+   puntaje : 0.3580
+
+la fuente+pagina esperadas estan en el top 5? NO
+busqueda profunda k=150 sobre los 139 fragmentos del indice:
+   rank=52   puntaje=0.1891  paginas=3-4       palabras=625
+   rank=55   puntaje=0.1803  paginas=4-5-6     palabras=650
+   diferencia vs top 1 (0.3580): el top 1 aventaja a 08-+7794-+Evaluación+psicométrica+prelim en 0.1690
+   (el umbral es 0.4150: el de 08-7794 quedaria POR DEBAJO)
+
+   ================================================================================================
+   TEXTO COMPLETO - fragmento 08-7794 (p. 4), rank 52, puntaje 0.1891
+   ================================================================================================
+y a mayor puntuación, mayor SMP. Procedimiento Una vez obtenido el aval del Comité de Ética de la Facultad de Humanidades y Ciencias Sociales, conforme a los procedimientos internos de la universidad en la que se realizó el estudio, se procedió con la adecuación de la versión en español de la WEMWBS-E para su uso en población colombiana. Tres evaluadores, expertos en psicología de la salud, además de docentes universitarios, revisaron la validez de contenido de esta versión en español del instrumento. El objetivo fue verificar su claridad, objetividad y adecuación para su administración en modalidad digital. Además se valoró su intencionalidad y consistencia, es decir, que el cuestionario contara con la calidad y cantidad de preguntas necesarias para la indagación del estado de SMP en población estudiantil. La revisión de los evaluadores fue cualitativa e individual, y sus Evaluación psicométrica preliminar de la Escala de Bienestar Mental de Warwick-Edinburgh. Vol. 18 No. 3 / septiembre – diciembre de 2025 101 observaciones se integraron por consenso del equipo investigador para ajustar la versión final del instrumento. Sus sugerencias dieron lugar a ajustes lingüísticos, orientados a garantizar el uso de palabras frecuentes y comprensibles en el español colombiano. La versión final del cuestionario se diseñó en Google Forms, configurando el formulario para impedir múltiples respuestas desde un mismo dispositivo y así garantizar la calidad de la información. Tras estos ajustes, se procedió a su aplicación a la muestra del estudio. Una invitación a participar en el estudio fue enviada en el segundo semestre del año, entre noviembre y diciembre de 2021, por los medios de comunicación institucionales, tanto correo electrónico como redes sociales. Quienes abrían el enlace compartido en la invitación, encontraban en primer lugar el consentimiento informado y, si aceptaban participar, continuaban con el diligenciamiento del cuestionario. Al finalizar, se preguntó a cada participante si podía ser contactado nuevamente en un par de semanas para diligenciar el instrumento por segunda vez. Aquellos que aceptaron, proporcionaron voluntariamente su correo electrónico. Según la fecha en que cada participante diligenció el cuestionario por primera vez, se les envió de nuevo aproximadamente 15 días después, lo cual se realizó entre diciembre de 2021 y enero de 2022. Todos los datos fueron guardados en una base de datos de acceso exclusivo para las investigadoras del estudio y se revisaron los datos para identificar inconsistencias. Análisis de Datos Para la evaluación preliminar de las propiedades psicométricas del WEMWBS -E se calcularon estadísticos descriptivos, además de analizar la fiabilidad y validez del instrumento. La fiabilidad se estimó mediante el coeficiente alfa de Cronbach, y la validez, mediante un análisis factorial exploratorio, utilizando un análisis de componentes principales y rotación varimax. Para este análisis se tuvo en cuenta que la carga factorial mínima fuera de 0.50. Además, se empleó la prueba de esfericidad de Bartlett para evaluar las correlaciones entre componentes. Todos los análisis se realizaron con el programa estadístico SPSS, versión 28. Resultados Como se observa en la Tabla 1, los valores de SMP de los estudiantes universitarios participantes evaluados con la WEMWBS-E se encuentra alrededor de 50 ( DE = 8.46), en una escala entre 14 y 70 puntos, y los puntajes de la mitad de la muestra se ubica entre los cuartiles 2 y 3, sugiriendo niveles medios de SMP. Las mujeres presentan menor puntuación ( M = 48.7, DE = 8.46) que los hombres ( M = 52, DE = 8.12), con una diferencia estadísticamente significativa ( t(212) = -2.82, p = 0.005, d = -0.393), aunque con un tamaño del efecto pequeño. Tabla 1. Estadísticos descriptivos de la muestra según versiones de 14 y 12 ítems del WEMWBS-E. Descriptivos WEMWBS-E 14 ítems WEMWBS-E 12 ítems (n = 214) M (DE) 50 (8.46) 42.54 (7.35) Mdn 50 43 Min-Máx.
+
+   ================================================================================================
+   TEXTO COMPLETO - TOP 1 p.24-42_t02_herrera-lopez_ries49.pdf (7-8), puntaje 0.3580
+   ================================================================================================
+sometió a la valoración de tres jueces expertos (uno en el tema de bienestar y dos en medición y evaluación psico - lógica), quienes consideraron tres criterios: claridad, coherencia y relevancia; puntuando de 1 (no cumple) a 4 (cumple totalmente). Para el análisis de concor - dancia y acuerdo entre jueces se utilizó el estadístico V de Aiken (Merino, 2023: 2). Posteriormente, se realizó un análisis de tipo des- criptivo, tanto de las variables sociodemográficas como de los ítems de las escalas de medidas. Así, se obtuvieron las frecuencias de respuesta, promedio, asimetría y curtosis. Se incluyó la prueba de normali- dad de Kolmogorov-Smirnov para determinar la pre- sencia o ausencia de normalidad multivariante de los datos. Para encontrar diferencias estadísticamente sig- nificativas en relación con el género, semestre y edad se llevó a cabo la prueba U de Mann-Whitney . Todos estos análisis se realizaron con el programa spss-26. Para la validación del constructo se realizó un análisis factorial exploratorio ( afe) y luego un aná- lisis factorial confirmatorio (afc), aplicando una va- lidación cruzada, que consiste en dividir la muestra en dos mitades al azar y utilizar una de ellas para el afe y la otra para el afc. Esta práctica permite un uso secuencial de los dos análisis, el primero para explorar la distribución de los ítems, eliminar los que presentan bajas propiedades psicométricas, y el se- gundo para confirmar el modelo teórico (Lloret et al., 2014: 1,151) y así obtener la escala final. El afe se realizó con el programa SPSS-26, considerando los índices de adecuación muestral Kaiser-Meyer-Olkin (kmo), la esfericidad de Bartlett, los valores de co- munalidad, las saturaciones de los ítems, las cargas factoriales obtenidas en la distribución de la matriz de configuración y la varianza total explicada. Se usó el método de extracción de ejes principales y el mé- todo de rotación Oblimin. El afc se realizó con el programa eqs 6.2 (Bentler y Wu, 2012), eligiendo el método de estimación Maximum Likelihood (ml) con el escalamiento robusto (Bryant y Satorra, 2012), sugerido para variables categóricas y con ausencia de normalidad multivariante. Para valorar el ajuste de los modelos se utilizaron los índices: chi-cuadrado de Satorra y Bentler (2001) (χ2S-B), chi-cuadrado par- tido por los grados de libertad (χ2/gl) (≤ 3: óptimos); el índice de ajuste comparativo ( cfi), el índice de ajuste de no normalidad (nnfi) (≥ 0.90 es adecuado; ≥ 0.95 es óptimo), el error de aproximación cuadrático medio (rmsea) (≤ 0.08) y el valor medio cuadrático de los residuos de las covarianzas (srmr) (≤ 0.08 es adecuado; ≤ 0.05 es óptimo) (Hu y Bentler, 1999). El análisis de consistencia interna se realizó con el índice Omega de McDonalds (ɷ < 0.60) para varia- bles categóricas y con ausencia de normalidad mul- tivariante (Elosua y Zumbo, 2008), calculado con el programa Factor 9.2 (Lorenzo y Ferrando, 2006). El nivel de significatividad adoptado fue de 0.05. Resultados Tras los análisis de validez de constructo, desde la prueba piloto como de la evaluación de jueces, se ajustaron algunos enunciados para mejorar la com- prensión. En especial, tras este proceso se eliminó la dimensión fomento de la economía, pues los jueces no lo- graron un consenso respecto de esta, además de que los argumentos y sustento teórico de su pertinencia no eran contundentes. Su exclusión permitió preser- var la parsimonia y la validez de contenido y estruc- tural del instrumento, pues esta dimensión mostró escasa integración con el modelo teórico de base, quizás porque opera bajo un marco más variado y amplio de concepciones de bienestar. Esta falta de proximidad psicológica se reflejó, asimismo, en que sus ítems resultaran de difícil comprensión para los encuestados, aspectos que en general comprometían Bienestar universitario psicosocial: un estudio exploratorio y validación psicométrica... Harvey-Mauricio Herrera-López, Christian-David Portilla-Realpe e Iván-Camilo Lasso-Lara / pp. 24-42 31 2026Vol. XVIINúm. 49doi:
+
+========================================================================================================
+CIERRE - sobre los 65 fragmentos analizados (13 ids x 5)
+========================================================================================================
+GRUPO A (6 ids)  n=30  abarcan >=2 paginas: 29  (96.7%)   palabras: mediana=639 media=625 min=429 max=649
+GRUPO B (7 ids)  n=35  abarcan >=2 paginas: 35  (100.0%)   palabras: mediana=639 media=633 min=481 max=649
+TOTAL            n=65  abarcan >=2 paginas: 64  (98.5%)   palabras: mediana=639 media=629 min=429 max=649

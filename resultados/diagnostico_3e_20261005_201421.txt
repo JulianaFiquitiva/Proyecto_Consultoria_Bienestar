@@ -1,0 +1,311 @@
+PROMPT 3e - PRUEBA DE CORDURA DE LA RECUPERACION (solo lectura, sin API)
+fecha   : 2026-10-05T20:15:17
+semilla : 42
+fragmentos en el chunker : 139
+fragmentos en el almacen : 139
+
+========================================================================================================
+(1) ALMACEN VECTORIAL ACTIVO Y UNION VECTOR <-> METADATO
+========================================================================================================
+almacen activo : chroma   (create_vectorstore() en vectorstore.py:176-185)
+clase         : ChromaVectorStore  (vectorstore.py:53)
+respaldo      : NumpyVectorStore (vectorstore.py:118) — NO activo
+
+como se unen vectores y metadatos:
+  Chroma guarda cada registro como (id, embedding, documento, metadata)
+  en la misma fila, y los devuelve ya alineados en un solo dict.
+  El ensamblaje esta en vectorstore.py:95-101:
+      for i, doc, meta, dist in zip(ids, docs, metas, dists):
+          hits.append(_hit(i, doc, meta['archivo'], meta['paginas'],
+                           1.0 - float(dist)))
+  El vector no viaja suelto: la clave de union es el id del fragmento
+  (chunker.py:101  '<archivo>#p<a>-<b>#<indice>').
+  archivo/paginas se guardan en add() (vectorstore.py:66-80) y se
+  leen en query() (lineas 98-99). paginas llega como string '1,2,3'
+  y lo convierte _hit() (lineas 34-35).
+  distancia -> puntaje: similitud = 1 - distancia_coseno (linea 100),
+  porque la coleccion se crea con hnsw:space=cosine (lineas 63 y 114).
+
+verificacion de orden: 10 fragmentos al azar, metadato LEIDO POR INDICE
+y texto comparado con el chunker original.
+  registros devueltos : 139
+  orden del almacen == orden del chunker : SI (identico, posicion a posicion)
+
+  idx  texto    metadato id en el almacen                           veredicto
+  ----------------------------------------------------------------------------------------------------
+  6    ok       ok       0121-6805-rfce-30-01-53 -_2.pdf#p7-8#6     OK
+  8    ok       ok       0121-6805-rfce-30-01-53 -_2.pdf#p8-10#8    OK
+  22   ok       ok       12198-Texto del artículo-61308-1-10-202407 OK
+  26   ok       ok       12198-Texto del artículo-61308-1-10-202407 OK
+  28   ok       ok       3.+Editorial.pdf#p1-2#0                    OK
+  35   ok       ok       7631.pdf#p5-7#5                            OK
+  57   ok       ok       Assessing-student-mental-health-and-wellbe OK
+  62   ok       ok       Assessing-student-mental-health-and-wellbe OK
+  70   ok       ok       Assessing-student-mental-health-and-wellbe OK
+  108  ok       ok       Student-well-being-in-higher-education--Sc OK
+
+  coinciden 10/10 por indice.
+
+  verificacion fuerte: re-vectorizar docs[i] y comparar con el vector i
+    idx 6   coseno(vector_guardado, re-vectorizado) = 1.000000
+    idx 8   coseno(vector_guardado, re-vectorizado) = 1.000000
+    idx 22  coseno(vector_guardado, re-vectorizado) = 1.000000
+    idx 26  coseno(vector_guardado, re-vectorizado) = 1.000000
+    idx 28  coseno(vector_guardado, re-vectorizado) = 1.000000
+    idx 35  coseno(vector_guardado, re-vectorizado) = 1.000000
+    idx 57  coseno(vector_guardado, re-vectorizado) = 1.000000
+    idx 62  coseno(vector_guardado, re-vectorizado) = 1.000000
+    idx 70  coseno(vector_guardado, re-vectorizado) = 1.000000
+    idx 108 coseno(vector_guardado, re-vectorizado) = 1.000000
+  minimo = 1.000000  -> el vector i SÍ corresponde al texto i
+  norma de los vectores guardados (debe ser ~1.0): min=1.000000 max=1.000000
+
+========================================================================================================
+(2) AUTO-RECUPERACION (30 fragmentos al azar)
+========================================================================================================
+
+  consulta = primeras 150 palabras del fragmento  (semilla 42)
+  TOP-1 correcto: 16 / 30 = 0.533
+  mediana del rank del fragmento original: 1   peor rank: 83
+  fragmento original                       que quedo en el top-1                     score1   rank score_e
+  ----------------------------------------------------------------------------------------------------
+  3.+Editorial.pdf#p1-2#0                  Mendez+Duran.pdf#p4-5#2                   0.7024     11  0.6654
+  0121-6805-rfce-30-01-53 -_2.pdf#p7-8#6   08-+7794-+Evaluación+psicométrica+prelim  0.6535     19  0.4406
+  7631.pdf#p5-7#5                          08-+7794-+Evaluación+psicométrica+prelim  0.5759     39  0.3685
+  12198-Texto del artículo-61308-1-10-2024 08-+7794-+Evaluación+psicométrica+prelim  0.7474      4  0.5980
+  0121-6805-rfce-30-01-53 -_2.pdf#p8-10#8  08-+7794-+Evaluación+psicométrica+prelim  0.7686      8  0.6555
+  0121-6805-rfce-30-01-53 -_2.pdf#p7-8#7   08-+7794-+Evaluación+psicométrica+prelim  0.7711     19  0.5601
+  12198-Texto del artículo-61308-1-10-2024 08-+7794-+Evaluación+psicométrica+prelim  0.7555     83  0.3374
+  Mendez+Duran.pdf#p5-7#3                  Mendez+Duran.pdf#p4-5#2                   0.7627     14  0.6273
+  0121-6805-rfce-30-01-53 -_2.pdf#p4-5#3   08-+7794-+Evaluación+psicométrica+prelim  0.7739     15  0.5949
+  p.24-42_t02_herrera-lopez_ries49.pdf#p4- 08-+7794-+Evaluación+psicométrica+prelim  0.7978     32  0.5052
+  Mendez+Duran.pdf#p13-15#9                08-+7794-+Evaluación+psicométrica+prelim  0.6808     13  0.5276
+  Assessing-student-mental-health-and-well Assessing-student-mental-health-and-well  0.6652      2  0.6511
+  Mendez+Duran.pdf#p3-4#1                  Mendez+Duran.pdf#p4-5#2                   0.6193      6  0.5736
+  0121-6805-rfce-30-01-53 -_2.pdf#p1-2#0   08-+7794-+Evaluación+psicométrica+prelim  0.7693      6  0.7498
+
+  consulta = 40 palabras del medio del fragmento  (semilla 42)
+  TOP-1 correcto: 3 / 30 = 0.100
+  mediana del rank del fragmento original: 22   peor rank: 96
+  fragmento original                       que quedo en el top-1                     score1   rank score_e
+  ----------------------------------------------------------------------------------------------------
+  3.+Editorial.pdf#p1-2#0                  08-+7794-+Evaluación+psicométrica+prelim  0.5987     25  0.4079
+  0121-6805-rfce-30-01-53 -_2.pdf#p7-8#6   08-+7794-+Evaluación+psicométrica+prelim  0.4689     31  0.2263
+  Assessing-student-mental-health-and-well 12198-Texto del artículo-61308-1-10-2024  0.4397     23  0.3249
+  Assessing-student-mental-health-and-well p.24-42_t02_herrera-lopez_ries49.pdf#p8-  0.5133     30  0.3323
+  Assessing-student-mental-health-and-well Assessing-student-mental-health-and-well  0.4392     18  0.3306
+  7631.pdf#p5-7#5                          Assessing-student-mental-health-and-well  0.6059     96  0.4072
+  12198-Texto del artículo-61308-1-10-2024 12198-Texto del artículo-61308-1-10-2024  0.5051      2  0.4206
+  12198-Texto del artículo-61308-1-10-2024 08-+7794-+Evaluación+psicométrica+prelim  0.4758     95  0.3388
+  Student-well-being-in-higher-education-- p.24-42_t02_herrera-lopez_ries49.pdf#p5-  0.3793     24  0.2771
+  0121-6805-rfce-30-01-53 -_2.pdf#p8-10#8  p.24-42_t02_herrera-lopez_ries49.pdf#p11  0.4457      7  0.3412
+  0121-6805-rfce-30-01-53 -_2.pdf#p7-8#7   0121-6805-rfce-30-01-53 -_2.pdf#p10-11#9  0.4852     33  0.3333
+  12198-Texto del artículo-61308-1-10-2024 12198-Texto del artículo-61308-1-10-2024  0.3645      4  0.3149
+  12198-Texto del artículo-61308-1-10-2024 p.24-42_t02_herrera-lopez_ries49.pdf#p18  0.5757     23  0.4783
+  Assessing-student-mental-health-and-well 12198-Texto del artículo-61308-1-10-2024  0.6259     31  0.3984
+  Mendez+Duran.pdf#p5-7#3                  Mendez+Duran.pdf#p14-16#10                0.4805      8  0.4106
+  0121-6805-rfce-30-01-53 -_2.pdf#p4-5#3   08-+7794-+Evaluación+psicométrica+prelim  0.5826     24  0.3244
+  Assessing-student-mental-health-and-well Mendez+Duran.pdf#p14-16#10                0.5095     46  0.3492
+  p.24-42_t02_herrera-lopez_ries49.pdf#p4- 12198-Texto del artículo-61308-1-10-2024  0.4933     56  0.3536
+  Mendez+Duran.pdf#p13-15#9                Mendez+Duran.pdf#p4-5#2                   0.4964     16  0.3944
+  p.24-42_t02_herrera-lopez_ries49.pdf#p2- 08-+7794-+Evaluación+psicométrica+prelim  0.6094     80  0.2640
+  Assessing-student-mental-health-and-well 12198-Texto del artículo-61308-1-10-2024  0.4063     13  0.3693
+  Assessing-student-mental-health-and-well Assessing-student-mental-health-and-well  0.3931     11  0.3168
+  Student-well-being-in-higher-education-- 12198-Texto del artículo-61308-1-10-2024  0.3710      2  0.3479
+  Mendez+Duran.pdf#p3-4#1                  Mendez+Duran.pdf#p4-5#2                   0.5954     21  0.4086
+  Student-well-being-in-higher-education-- Student-well-being-in-higher-education--  0.4884     11  0.4380
+  p.24-42_t02_herrera-lopez_ries49.pdf#p16 7631.pdf#p19-21#15                        0.4225     44  0.3197
+  0121-6805-rfce-30-01-53 -_2.pdf#p1-2#0   08-+7794-+Evaluación+psicométrica+prelim  0.5046      9  0.3769
+
+  RESUMEN: primeras 150 palabras -> 16/30 top-1 ; 40 del medio -> 3/30
+
+========================================================================================================
+(3) MISMA FUNCION DE VECTORIZACION, NORMALIZACION Y PREFIJOS
+========================================================================================================
+texto de referencia:
+  para las consultas : retriever.py:37   vector = embedder.embed_query(q)
+                        embedder.py:44-45 -> return self.embed([text])[0]
+  para los fragmentos: index.py:313      vecs = embedder.embed(texts)
+  => las DOS pasan por SentenceTransformerEmbedder.embed (embedder.py:70)
+     una sola vez, sin excepcion.
+
+  embedder.py:71-73
+      vecs = self._model.encode(list(texts),
+                                normalize_embeddings=True,
+                                show_progress_bar=False)
+  normalize_embeddings=True se aplica IGUAL a consulta y a documento.
+
+  prefijos/prompts del modelo:
+      model.prompts              = {'query': '', 'document': ''}
+      model.default_prompt_name  = None
+      encode(..., prompt_name=...)  no se usa en embedder.py
+      => el modelo declara los prompts 'query' y 'document' pero con
+        cadena VACIA: no se antepone absolutamente nada. Consulta y
+        fragmento se vectorizan con exactamente el mismo tratamiento.
+
+  norma de un vector de consulta recién calculado : 1.00000000
+  norma de los 139 vectores guardados             : min=0.99999988 max=1.00000012
+  => coseno puro en ambos lados, sin normalizar dos veces.
+
+max_seq_length POR DEFECTO del modelo, ANTES de que el codigo lo cambie:
+  fichero sentence_bert_config.json : {"max_seq_length": 128, "do_lower_case": false}
+  -> max_seq_length POR DEFECTO = 128
+     ruta: C:\Users\Lenovo-Laptop\.cache\huggingface\hub\models--sentence-transformers--paraphrase-multilingual-MiniLM-L12-v2\snapshots\e8f8c211226b894fcb81acc59f3b34ba3efd5f42\sentence_bert_config.json
+     (es este archivo, y no config_sentence_transformers.json, el que
+      fija el corte; ese otro solo guarda versiones de paquetes)
+  pooling (1_Pooling/config.json): mean_tokens=True  cls=False  max=False
+  modelo recien cargado, sin tocar : max_seq_length = 128
+  (embedder.py:63 lo sobrescribe a 512; por eso el backend lleva @seq512)
+
+========================================================================================================
+(4) VENTANA DE 512 TOKENS: ids 8, 12, 13, 14
+========================================================================================================
+
+--------------------------------------------------------------------------------------------------------
+id 8  ¿Qué escala usó el estudio con estudiantes universitarios de psicología de Bucaramanga y cuántos ítems tiene?
+  respuesta esperada : Escala de bienestar psicológico de Ryff, 29 ítems
+
+  TOP-1 de la pregunta: 08-+7794-+Evaluación+psicométrica+preliminar+de+la+Escala+de+Bienestar+Mental+de+W.pdf  paginas [2, 3]  puntaje 0.4625
+
+  --- fragmento(s) que cubren 12198-Texto del artículo-61308-1-10-20240725.pdf p.2 ---
+  id=12198-Texto del artículo-61308-1-10-20240725.pdf#p1-4#0  paginas=[1, 2, 3, 4]  rank=128  puntaje=0.1743  (1170 tokens)
+  ---- PRIMEROS 512 TOKENS (lo que realmente ve el modelo) ----
+EVALUACIÓN DEL BIENESTAR PSICOLÓGICO DE ESTUDIANTES UNIVERSITARIOS DE PSICOLOGÍA EVALUATION OF THE PSYCHOLOGICAL WELL-BEING OF UNIVERSITY PSYCHOLOGY STUDENTS Héctor Andrés Orejarena Silva Corporación Universitaria Minuto de Dios, Colombia Miguel Angel Tapias Porras Corporación Universitaria Minuto de Dios, Colombia Shirley Lizeth Calderón Rondón Corporación Universitaria Minuto de Dios, Colombia Yessica Ariani Sánchez Bermúdez Corporación Universitaria Minuto de Dios, Colombia Rita Lucía Salcedo Domínguez Corporación Universitaria Minuto de Dios, Colombia pág. 10421 DOI: https://doi.org/10.37811/cl_rcm.v8i4.12198 Evaluación del Bienestar Psicológico de Estudiantes Universitarios de Psicología Héctor Andrés Orejarena Silva1 hector.orejarena@uniminuto.edu https://orcid.org/0000-0001-5384-9145 Corporación Universitaria Minuto de Dios Colombia Miguel Angel Tapias Porras mtapiasporr@uniminuto.edu.co https://orcid.org/0000-0002-4929-9424 Corporación Universitaria Minuto de Dios Colombia Shirley Lizeth Calderón Rondón shirley.calderon@uniminuto.edu https://orcid.org/0000-0001-6837-8980 Corporación Universitaria Minuto de Dios Colombia Yessica Ariani Sánchez Bermúdez yessica.sanchez@uniminuto.edu https://orcid.org/0009-0000-2756-2634 Corporación Universitaria Minuto de Dios Colombia Rita Lucía Salcedo Domínguez rita.salcedo@uniminuto.edu https://orcid.org/0000-0003-3340-3669 Corporación Universitaria Minuto de Dios Colombia RESUMEN El propósito de esta investigación, es evaluar el bienestar psicológico (BP) de estudiantes universitarios de Psicología. Para su desarrollo, se utiliza un enfoque cuantitativo, con alcance descriptivo, de tipo no experimental y transversal. La muestra estuvo conformada por 171 participantes, de los cuales 35 fueron hombres y 136 mujeres. Como instrumento de medición, se usó la escala de bienestar psicológico de Ryff, adaptación española de Díaz et al (2006), validada para Colombia por
+  ---- fin de la ventana ----
+  composicion de la ventana (512 tokens):
+      portada/autores   255 tokens   49.8%
+      cuerpo            104 tokens   20.3%
+      correos            59 tokens   11.5%
+      DOI/URL            56 tokens   10.9%
+      ORCID              38 tokens    7.4%
+
+  --- TOP-1 de la pregunta (para comparar) ---
+  id=08-+7794-+Evaluación+psicométrica+preliminar+de+la+Escala+de+Bienestar+Mental+de+W.pdf#p2-3#2  paginas=[2, 3]  puntaje=0.4625
+  ---- PRIMEROS 512 TOKENS ----
+estudiantes universitarios colombianos, mediante un análisis factorial exploratorio y estimaciones de fiabilidad. Esta evaluación preliminar busca proporcionar una herramienta confiable para medir la SMP en estudiantes universitarios, lo que permitirá obtener una perspectiva más completa de la experiencia subjetiva de esta población, que integre tanto aspectos preventivos de problemas de salud mental como la promoción de recursos internos que favorezcan su bienestar integral, y orientaciones para fortalecer su calidad de vida y funcionalidad en los aspectos emocional, psicológico y social. Domínguez-Alfaro, N., Amaya, C., Castro, I., & Cadavid-Ruiz, N. Vol. 18 No. 3 / septiembre – diciembre de 2025 100 Método Diseño El presente estudio es de corte cuantitativo y empleó un diseño instrumental, para examinar de forma preliminar las propiedades psicométricas de la versión en español de la Escala de Bienestar Mental de Warwick-Edinburgh (WEMWBS-E) en estudiantes universitarios colombianos. Participantes La evaluación preliminar del instrumento contó con la participación de 214 estudiantes universitarios de pregrado de una universidad privada en la ciudad de Cali, Colombia, con una edad media de 20.14 ( DE = 1.96), y que cursaban entre primero y décimo semestre ( Mdn = 5). Del total de participantes, el 60% ( n = 128) corresponde a mujeres. La muestra incluyó estudiantes de cinco facultades de la universidad: Ingeniería y Ciencias ( n = 66), Humanidades y Ciencias Sociales ( n = 64), Creación y Hábitat ( n = 31), Ciencias de la Salud (n = 27) y Ciencias Económicas (n = 26). Los criterios de inclusión de los participantes fueron: ser estudiante activo de pregrado en la universidad seleccionada, tener al menos 18 años y aceptar voluntariamente participar en el estudio. Se excluyeron participantes con respuestas incompletas. Se empleó un muestreo no probabilístico por autoselección, puesto que los estudiantes participaron de manera voluntaria tras recibir la invitación al estudio a través de canales institucionales de la universidad (correo electrónico y redes sociales internas). De 98 participantes que aceptaron ser contactados nuevamente, 61 respondieron por segunda vez el cuestionario, dos semanas después de su primer diligenciamiento. Esta submuestra, equivalente al 29% de la muestra inicial,
+  ---- fin de la ventana ----
+  composicion de la ventana (512 tokens):
+      cuerpo            512 tokens  100.0%
+
+--------------------------------------------------------------------------------------------------------
+id 12  ¿Cuáles son las cinco dimensiones de la escala de bienestar estudiantil de Khatri et al. (2024)?
+  respuesta esperada : Académico, financiero, físico, resiliencia psicológica y relacional
+
+  TOP-1 de la pregunta: 12198-Texto del artículo-61308-1-10-20240725.pdf  paginas [7, 8, 9]  puntaje 0.4833
+
+  --- fragmento(s) que cubren Student-well-being-in-higher-education--Scale-deve_2024_The-International-Jo.pdf p.1 ---
+  id=Student-well-being-in-higher-education--Scale-deve_2024_The-International-Jo.pdf#p1-2#0  paginas=[1, 2]  rank=131  puntaje=0.2311  (1235 tokens)
+  ---- PRIMEROS 512 TOKENS (lo que realmente ve el modelo) ----
+The International Journal of Management Education 22 (2024) 100933 Available online 20 January 2024 1472-8117/© 2024 The Authors. Published by Elsevier Ltd. This is an open access article under the CC BY license (http://creativecommons.org/licenses/by/4.0/). Student well-being in higher education: Scale development and validation with implications for management education Puja Khatri a, Harshleen Kaur Duggal a, Weng Marc Lim b,c,d, Asha Thomas e,*, Atul Shiva f a University School of Management Studies, Guru Gobind Singh Indraprastha University, Dwarka, New Delhi, India b Sunway Business School, Sunway University, Sunway City, Selangor, Malaysia c School of Business, Law and Entrepreneurship, Swinburne University of Technology, Hawthorn, Victoria, Australia d Faculty of Business, Design and Arts, Swinburne University of Technology Sarawak Campus, Kuching, Sarawak, Malaysia e Department of Operations Research and Business Intelligence, Wrocław University of Science and Technology, Wrocław, Poland f Jaipuria Institute of Management, Noida, Uttar Pradesh, India ARTICLE INFO Keywords: Higher education Management education Student well-being Scale development Scale validation SDG3 ABSTRACT Student well-being (SWB) encompasses the physical, psychological, and social wellness of stu- dents, aspects increasingly at risk in the high-pressure environment of higher education. Marked by intense workloads, unmet expectations, and uncertainties around degree completion and employment, the higher education sector faces a growing challenge in maintaining and enhancing SWB. Current instruments for assessing SWB are limited in scope, failing to capture its multi- faceted nature comprehensively. Addressing this gap, our research adopts a rigorous multi-study, multi-method, and multi-sample approach to develop and validate a multi-dimensional scale that effectively captures the nuances of SWB. This process encompassed five methodical stages: scale generation, scale purification, scale refinement, scale validation, and scale generalizability. The resulting SWB scale, encompassing five key dimensions—academic well-being, financial well- being, physical well-
+  ---- fin de la ventana ----
+  composicion de la ventana (512 tokens):
+      cuerpo            256 tokens   50.0%
+      portada/autores   239 tokens   46.7%
+      DOI/URL            17 tokens    3.3%
+
+  --- TOP-1 de la pregunta (para comparar) ---
+  id=12198-Texto del artículo-61308-1-10-20240725.pdf#p7-9#3  paginas=[7, 8, 9]  puntaje=0.4833
+  ---- PRIMEROS 512 TOKENS ----
+la muestra, socialización del consentimiento informado y aplicación del instrumento. Fase 3: registro de las puntuaciones en una base de datos Excel. Fase 4: análisis estadístico con el programa SPSS versión 27.0. RESULTADOS En la tabla 2 se observa que, tras la medición del bienestar psicológico de la muestra seleccionada , se encontró como resultado general una puntuación media d e 4,90, que corresponde a un nivel alto con base al baremo de interpretación del instrumento. Tabla 2 Nivel de bienestar psicológico N Mín. Máx. Media Desviación Bienestar Psicológico 171 3,28 6 4,908 0,639 Nota: elaboración propia. Los resultados de la tabla 3, muestran que todas las dimensiones se encuentran en un nivel alto según la interpretación de la prueba. No obstante, el crecimiento personal, es la de mayor puntuación con una media de 5,30, seguido por propósito en la vida con 5,25, y autoaceptación con 5,20. Posteriormente se observan las dimensiones de dominio del entorno con una media de 4,9, autonomía con 4,48 y finalmente relaciones positivas con 4,46. Tabla 3 Dimensiones de bienestar psicológico Dimensión N Mín. Máx. Media Desviación Autoaceptación 171 3 6 5,2091 0,73999 Relaciones positivas 171 2 6 4,462 1,05814 Autonomía 171 2 6 4,4893 1,04007 Dominio del entorno 171 2,2 6 4,952 0,82707 Propósito en la vida 171 2,4 6 5,2526 0,79278 Crecimiento personal 171 3,25 6 5,307 0,69824 Para discriminar los datos en base a la edad, se establecieron tres grupos etarios, a saber: 1) adultez joven, de 18 a 25 años; 2) adultez Temprana, de 26 a 40 años; y 3) adultez media, de 41 a 55 años. En la tabla 4, se aprecia que, a mayor edad hay un ligero incremento en el puntaje global de la prueba, que pág. 10427 se detalla de esta forma: adultez joven con media de 4,76, adultez temprana con 4,96 y adultez media 5,22. Tabla 4 Discriminación del bienestar psicológico por grupos etarios Adultez joven Adultez temprana Adultez media N 68 88 15 Media 4,7622 4,9663 5,2276 Media
+  ---- fin de la ventana ----
+  composicion de la ventana (512 tokens):
+      cuerpo            497 tokens   97.1%
+      tablas             15 tokens    2.9%
+
+--------------------------------------------------------------------------------------------------------
+id 13  ¿Cuántos estudios incluyó la revisión sistemática de Baik, Ryan y Lynch-Wells y qué años cubre?
+  respuesta esperada : 31 estudios, publicados entre 2008 y 2024
+
+  TOP-1 de la pregunta: p.24-42_t02_herrera-lopez_ries49.pdf  paginas [7, 8]  puntaje 0.4452
+
+  --- fragmento(s) que cubren Assessing-student-mental-health-and-wellbeing-in-higher-e_2026_Educational-R.pdf p.1 ---
+  id=Assessing-student-mental-health-and-wellbeing-in-higher-e_2026_Educational-R.pdf#p1-2#0  paginas=[1, 2]  rank=101  puntaje=0.1440  (1159 tokens)
+  ---- PRIMEROS 512 TOKENS (lo que realmente ve el modelo) ----
+Review Assessing student mental health and wellbeing in higher education: A systematic review of measurement approaches Chi Baik * , Tracii Ryan, Siobhan Lynch-Wells Centre for the Study of Higher Education, The University of Melbourne, Melbourne, Australia ARTICLE INFO Keywords: Higher education Student wellbeing Mental health Psychological distress Measurement University ABSTRACT Student mental health is an increasingly pressing concern in higher education globally, yet efforts to deal with this issue are often hampered by inconsistencies in defining and measuring mental health and wellbeing. This systematic review synthesizes empirical research examining the measurement approaches used to assess mental health and wellbeing among university students. Thirty-one high-quality studies published between 2008 and 2024 were identified through rigorous screening and quality appraisal processes. The review explores the purpose, conceptual coherence, psychometric robustness, and educational relevance of instruments used to assess student mental health (most commonly operationalised in the literature as psychological distress) and psychological or subjective wellbeing (most commonly operationalised as flourishing, thriving, life satisfaction, and quality of life) employed across diverse higher education contexts. Findings reveal a predominant reliance on clinical symptom-based tools such as the DASS-21, PHQ-9, GAD-7 and PSS-10, while measures of positive wellbeing and context-sensitive tools tailored to higher education settings remain comparatively underutilised. Few reviewed studies embedded educational constructs such as academic engagement, self-efficacy or belonging into their assessment frameworks. This review argues for a shift towards more integrative, theory- informed approaches that combine assessments of psychological distress with indicators of pos- itive wellbeing and educational experiences. By doing so, university policies and practices can move beyond reactive support models towards designing educational environments that promote and support overall student wellbeing. 1. Introduction Student mental health has emerged as a critical concern in higher education around the world, prompting growing examination from researchers, institutional leaders, and educators. Universities are increasingly grappling with rising rates of psychological distress among students, particularly anxiety and depression (Au
+  ---- fin de la ventana ----
+  composicion de la ventana (512 tokens):
+      cuerpo            451 tokens   88.1%
+      portada/autores    61 tokens   11.9%
+
+  --- TOP-1 de la pregunta (para comparar) ---
+  id=p.24-42_t02_herrera-lopez_ries49.pdf#p7-8#6  paginas=[7, 8]  puntaje=0.4452
+  ---- PRIMEROS 512 TOKENS ----
+sometió a la valoración de tres jueces expertos (uno en el tema de bienestar y dos en medición y evaluación psico - lógica), quienes consideraron tres criterios: claridad, coherencia y relevancia; puntuando de 1 (no cumple) a 4 (cumple totalmente). Para el análisis de concor - dancia y acuerdo entre jueces se utilizó el estadístico V de Aiken (Merino, 2023: 2). Posteriormente, se realizó un análisis de tipo des- criptivo, tanto de las variables sociodemográficas como de los ítems de las escalas de medidas. Así, se obtuvieron las frecuencias de respuesta, promedio, asimetría y curtosis. Se incluyó la prueba de normali- dad de Kolmogorov-Smirnov para determinar la pre- sencia o ausencia de normalidad multivariante de los datos. Para encontrar diferencias estadísticamente sig- nificativas en relación con el género, semestre y edad se llevó a cabo la prueba U de Mann-Whitney . Todos estos análisis se realizaron con el programa spss-26. Para la validación del constructo se realizó un análisis factorial exploratorio ( afe) y luego un aná- lisis factorial confirmatorio (afc), aplicando una va- lidación cruzada, que consiste en dividir la muestra en dos mitades al azar y utilizar una de ellas para el afe y la otra para el afc. Esta práctica permite un uso secuencial de los dos análisis, el primero para explorar la distribución de los ítems, eliminar los que presentan bajas propiedades psicométricas, y el se- gundo para confirmar el modelo teórico (Lloret et al., 2014: 1,151) y así obtener la escala final. El afe se realizó con el programa SPSS-26, considerando los índices de adecuación muestral Kaiser-Meyer-Olkin (kmo), la esfericidad de Bartlett, los valores de co- munalidad, las saturaciones de los ítems, las cargas factoriales obtenidas en la distribución de la matriz de configuración y la varianza total explicada. Se usó el método de extracción de ejes principales y el mé- todo de rotación Oblimin. El afc se realizó con el programa eqs 6.2 (Bentler y Wu, 2012),
+  ---- fin de la ventana ----
+  composicion de la ventana (512 tokens):
+      cuerpo            512 tokens  100.0%
+
+--------------------------------------------------------------------------------------------------------
+id 14  ¿Qué técnica estadística y qué muestra usó el estudio sobre autoconcepto y rendimiento (Pedraja-Rejas et al.)?
+  respuesta esperada : Regresión lineal múltiple; 170 estudiantes de tres carreras
+
+  TOP-1 de la pregunta: p.24-42_t02_herrera-lopez_ries49.pdf  paginas [8, 9]  puntaje 0.4991
+
+  --- fragmento(s) que cubren 7631.pdf p.1 ---
+  id=7631.pdf#p1-2#0  paginas=[1, 2]  rank=64  puntaje=0.2596  (1122 tokens)
+  ---- PRIMEROS 512 TOKENS (lo que realmente ve el modelo) ----
+Fronteiras: Journal of Social, Technological and Environmental Science http://periodicos.unievangelica.edu.br/fronteiras/ ISSN 2238-8869 Submissão: 26/09/2024 Aceite: 24/01/2025 Publicação: 18/02/2025 v.14, n.1, 2025 • p. 124-144. • DOI http://dx.doi.org/10.21664/2238-8869.2025v14i1p.124-144 © 2021 by the authors. Esta revista oferece acesso livre imediato ao seu conteúdo, seguindo o princípio de que disponibilizar gratuitamente o conhecimento científico ao público proporciona maior democratização mundial do conhecimento. Este manuscrito é distribuído nos termos da licença Creative Commons – Atribuição - NãoComercial 4.0 Internacional (https://creativecommons.org/licenses/by -nc/4.0/legalcode), que permite reproduzir e compartilhar o material licenciado, no todo ou em parte, somente para fim não comercial; e produzir, rep roduzir, e compartilhar material adaptado somente para fim não comercial. Article Relación entre el Autoconcepto Estudiantil, las Características del Cuerpo Académico y el Rendimiento Estudiantil Liliana Pedraja-Rejas1 , César Lecaros2 , Carolane Riquelme3 1 Doctora en Ciencias de la Educación de la Pontificia Universidad Católica de Chile. Profesora Titular, Universidad de Tarapac á, Arica, Chile. ORCID: 0000-0001-7732-4183. E-mail: lpedraja@academicos.uta.cl 2 Ingeniero Civil Industrial de la Universidad de Tarapacá, Arica, Chile. ORCID: 0009-0006-2915-2835. E-mail: cnlb19@gmail.com 3 Ingeniera Civil Industrial de la Universidad de Tarapacá, Arica, Chile. ORCID: 0009-0009-0789-0740. E -mail: riquelmecarolane@gmail.com RESUMEN La presente investigación explora la relación entre el autoconcepto estudiantil, las características de los académicos y su influencia en el rendimiento estudiantil. Para ello, se realizó un estudio cuantitativo utilizando un análisis de regresión lineal m últiple con una muestra de 170 estudiantes de tres carreras en dos universidades regionales. Los resultados indican una
+  ---- fin de la ventana ----
+  composicion de la ventana (512 tokens):
+      portada/autores   319 tokens   62.3%
+      cuerpo             82 tokens   16.0%
+      DOI/URL            58 tokens   11.3%
+      correos            27 tokens    5.3%
+      ORCID              26 tokens    5.1%
+  id=7631.pdf#p1-2#1  paginas=[1, 2]  rank=79  puntaje=0.2442  (947 tokens)
+  ---- PRIMEROS 512 TOKENS (lo que realmente ve el modelo) ----
+and the characteristics of academics influence students' academic performance. Keywords: self-concept; characteristics of teachers; academic performance. 125 Relación entre el Autoconcepto Estudiantil, las Características del Cuerpo Académico y el Rendimiento Estudiantil Liliana Pedraja-Rejas, César Lecaros, Carolane Riquelme v.14, n.1, 2025 • p. 124-144. • DOI http://dx.doi.org/10.21664/2238-8869.2025v14i1p.124-144 Introdución El sistema de educación superior constituye un elemento fundamental en la investigación educativa, ya que actúa como una fuente de conocimiento en diversas formas. Sus contribuciones multifacéticas son una fuerza impulsora crucial para la innovación, el progreso económico y la mejora de la calidad de vida (Ganga-Contreras et al. 2024), y, en general, representan el desar rollo y la evolución de la mayoría de los ámbitos de la sociedad. Por esta razón, el cumplimiento de mínimos estándares de calidad es considerado como uno de los grandes desafíos que enfrentan los gobiernos de todo el mundo (González-Zabala et al. 2017). Este desafío se intensifica ante los significativos cambios de las últimas décadas, como la creciente demanda de acceso a la educación superior, el aumento de instituciones universitarias, la apertura de nuevas carreras y un interés cada vez mayor en el desarrollo de la investigación científica (Jara et al. 2016). Las instituciones universitarias desempeñan un papel fundamental en la formación de los futuros profesionales, ya que se encargan de preparar y dotar a sus estudiantes de las destrezas, habilidades y conocimientos necesarios en sus respectivas áreas de estudio (Douwes et al. 2023). Es por esto, que los centros educacionales, tales como universidades e institutos profesionales deben entregar un servicio de calidad que asegure procesos eficientes no sólo en la docencia e investigación, sino también en la part e administrativa (Araneda-Guirriman et al. 2016). En la educación superior, se asume que los resultados del aprendizaje son lo más relevante y que la evaluación debe alinearse con estos resultados (Boud & Bearman 2024). En este contexto, el rendimiento estudiantil emerge como una de las dimensiones más importantes del proceso de enseñanza-
+  ---- fin de la ventana ----
+  composicion de la ventana (512 tokens):
+      cuerpo            470 tokens   91.8%
+      DOI/URL            28 tokens    5.5%
+      portada/autores    14 tokens    2.7%
+
+  --- TOP-1 de la pregunta (para comparar) ---
+  id=p.24-42_t02_herrera-lopez_ries49.pdf#p8-9#8  paginas=[8, 9]  puntaje=0.4991
+  ---- PRIMEROS 512 TOKENS ----
+0.039) (tabla 1). El afc reveló una medida kmo de 0.785, mientras que la prueba de esfericidad de Bartlett fue significativa (χ2 = 1516.363; gl = 190; p ≤ 0.000), lo que respalda la factibilidad del análisis factorial. Las comunalidades (h2) fueron adecuadas y oscilaron entre 0.368 (ítem gc4) y 0.680 (ítem ps7). Se extrajeron cinco dimensio- nes, de acuerdo al modelo teórico proyectado, con óptimos ajustes, las cuales explicaron en conjunto 54.5 % de la varianza total. Las saturaciones de los ítems variaron entre 0.402 (ítem ps10) y 0.803 (ítem ps8) (tabla 2). El afc de la estructura de cinco factores pro- bados en el afc indicó óptimos ajustes (gráfica1), con pesos factoriales (ʎ) y errores de medición (e) adecuados: χ 2S-B = 344.978; χ 2S-B /(160) = 2.156; p< 0.001; nnfi = 0.900; cfi = 0.911; rmsea = 0.063 (90 % ci [0.053, 0.072]); srmr v = 0.080. Los esta- dísticos lambda (ʎ) más altos fueron de 0.90 (ítem rsp30) y 0.84 (ítem ps8), y los más bajos de 0.31 (ítem rspc28) y 0.36 (ítem pps26). Para evaluar el ajuste local del modelo se examinó la matriz de residuales estandarizados. El promedio de los aasr (Average Absolute Standardized Residual o residuales estandarizados absolutos) fue de 0.065, siendo un valor aceptable pues es menor a 0.08. El análisis de la distribución de los residuales mostró que 77.6 % de los valores se concentraron en el ran- go de -0.1 a 0.1, lo que indica que el modelo repro- duce adecuadamente la mayoría de las correlaciones observadas sin sesgos sistemáticos importantes. Bienestar universitario psicosocial: un estudio exploratorio y validación psicométrica... Harvey-Mauricio Herrera-López, Christian-David Portilla-Real
+  ---- fin de la ventana ----
+  composicion de la ventana (512 tokens):
+      cuerpo            506 tokens   98.8%
+      tablas              6 tokens    1.2%
+
+========================================================================================================
+(5) RECALL CON TF-IDF SOBRE LOS MISMOS 18 PARES (SOLO DIAGNOSTICO)
+========================================================================================================
+vocabulario TF-IDF : 54359 terminos
+matriz             : 139 x 54359 (sparse, norma l2)
+AVISO: esto NO se usa para cambiar nada del sistema; es un espejo.
+
+id   documento esperado                             pág     rank  puntaje   @1   @5  @10
+--------------------------------------------------------------------------------------------------------
+1    p.24-42_t02_herrera-lopez_ries49.pdf           5          2   0.1157    -   SI   SI
+2    p.24-42_t02_herrera-lopez_ries49.pdf           8          6   0.0579    -    -   SI
+3    p.24-42_t02_herrera-lopez_ries49.pdf           12         3   0.0571    -   SI   SI
+4    p.24-42_t02_herrera-lopez_ries49.pdf           8          1   0.1108   SI   SI   SI
+5    08-+7794-+Evaluación+psicométrica+preliminar+d 1          1   0.1936   SI   SI   SI
+6    08-+7794-+Evaluación+psicométrica+preliminar+d 5          5   0.0892    -   SI   SI
+7    08-+7794-+Evaluación+psicométrica+preliminar+d 4          1   0.0767   SI   SI   SI
+8    12198-Texto del artículo-61308-1-10-20240725.p 2          2   0.0751    -   SI   SI
+9    12198-Texto del artículo-61308-1-10-20240725.p 7          1   0.1208   SI   SI   SI
+10   12198-Texto del artículo-61308-1-10-20240725.p 7          1   0.1339   SI   SI   SI
+11   0121-6805-rfce-30-01-53 -_2.pdf                8          2   0.1341    -   SI   SI
+12   Student-well-being-in-higher-education--Scale- 1         88   0.0156    -    -    -
+13   Assessing-student-mental-health-and-wellbeing- 1          1   0.0703   SI   SI   SI
+14   7631.pdf                                       1         14   0.0495    -    -    -
+15   Mendez+Duran.pdf                               13         2   0.0768    -   SI   SI
+16   p.24-42_t02_herrera-lopez_ries49.pdf           8         24   0.0463    -    -    -
+16   08-+7794-+Evaluación+psicométrica+preliminar+d 4         12   0.0598    -    -    -
+16   12198-Texto del artículo-61308-1-10-20240725.p 2         16   0.0529    -    -    -
+
+TF-IDF recuperacion@1  : por par  6/18 = 0.333   por id  6/16 = 0.375
+TF-IDF recuperacion@5  : por par 12/18 = 0.667   por id 12/16 = 0.750
+TF-IDF recuperacion@10 : por par 13/18 = 0.722   por id 13/16 = 0.812
+
+comparacion con el backend activo (sentence-transformers, diagnostico 3d):
+  backend  @1 = 3/18 = 0.167   @5 = 6/18 = 0.333   @10 = 6/18 = 0.333
+  tf-idf   @1 = 6/18 = 0.333   @5 = 12/18 = 0.667   @10 = 13/18 = 0.722
+
+NOTA: ambos resultados son DIAGNOSTICOS. El umbral 0.4150, k=5 y el
+corpus se calibraron solo con las 6 preguntas de apoyo; nada de esto
+se traslada al sistema.

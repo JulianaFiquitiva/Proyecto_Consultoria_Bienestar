@@ -1,0 +1,15 @@
+{
+  "fecha": "2026-10-05T04:53:39",
+  "modelo_llm": "gpt-4",
+  "temperatura": 0.3,
+  "backend_embeddings": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "umbral": 0.415,
+  "umbral_defecto": 0.415,
+  "k": 5,
+  "MAX_TOKENS_RAG": 700,
+  "PRESUPUESTO_PROMPT_CHARS": 18000,
+  "commit": "9df862ce6ed2f9cef95e6ac5b3af3772b4f36495",
+  "sha256_prompts_rag_v1": "8daae51b878cbb16ee3e66c5e032d1c37f7e8be1f913522e689dbdf4a00bf267",
+  "semilla_orden_hoja": 20261004,
+  "corrida_origen": "resultados_banco.csv"
+}

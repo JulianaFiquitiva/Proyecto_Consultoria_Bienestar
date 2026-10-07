@@ -1,0 +1,110 @@
+PASO 1  copia byte a byte -> resultados_banco_corrida1.csv  (15849 bytes, igual: True)
+PASO 2  hoja  = hoja_revision_ciega_20261005_045339.csv  (38 filas, 11 columnas, sin 'condicion')
+        clave = clave_condicion_20261005_045339.csv  (NO se abre ni se muestra)
+PASO 3  metadatos_20261005_045339.json
+        fecha:                     2026-10-05T04:53:39
+        modelo_llm:                gpt-4
+        temperatura:               0.3
+        backend_embeddings:        sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+        umbral:                    0.415
+        umbral_defecto:            0.415
+        k:                         5
+        MAX_TOKENS_RAG:            700
+        PRESUPUESTO_PROMPT_CHARS:  18000
+        commit:                    9df862ce6ed2f9cef95e6ac5b3af3772b4f36495
+        sha256_prompts_rag_v1:     8daae51b878cbb16ee3e66c5e032d1c37f7e8be1f913522e689dbdf4a00bf267
+        semilla_orden_hoja:        20261004
+        corrida_origen:            resultados_banco.csv
+
+PASO 4  TABLA condicion=con
+id   tipo      abstuvo  #fuentes frases?   frases que coinciden
+----------------------------------------------------------------------------------------------------
+1    responde  no       5       SI        no menciona
+2    responde  sí       0       SI        no encuentro
+3    responde  sí       0       SI        no encuentro
+4    responde  sí       0       SI        no encuentro
+5    responde  no       5       SI        no proporciona
+6    responde  sí       0       SI        no encuentro
+7    responde  sí       0       SI        no encuentro
+8    responde  no       5       SI        no proporciona
+9    responde  no       5       -         
+10   responde  no       5       -         
+11   responde  no       5       -         
+12   responde  no       5       SI        no proporciona
+13   responde  no       5       -         
+14   responde  no       5       SI        no puedo
+15   responde  sí       0       SI        no encuentro
+16   responde  no       5       SI        no proporciona
+17   abstiene  no       5       SI        no contiene
+18   abstiene  sí       0       SI        no encuentro
+19   abstiene  sí       0       SI        no encuentro
+
+con abstuvo=sí            : 8 / 19
+con con frases de abst.   : 15 / 19
+   abstiene  n=3  abstuvo=sí 2
+   responde  n=16  abstuvo=sí 6
+
+PASO 5  DIAGNOSTICO de abstenciones (solo lectura)
+
+id 2  ¿Con cuántos ítems y dimensiones quedó la versión final de la EBUP?
+   pagina_pdf esperada del banco: [8]   documento: p_24-42_t02_herrera-lopez_ries49.pdf
+   [1] p.24-42_t02_herrera-lopez_ries49.pdf           p.11-12-13     0.3823
+   [2] p.24-42_t02_herrera-lopez_ries49.pdf           p.8-9          0.3427  <== ESTA
+   [3] p.24-42_t02_herrera-lopez_ries49.pdf           p.7-8          0.3065  <== ESTA
+   [4] 7631.pdf                                       p.8-9-10       0.2814  <== ESTA
+   [5] 0121-6805-rfce-30-01-53 -_2.pdf                p.10-11        0.2803
+   ¿aparece la pagina esperada entre las 5 recuperadas? SI   ([8])
+
+id 3  ¿Qué omega de McDonald obtuvo la EBUP?
+   pagina_pdf esperada del banco: [12]   documento: p_24-42_t02_herrera-lopez_ries49.pdf
+   [1] 0121-6805-rfce-30-01-53 -_2.pdf                p.10-11        0.1604
+   [2] p.24-42_t02_herrera-lopez_ries49.pdf           p.11-12-13     0.1409  <== ESTA
+   [3] p.24-42_t02_herrera-lopez_ries49.pdf           p.8-9          0.1362
+   [4] 12198-Texto del artículo-61308-1-10-20240725.p p.7-8-9        0.1198
+   [5] p.24-42_t02_herrera-lopez_ries49.pdf           p.7-8          0.1177
+   ¿aparece la pagina esperada entre las 5 recuperadas? SI   ([12])
+
+id 4  ¿Encontró el estudio de la EBUP diferencias por género en el puntaje total?
+   pagina_pdf esperada del banco: [8]   documento: p_24-42_t02_herrera-lopez_ries49.pdf
+   [1] p.24-42_t02_herrera-lopez_ries49.pdf           p.8-9          0.4001  <== ESTA
+   [2] 12198-Texto del artículo-61308-1-10-20240725.p p.7-8-9        0.3999  <== ESTA
+   [3] 7631.pdf                                       p.8-9-10       0.3861  <== ESTA
+   [4] p.24-42_t02_herrera-lopez_ries49.pdf           p.7-8          0.3727  <== ESTA
+   [5] Student-well-being-in-higher-education--Scale- p.8-9          0.3719  <== ESTA
+   ¿aparece la pagina esperada entre las 5 recuperadas? SI   ([8])
+
+id 6  ¿Qué alfa de Cronbach obtuvo la WEMWBS-E en estudiantes universitarios colombianos?
+   pagina_pdf esperada del banco: [5]   documento: 08-_7794-_Evaluación_psicométrica_preliminar_de_la_E
+   [1] 08-+7794-+Evaluación+psicométrica+preliminar+d p.2-3          0.4074
+   [2] 0121-6805-rfce-30-01-53 -_2.pdf                p.13           0.3111
+   [3] Mendez+Duran.pdf                               p.19-20        0.3029
+   [4] p.24-42_t02_herrera-lopez_ries49.pdf           p.1-2-3        0.2837
+   [5] 7631.pdf                                       p.1-2          0.2823
+   ¿aparece la pagina esperada entre las 5 recuperadas? NO   (ninguna)
+
+id 7  ¿Qué diferencia por sexo encontró el estudio de la WEMWBS-E y con qué prueba?
+   pagina_pdf esperada del banco: [4]   documento: 08-_7794-_Evaluación_psicométrica_preliminar_de_la_E
+   [1] p.24-42_t02_herrera-lopez_ries49.pdf           p.7-8          0.3580
+   [2] p.24-42_t02_herrera-lopez_ries49.pdf           p.8-9          0.3319
+   [3] Student-well-being-in-higher-education--Scale- p.8-9          0.3274
+   [4] p.24-42_t02_herrera-lopez_ries49.pdf           p.7-8          0.3129
+   [5] 12198-Texto del artículo-61308-1-10-20240725.p p.7-8-9        0.3052
+   ¿aparece la pagina esperada entre las 5 recuperadas? NO   (ninguna)
+
+id 15  ¿Cuántos documentos conformaron el universo de la revisión documental de Méndez Durán y de l
+   pagina_pdf esperada del banco: [13]   documento: Mendez_Duran.pdf
+   [1] 08-+7794-+Evaluación+psicométrica+preliminar+d p.7-8          0.2709
+   [2] p.24-42_t02_herrera-lopez_ries49.pdf           p.17-18        0.2664
+   [3] p.24-42_t02_herrera-lopez_ries49.pdf           p.11-12-13     0.2619  <== ESTA
+   [4] p.24-42_t02_herrera-lopez_ries49.pdf           p.7-8          0.2585
+   [5] 08-+7794-+Evaluación+psicométrica+preliminar+d p.3-4          0.2520
+   ¿aparece la pagina esperada entre las 5 recuperadas? SI   ([13])
+
+PASO 6  agent\rag\logs\rag_consultas.csv
+   filas           : 46
+   tamano bytes    : 28704
+   columnas        : ['fecha', 'backend', 'pregunta', 'fragmentos', 'respuesta', 'abstencion']
+   largo campo 'fragmentos': min=244 max=414 media=309
+   ¿guarda el TEXTO de los fragmentos? NO
+   formato real    : '<archivo> p.<paginas> (<puntaje>)' unido por ' | '
+   ejemplo         : 08-+7794-+Evaluación+psicométrica+preliminar+de+la+Escala+de+Bienestar+Mental+de+W.pdf p.7-8 (0.3328) | Mendez+Duran.pdf p.4-5 (0.3066) | Mendez+Duran

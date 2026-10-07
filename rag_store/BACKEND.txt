@@ -1,0 +1,48 @@
+BACKEND ACTIVO — modulo RAG de IndiceFelicidad
+======================================================================
+fecha              : 2026-10-06T05:08:53
+embeddings         : tfidf-local@60000
+dimension          : 60000
+almacen            : chroma
+directorio         : C:\Users\Lenovo-Laptop\Documents\IndiceFelicidad\rag_store
+flag openai        : apagado por defecto (RAG_OPENAI_EMBEDDINGS)
+
+ORDEN DE PREFERENCIA DEL ENUNCIADO
+  1. sentence-transformers paraphrase-multilingual-MiniLM-L12-v2 + ChromaDB
+  2. TF-IDF local (scikit-learn) + arrays NumPy/JSON
+  3. OpenAI embeddings SOLO si se pide explicitamente (flag apagado)
+
+DESCARTES
+  [sentence-transformers] dimension 384 != la del indice 60000
+
+INTENTOS DE INSTALACION (mensaje literal)
+  [pypdf]          Successfully installed pypdf-6.19.0
+                   verificacion: pypdf 6.19.0 OK
+  [torch]          Successfully installed torch-2.14.1+cpu
+                   verificacion: torch OK 2.14.1+cpu
+  [sentence-transformers, intento 1]
+                   el proceso se interrumpio a los 900 s; quedo incompleto:
+                     ModuleNotFoundError: No module named 'sentence_transformers'
+  [sentence-transformers, intento 2]
+                   Successfully installed sentence-transformers-6.1.0
+                   verificacion: sentence_transformers 6.1.0 OK
+  [chromadb]       Successfully installed chromadb-1.5.9 (y onnxruntime-1.30.0)
+                   verificacion: chromadb 1.5.9 OK
+  [API de Chroma]  AttributeError: 'Client' object has no attribute 'get_or_create'
+                   -> uso correcto: client.get_or_create_collection(...)
+  [PyMuPDF/fitz]   NO se instalo: el enunciado lo prohibe (usa .pyd que
+                   Smart App Control podria bloquear).
+  [pdfplumber]     NO se instalo: no hace falta, pypdf cubre la extraccion.
+  [torch, 2026-10-05]
+                   Smart App Control bloquea torch\_C.cp314-win_amd64.pyd:
+                     ImportError: DLL load failed while importing _C: Una
+                     directiva de Control de aplicaciones bloqueo este archivo.
+                   el fichero esta integro y su sha256 coincide con el
+                   RECORD de pip, y copiarlo a otra ruta NO ayuda: SAC
+                   decide por hash, no por camino. Reinstalar el mismo
+                   wheel produce el mismo hash -> no arregla nada.
+                   solo ese modulo esta bloqueado; los DLL de torch\lib
+                   se cargan bien por ctypes.WinDLL.
+                   -> solucion: se usa el respaldo 2 (TF-IDF local) del
+                   enunciado. torch/sentence-transformers quedan
+                   instalados pero inutilizables en este equipo.

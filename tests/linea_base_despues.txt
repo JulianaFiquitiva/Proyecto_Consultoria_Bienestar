@@ -1,0 +1,83 @@
+==============================================================================
+PREGUNTA: Existen más estudios realcionados con el bienestar estudiantil?
+==============================================================================
+success: True
+analysis_type: fuera_de_dominio
+function_to_call: abstencion
+
+--- INTERPRETACION ---
+[FUERA DE DOMINIO - NO SE EJECUTO NINGUN ANALISIS]
+
+No puedo responder esta pregunta con el agente estadistico.
+
+Motivo: Pregunta por otros estudios o publicaciones existentes. El dataset solo contiene respuestas de una encuesta, no un registro de estudios.
+
+El dataset contiene SOLO respuestas de la encuesta de bienestar
+(1,813 estudiantes validos de ~29,950). No contiene literatura,
+bibliografia, directorios de fuentes ni datos de otros paises.
+
+Que SI puedo responder (ejemplos con el dataset):
+  1. ¿Cual es la media global de bienestar (T-score)?
+  2. ¿Hay diferencia de bienestar entre hombres y mujeres?
+  3. ¿Que dimension de Ryff tiene el puntaje mas bajo?
+  4. ¿Que factores predicen el bienestar?
+
+Para buscar literatura externa use: "dame referencias sobre <tema>".
+
+[Trazabilidad] Dataset: ninguno | Metodo: abstencion | Registros: None
+
+==============================================================================
+PREGUNTA: en donde puedo consultar más sobre temas de bienestar estudaintil?
+==============================================================================
+success: True
+analysis_type: fuera_de_dominio
+function_to_call: abstencion
+
+--- INTERPRETACION ---
+[FUERA DE DOMINIO - NO SE EJECUTO NINGUN ANALISIS]
+
+No puedo responder esta pregunta con el agente estadistico.
+
+Motivo: Pregunta donde consultar informacion externa. El dataset no contiene bibliografia ni directorios de fuentes.
+
+El dataset contiene SOLO respuestas de la encuesta de bienestar
+(1,813 estudiantes validos de ~29,950). No contiene literatura,
+bibliografia, directorios de fuentes ni datos de otros paises.
+
+Que SI puedo responder (ejemplos con el dataset):
+  1. ¿Cual es la media global de bienestar (T-score)?
+  2. ¿Hay diferencia de bienestar entre hombres y mujeres?
+  3. ¿Que dimension de Ryff tiene el puntaje mas bajo?
+  4. ¿Que factores predicen el bienestar?
+
+Para buscar literatura externa use: "dame referencias sobre <tema>".
+
+[Trazabilidad] Dataset: ninguno | Metodo: abstencion | Registros: None
+
+==============================================================================
+PREGUNTA: en otros paises de latinoamerica hay más estudios relacionados?
+==============================================================================
+success: True
+analysis_type: fuera_de_dominio
+function_to_call: abstencion
+
+--- INTERPRETACION ---
+[FUERA DE DOMINIO - NO SE EJECUTO NINGUN ANALISIS]
+
+No puedo responder esta pregunta con el agente estadistico.
+
+Motivo: Pregunta por otros estudios o publicaciones existentes. El dataset solo contiene respuestas de una encuesta, no un registro de estudios.
+
+El dataset contiene SOLO respuestas de la encuesta de bienestar
+(1,813 estudiantes validos de ~29,950). No contiene literatura,
+bibliografia, directorios de fuentes ni datos de otros paises.
+
+Que SI puedo responder (ejemplos con el dataset):
+  1. ¿Cual es la media global de bienestar (T-score)?
+  2. ¿Hay diferencia de bienestar entre hombres y mujeres?
+  3. ¿Que dimension de Ryff tiene el puntaje mas bajo?
+  4. ¿Que factores predicen el bienestar?
+
+Para buscar literatura externa use: "dame referencias sobre <tema>".
+
+[Trazabilidad] Dataset: ninguno | Metodo: abstencion | Registros: None

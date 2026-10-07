@@ -1,0 +1,71 @@
+Analizando: 'buscar ¿Qué estudios en universitarios colombianos han comparado el bienestar según género, edad o semestre?'...
+----------------------------------------
+[METODO: Busqueda de literatura academica en Crossref y PubMed]
+
+--- Supuestos verificados ---
+  [CUMPLE] Identificabilidad de la fuente: Toda fuente tiene DOI o URL verificable
+  [CUMPLE] Procedencia academica: Resultados provenientes de bases indexadas (Crossref/PubMed), no de un generador de texto
+  [NO CUMPLE] Sustento del contenido: NO verificado: solo se tienen metadatos, no el texto completo. No se puede afirmar que el paper diga algo concreto sin leerlo.
+
+Prueba seleccionada: Busqueda bibliografica (Crossref, fallback PubMed)
+Razon: Se consultan bases academicas indexadas con DOI verificable. Crossref es la fuente primaria por cobertura y velocidad; PubMed solo se usa si Crossref no retorna resultados.
+
+--- Advertencias ---
+  - El DOI confirma la IDENTIDAD de la fuente (existe y es localizable), NO garantiza que sea pares revisada ni que el contenido sustente una afirmacion concreta. Eso requiere leer el documento.
+  - La busqueda cubre solo bases indexadas (Crossref/PubMed); no es navegacion web general ni incluye todo el contenido de internet.
+  - No se descargaron ni se leyeron los textos completos: solo metadatos (titulo, autores, ano, fuente, DOI).
+
+--- Fuentes encontradas en la web ---
+Consulta: buscar ¿Qué estudios en universitarios colombianos han comparado el bienestar según género, edad o semestre?
+Bases consultadas: Crossref, PubMed
+Resultados: 5
+
+1. Parental Gender Stereotypes and Student Wellbeing in China
+   Autores: Shuai Chu, Xiangquan Zeng, Klaus F. Zimmermann
+   Fuente: 
+   DOI: 10.2139/ssrn.4013210
+   URL: https://doi.org/10.2139/ssrn.4013210
+
+2. Transgender and Gender-Diverse Youth in Aotearoa New Zealand: How High-Schools Influence Student Wellbeing
+   Autores:  , Quinn MacKay
+   Fuente: 
+   DOI: 10.26686/wgtn.27020764
+   URL: https://doi.org/10.26686/wgtn.27020764
+
+3. Student Officers' Wellbeing (2025)
+   Autores: John Harrison
+   Fuente: Wellbeing in Policing
+   DOI: 10.4324/9781003518860-10
+   URL: https://doi.org/10.4324/9781003518860-10
+
+4. A Psychological Study on Gender and Emotional Wellbeing of Indian Research Scholars: A Phenomenological Comparison (2020)
+   Autores: Neema Bajaj
+   Fuente: International Journal of Psychosocial Rehabilitation
+   DOI: 10.37200/ijpr/v24i4/pr201605
+   URL: https://doi.org/10.37200/ijpr/v24i4/pr201605
+
+5. PSYCHOLOGICAL WELLBEING AMONG COLLEGE STUDENTS: AGE GENDER AND EDUCATION (2024)
+   Autores: Nand Lal Kumar, Alka Agrawal
+   Fuente: ShodhKosh: Journal of Visual and Performing Arts
+   DOI: 10.29121/shodhkosh.v5.i2.2024.2184
+   URL: https://doi.org/10.29121/shodhkosh.v5.i2.2024.2184
+
+
+--- Interpretacion en lenguaje simple ---
+La búsqueda generó cinco resultados. Sin embargo, es importante mencionar que no se descargaron ni se leyeron los textos completos, solo se accedió a los metadatos. Por lo tanto, no se puede afirmar que estos estudios hayan sido revisados por pares ni que concluyan algo específico. 
+
+Los títulos de los estudios son:
+
+1. "Parental Gender Stereotypes and Student Wellbeing in China" por Shuai Chu, Xiangquan Zeng, Klaus F. Zimmermann. No se especifica el año de publicación.
+
+2. "Transgender and Gender-Diverse Youth in Aotearoa New Zealand: How High-Schools Influence Student Wellbeing" por Quinn MacKay. No se especifica el año de publicación.
+
+3. "Student Officers' Wellbeing" por John Harrison, publicado en 2025 en la fuente "Wellbeing in Policing".
+
+4. "A Psychological Study on Gender and Emotional Wellbeing of Indian Research Scholars: A Phenomenological Comparison" por Neema Bajaj, publicado en 2020 en la "International Journal of Psychosocial Rehabilitation".
+
+5. "PSYCHOLOGICAL WELLBEING AMONG COLLEGE STUDENTS: AGE GENDER AND EDUCATION" por Nand Lal Kumar, Alka Agrawal, publicado en 2024 en "ShodhKosh: Journal of Visual and Performing Arts".
+
+Las bases de datos consultadas fueron Crossref y PubMed. Para verificar la información de cada fuente, es necesario leer el documento completo.
+
+[Trazabilidad] Dataset: ninguno | Metodo: literature_search | Registros: N/A

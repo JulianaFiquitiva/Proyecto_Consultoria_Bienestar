@@ -1,0 +1,59 @@
+# Datos (sensibles, no subir)
+*.xlsx
+*.csv
+*.xls
+
+# ...pero los entregables de la actividad SI se versionan
+!resultados/*.csv
+# indice RAG: ~100 MB de binarios, se regenera con
+#   python -m agent.rag.index --rebuild
+rag_store/*
+!rag_store/calibracion.csv
+!agent/rag/logs/*.csv
+
+# Archivos temporales de LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.nav
+*.snm
+
+# Archivos binarios
+*.deb
+*.pyc
+__pycache__/
+
+# Entorno virtual
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# pytest
+.pytest_cache/
+
+# Archivos grandes innecesarios
+IndiceFelicidad/
+
+# Corpus de articulos y su indice
+docs/rag_corpus/*.pdf
+rag_store/*
+!rag_store/BACKEND.txt
+!rag_store/calibracion.csv
+
+# Datos de la contraparte y claves
+data/*.xlsx
+.env
+*.env
+
+# Archivos que Python crea solo
+__pycache__/
+*.pyc
+
+# Material de terceros
+docs/Informe_*
+notebooks/
+requirements.txt

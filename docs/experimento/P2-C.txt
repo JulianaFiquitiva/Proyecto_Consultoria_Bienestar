@@ -1,0 +1,50 @@
+A continuación se presentan *5 referencias científicas* presentes en las fuentes que aportan evidencia sobre la *validez y confiabilidad de escalas de bienestar* utilizadas en estudiantes universitarios y jóvenes colombianos:
+
+---
+
+1. *Herrera-López, Portilla-Realpe y Lasso-Lara (2026)*
+   * *Autores:* Harvey-Mauricio Herrera-López, Christian-David Portilla-Realpe e Iván-Camilo Lasso-Lara.
+   * *Año:* 2026.
+   * *Revista:* Revista Iberoamericana de Educación Superior (RIES).
+   * *DOI:* https://doi.org/10.22201/iisue.20072872e.2026.49.2060.
+   * *Afirmación sobre el tema:* Validó la Escala de Bienestar Universitario Psicosocial (EBUP) de 20 ítems y 5 factores en universitarios colombianos, confirmando su validez de contenido (V de Aiken = 0.91), validez estructural (AFE/AFC) y una alta consistencia interna (Omega de McDonald = 0.822).
+
+---
+
+2. *Domínguez-Alfaro, Amaya, Castro y Cadavid-Ruiz (2025)*
+   * *Autores:* Nathalie Domínguez-Alfaro, Catalina Amaya, Isabela Castro y Natalia Cadavid-Ruiz.
+   * *Año:* 2025.
+   * *Revista:* Revista CES Psicología.
+   * *DOI:* https://doi.org/10.21615/cesp.7794.
+   * *Afirmación sobre el tema:* Evaluó las propiedades psicométricas de la versión en español de la Escala de Bienestar Mental de Warwick-Edinburgh (WEMWBS-E) en universitarios colombianos, demostrando que una versión ajustada de 12 ítems y 2 factores posee alta consistencia interna (Alfa de Cronbach = 0.902) y adecuada confiabilidad test-retest (CCI = 0.663).
+
+---
+
+3. *Gómez-Acosta, Vinaccia-Alpi y Sierra-Barón (2020)*
+   * *Autores:* Alejandro Gómez-Acosta, Stefano Vinaccia-Alpi y Willy Sierra-Barón.
+   * *Año:* 2020.
+   * *Revista:* CES Psicología.
+   * *DOI:* https://doi.org/10.21615/cesp.13.2.7.
+   * *Afirmación sobre el tema:* Analizó de manera exploratoria las propiedades psicométricas de la Escala de Salud Mental Positiva en jóvenes colombianos, aportando evidencia preliminar sobre su validez y fiabilidad para evaluar el bienestar mental en esta población.
+
+---
+
+4. *Pineda Roa, Castro Muñoz y Chaparro Clavijo (2018)*
+   * *Autores:* Carlos A. Pineda Roa, Jhon A. Castro Muñoz y Reynel A. Chaparro Clavijo.
+   * *Año:* 2018.
+   * *Revista:* Pensamiento Psicológico.
+   * *DOI:* https://doi.org/10.11144/Javerianacali.PPSI16-1.epeb.
+   * *Afirmación sobre el tema:* Desarrolló la validación psicométrica de la versión adaptada de las Escalas de Bienestar Psicológico de Ryff (29 ítems) en adultos jóvenes y universitarios colombianos, confirmando la validez de constructo de su modelo multidimensional y la consistencia interna de sus dimensiones.
+
+---
+
+5. *Orejarena Silva, Tapias Porras, Calderón Rondón, Sánchez Bermúdez y Salcedo Domínguez (2024)*
+   * *Autores:* Héctor Andrés Orejarena Silva, Miguel Angel Tapias Porras, Shirley Lizeth Calderón Rondón, Yessica Ariani Sánchez Bermúdez y Rita Lucía Salcedo Domínguez.
+   * *Año:* 2024.
+   * *Revista:* Ciencia Latina Revista Científica Multidisciplinar.
+   * *DOI:* https://doi.org/10.37811/cl_rcm.v8i4.12198.
+   * *Afirmación sobre el tema:* Aplicó la Escala de Bienestar Psicológico de Ryff de 29 ítems (validada previamente para Colombia) a estudiantes universitarios de Psicología, comprobando su fiabilidad y consistencia interna para medir las seis dimensiones del bienestar psicológico en el entorno universitario.
+
+---
+
+💡 ¿Te gustaría que elabore un informe estructurado que sintetice las diferencias teóricas entre estas escalas (como las dimensiones hedónicas, eudaimónicas y psicosociales) para profundizar en su utilidad clínica e institucional?

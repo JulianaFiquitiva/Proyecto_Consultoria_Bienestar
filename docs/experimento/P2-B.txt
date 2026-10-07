@@ -1,0 +1,65 @@
+Tu pregunta > buscar ¿Qué evidencia hay sobre la validez y confiabilidad de escalas de bienestar en universitarios colombianos?
+
+Buscando en bases academicas (Crossref/PubMed)...
+
+Analizando: 'buscar ¿Qué evidencia hay sobre la validez y confiabilidad de escalas de bienestar en universitarios colombianos?'...
+----------------------------------------
+[METODO: Busqueda de literatura academica en Crossref y PubMed]
+
+--- Supuestos verificados ---
+  [CUMPLE] Identificabilidad de la fuente: Toda fuente tiene DOI o URL verificable
+  [CUMPLE] Procedencia academica: Resultados provenientes de bases indexadas (Crossref/PubMed), no de un generador de texto
+  [NO CUMPLE] Sustento del contenido: NO verificado: solo se tienen metadatos, no el texto completo. No se puede afirmar que el paper diga algo concreto sin leerlo.
+
+Prueba seleccionada: Busqueda bibliografica (Crossref, fallback PubMed)
+Razon: Se consultan bases academicas indexadas con DOI verificable. Crossref es la fuente primaria por cobertura y velocidad; PubMed solo se usa si Crossref no retorna resultados.
+
+--- Advertencias ---
+  - El DOI confirma la IDENTIDAD de la fuente (existe y es localizable), NO garantiza que sea pares revisada ni que el contenido sustente una afirmacion concreta. Eso requiere leer el documento.
+  - La busqueda cubre solo bases indexadas (Crossref/PubMed); no es navegacion web general ni incluye todo el contenido de internet.
+  - No se descargaron ni se leyeron los textos completos: solo metadatos (titulo, autores, ano, fuente, DOI).
+
+--- Fuentes encontradas en la web ---
+Consulta: buscar ¿Qué evidencia hay sobre la validez y confiabilidad de escalas de bienestar en universitarios colombianos?
+Bases consultadas: Crossref, PubMed
+Resultados: 5
+
+1. Validez, confiabilidad, análisis de escalas y análisis de ítems (2023)
+   Autores: 
+   Fuente: Análisis cuantitativo de datos para la investigación educativa y social
+   DOI: 10.2307/jj.37972966.10
+   URL: https://doi.org/10.2307/jj.37972966.10
+
+2. Recopilación de evidencia de validez y confiabilidad de una herramienta de medición de estados afectivos y experiencias subjetivas en el trabajo
+   Autores:  , Marcela Fanny Marín Ferrari
+   Fuente: 
+   DOI: 10.7764/tesisuc/psi/104516
+   URL: https://doi.org/10.7764/tesisuc/psi/104516
+
+3. Student Officers' Wellbeing (2025)
+   Autores: John Harrison
+   Fuente: Wellbeing in Policing
+   DOI: 10.4324/9781003518860-10
+   URL: https://doi.org/10.4324/9781003518860-10
+
+4. Strengthening Student Wellbeing: Wellbeing Language of Chinese International tudents (2024)
+   Autores: Lanxi Huang
+   Fuente: AERA 2024
+   DOI: 10.3102/ip.24.2114573
+   URL: https://doi.org/10.3102/ip.24.2114573
+
+5. Governing globalisation?
+   Autores: 
+   Fuente: Regulating international students’ wellbeing
+   DOI: 10.2307/j.ctt9qgnpz.7
+   URL: https://doi.org/10.2307/j.ctt9qgnpz.7
+
+
+--- Interpretacion en lenguaje simple ---
+La búsqueda sobre la validez y confiabilidad de escalas de bienestar en universitarios colombianos arrojó cinco resultados. Los títulos de los documentos encontrados varían en su enfoque y no todos parecen estar directamente relacionados con el tema de interés. Algunos títulos sugieren un enfoque en la validez y confiabilidad de las herramientas de medición en general, mientras que otros parecen centrarse en el bienestar de los estudiantes, aunque no específicamente en Colombia. 
+
+Los documentos provienen de bases de datos académicas indexadas, específicamente Crossref y PubMed. Todos los documentos tienen un DOI o URL verificable, lo que confirma su identidad y localización, pero no garantiza que sean revisados por pares ni que su contenido sustente una afirmación concreta. 
+
+Es importante destacar que solo se han consultado los metadatos de estos documentos, no se han descargado ni leído los textos completos. Por lo tanto, no se puede afirmar que los documentos digan, demuestren o concluyan algo específico sin leerlos en su totalidad. Para verificar la validez y confiabilidad de cada fuente, sería necesario leer cada documento completo.
+
+[Trazabilidad] Dataset: ninguno | Metodo: literature_search | Registros: N/A

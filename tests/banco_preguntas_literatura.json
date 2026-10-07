@@ -1,0 +1,192 @@
+[
+  {
+    "id": 1,
+    "pregunta": "¿Con cuántos estudiantes se validó la escala EBUP (Escala de Bienestar Universitario Psicosocial)?",
+    "respuesta_esperada": "296 estudiantes",
+    "documento": "p_24-42_t02_herrera-lopez_ries49.pdf",
+    "pagina_pdf": "5",
+    "pagina_impresa": "28",
+    "tipo": "responde",
+    "cita_textual": "Participantes • Muestra: fue incidental y estuvo conformada por 296 estudiantes de la Facultad de Ciencias Humanas y Sociales, pe"
+  },
+  {
+    "id": 2,
+    "pregunta": "¿Con cuántos ítems y dimensiones quedó la versión final de la EBUP?",
+    "respuesta_esperada": "20 ítems en cinco dimensiones",
+    "documento": "p_24-42_t02_herrera-lopez_ries49.pdf",
+    "pagina_pdf": "8",
+    "pagina_impresa": "31",
+    "tipo": "responde",
+    "cita_textual": "ó la validez del constructo. La escala finalmente quedó compuesta por 20 ítems distribuidos en cinco dimensiones. Los resultados de V de Aiken para cada criterio"
+  },
+  {
+    "id": 3,
+    "pregunta": "¿Qué omega de McDonald obtuvo la EBUP?",
+    "respuesta_esperada": "ω = 0.822",
+    "documento": "p_24-42_t02_herrera-lopez_ries49.pdf",
+    "pagina_pdf": "12",
+    "pagina_impresa": "35",
+    "tipo": "responde",
+    "cita_textual": ", omega de McDonald (ɷ) de ebup fue adecuado (ɷ = 0.822). Las correlaciones Rho Spearman entre las dimens"
+  },
+  {
+    "id": 4,
+    "pregunta": "¿Encontró el estudio de la EBUP diferencias por género en el puntaje total?",
+    "respuesta_esperada": "No: diferencias no significativas (p = 0.487)",
+    "documento": "p_24-42_t02_herrera-lopez_ries49.pdf",
+    "pagina_pdf": "8",
+    "pagina_impresa": "31",
+    "tipo": "responde",
+    "cita_textual": "significativas en el puntaje total de la escala (p = 0.487). No obstante, sí en la dimensión cid (M-F = 153."
+  },
+  {
+    "id": 5,
+    "pregunta": "¿Cuántos de los 14 ítems de la Escala de Warwick-Edinburgh (WEMWBS-E) se conservaron en estudiantes colombianos?",
+    "respuesta_esperada": "12 de los 14 ítems",
+    "documento": "08-_7794-_Evaluación_psicométrica_preliminar_de_la_Escala_de_Bienestar_Mental_de_W.pdf",
+    "pagina_pdf": "1",
+    "pagina_impresa": "98",
+    "tipo": "responde",
+    "cita_textual": "alud mental positiva. Los resultados muestran que 12 de los 14 ítems originales son apropiados para esta población, explicando el"
+  },
+  {
+    "id": 6,
+    "pregunta": "¿Qué alfa de Cronbach obtuvo la WEMWBS-E en estudiantes universitarios colombianos?",
+    "respuesta_esperada": "0.902",
+    "documento": "08-_7794-_Evaluación_psicométrica_preliminar_de_la_Escala_de_Bienestar_Mental_de_W.pdf",
+    "pagina_pdf": "5",
+    "pagina_impresa": "102",
+    "tipo": "responde",
+    "cita_textual": "ón del cuestionario WEMWBS-E, alcanzó un valor de 0.902, considerado un valor de consistencia interna ade"
+  },
+  {
+    "id": 7,
+    "pregunta": "¿Qué diferencia por sexo encontró el estudio de la WEMWBS-E y con qué prueba?",
+    "respuesta_esperada": "Mujeres 48.7 vs. hombres 52; t(212) = -2.82, p = 0.005",
+    "documento": "08-_7794-_Evaluación_psicométrica_preliminar_de_la_Escala_de_Bienestar_Mental_de_W.pdf",
+    "pagina_pdf": "4",
+    "pagina_impresa": "101",
+    "tipo": "responde",
+    "cita_textual": "on una diferencia estadísticamente significativa (t(212) = -2.82, p = 0.005, d = -0.393), aunque con un tamaño del"
+  },
+  {
+    "id": 8,
+    "pregunta": "¿Qué escala usó el estudio con estudiantes universitarios de psicología de Bucaramanga y cuántos ítems tiene?",
+    "respuesta_esperada": "Escala de bienestar psicológico de Ryff, 29 ítems",
+    "documento": "12198-Texto_del_artículo-61308-1-10-20240725.pdf",
+    "pagina_pdf": "2",
+    "pagina_impresa": "10421",
+    "tipo": "responde",
+    "cita_textual": "ara Colombia por Pineda Roa et al. (2017) la cual consta de 29 ítems. Como resultados, la muestra obtuvo un promedio d"
+  },
+  {
+    "id": 9,
+    "pregunta": "¿Qué puntaje medio global de bienestar psicológico obtuvo la muestra de estudiantes de psicología?",
+    "respuesta_esperada": "4,90 (nivel alto)",
+    "documento": "12198-Texto_del_artículo-61308-1-10-20240725.pdf",
+    "pagina_pdf": "7",
+    "pagina_impresa": "10426",
+    "tipo": "responde",
+    "cita_textual": "eccionada, se encontró como resultado general una puntuación media de 4,90, que corresponde a un nivel alto con base al bare"
+  },
+  {
+    "id": 10,
+    "pregunta": "¿Cuál fue la dimensión de bienestar psicológico con mayor puntuación en estudiantes de psicología?",
+    "respuesta_esperada": "Crecimiento personal (media 5,30)",
+    "documento": "12198-Texto_del_artículo-61308-1-10-20240725.pdf",
+    "pagina_pdf": "7",
+    "pagina_impresa": "10426",
+    "tipo": "responde",
+    "cita_textual": "a. No obstante, el crecimiento personal, es la de mayor puntuación con una media de 5,30, seguido por propósito en la vida con 5,25, y aut"
+  },
+  {
+    "id": 11,
+    "pregunta": "¿Qué R² obtuvo la regresión del promedio semestral sobre los programas de Bienestar Universitario en la Universidad del Magdalena?",
+    "respuesta_esperada": "0,04449",
+    "documento": "0121-6805-rfce-30-01-53_-_2.pdf",
+    "pagina_pdf": "8",
+    "pagina_impresa": "60",
+    "tipo": "responde",
+    "cita_textual": "de regresión indican que existe un R 2 muy bajo (0,04449), lo cual sugiere que las variables regresoras co"
+  },
+  {
+    "id": 12,
+    "pregunta": "¿Cuáles son las cinco dimensiones de la escala de bienestar estudiantil de Khatri et al. (2024)?",
+    "respuesta_esperada": "Académico, financiero, físico, resiliencia psicológica y relacional",
+    "documento": "Student-well-being-in-higher-education--Scale-deve_2024_The-International-Jo.pdf",
+    "pagina_pdf": "1",
+    "pagina_impresa": "",
+    "tipo": "responde",
+    "cita_textual": "lizability. The resulting SWB scale, encompassing five key dimensions—academic well-being, financial wellbeing, physica"
+  },
+  {
+    "id": 13,
+    "pregunta": "¿Cuántos estudios incluyó la revisión sistemática de Baik, Ryan y Lynch-Wells y qué años cubre?",
+    "respuesta_esperada": "31 estudios, publicados entre 2008 y 2024",
+    "documento": "Assessing-student-mental-health-and-wellbeing-in-higher-e_2026_Educational-R.pdf",
+    "pagina_pdf": "1",
+    "pagina_impresa": "",
+    "tipo": "responde",
+    "cita_textual": "l health and wellbeing among university students. Thirty-one high-quality studies published between 2008 and 2024 were identified through rigorous screening and qu"
+  },
+  {
+    "id": 14,
+    "pregunta": "¿Qué técnica estadística y qué muestra usó el estudio sobre autoconcepto y rendimiento (Pedraja-Rejas et al.)?",
+    "respuesta_esperada": "Regresión lineal múltiple; 170 estudiantes de tres carreras",
+    "documento": "7631.pdf",
+    "pagina_pdf": "1",
+    "pagina_impresa": "124",
+    "tipo": "responde",
+    "cita_textual": "s de regresión lineal múltiple con una muestra de 170 estudiantes de tres carreras en dos universidades regionales. Los resultados i"
+  },
+  {
+    "id": 15,
+    "pregunta": "¿Cuántos documentos conformaron el universo de la revisión documental de Méndez Durán y de la Ossa Montes?",
+    "respuesta_esperada": "46 documentos",
+    "documento": "Mendez_Duran.pdf",
+    "pagina_pdf": "13",
+    "pagina_impresa": "88",
+    "tipo": "responde",
+    "cita_textual": "ón, el universo de estudio estuvo constituido por cuarenta y seis (46) documentos académicos y científicos (artículos, libros, tesi"
+  },
+  {
+    "id": 16,
+    "pregunta": "¿Qué encuentran los estudios del corpus sobre diferencias de bienestar entre hombres y mujeres universitarios colombianos?",
+    "respuesta_esperada": "RIES/EBUP: sin diferencia en el total (p = 0.487); WEMWBS-E: mujeres menores (48.7 vs 52, p = 0.005); Ryff en psicología: sin diferencia significativa (hombres 5,06 vs mujeres 4,86)",
+    "documento": "p_24-42_t02_herrera-lopez_ries49.pdf | 08-_7794-_Evaluación_psicométrica_preliminar_de_la_Escala_de_Bienestar_Mental_de_W.pdf | 12198-Texto_del_artículo-61308-1-10-20240725.pdf",
+    "pagina_pdf": "8 | 4 | 2",
+    "pagina_impresa": "31 | 101 | 10421",
+    "tipo": "responde",
+    "cita_textual": "significativas en el puntaje total de la escala (p = 0.487). No obstante, sí en la dimensión cid (M-F = 153. || on una diferencia estadísticamente significativa (t(212) = -2.82, p = 0.005, d = -0.393), aunque con un tamaño del || la adultez media 5,2. Finalmente, a pesar de que no hubo diferencias significativas entre géneros, se logró apreciar un puntaje ligeramente más alt"
+  },
+  {
+    "id": 17,
+    "pregunta": "¿Qué tamaño de muestra tuvo el estudio de validación de Pineda Roa, Castro Muñoz y Chaparro Clavijo (2017)?",
+    "respuesta_esperada": "NO está en el corpus (se cita el estudio, pero ningún documento da su n): debe abstenerse",
+    "documento": "(ninguno)",
+    "pagina_pdf": "",
+    "pagina_impresa": "",
+    "tipo": "abstiene",
+    "cita_textual": ""
+  },
+  {
+    "id": 18,
+    "pregunta": "¿Qué dicen los documentos sobre la relación entre el sueño y el bienestar de los estudiantes?",
+    "respuesta_esperada": "NO está en el corpus (0 menciones del tema): debe abstenerse",
+    "documento": "(ninguno)",
+    "pagina_pdf": "",
+    "pagina_impresa": "",
+    "tipo": "abstiene",
+    "cita_textual": ""
+  },
+  {
+    "id": 19,
+    "pregunta": "¿Qué evidencia aportan los documentos sobre religiosidad o espiritualidad y el bienestar de los universitarios?",
+    "respuesta_esperada": "NO está en el corpus (0 menciones del tema): debe abstenerse",
+    "documento": "(ninguno)",
+    "pagina_pdf": "",
+    "pagina_impresa": "",
+    "tipo": "abstiene",
+    "cita_textual": ""
+  }
+]
