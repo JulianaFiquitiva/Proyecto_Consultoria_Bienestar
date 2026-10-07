@@ -5,6 +5,8 @@
 
 # ...pero los entregables de la actividad SI se versionan
 !resultados/*.csv
+# hojas de revision ciega exportadas a Excel (tests/hoja_a_xlsx.py)
+!resultados/*.xlsx
 # indice RAG: ~100 MB de binarios, se regenera con
 #   python -m agent.rag.index --rebuild
 rag_store/*
@@ -57,3 +59,5 @@ __pycache__/
 docs/Informe_*
 notebooks/
 requirements.txt
+
+!docs/corpus_inventario_20.csv
