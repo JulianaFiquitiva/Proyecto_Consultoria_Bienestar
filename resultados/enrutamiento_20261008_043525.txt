@@ -1,0 +1,231 @@
+MEDICION DEL ENRUTAMIENTO - CONJUNTO DE PRUEBA
+==============================================================================
+fecha del informe  : 2026-10-08T04:35:25
+HEAD               : 8d4b1133602028e880722bdd43802f2851dd2116
+titulo de HEAD     : Enrutamiento: puerta de documento concreto del corpus
+banco de prueba    : tests/banco_enrutamiento_test.json (24)
+sha256 del banco   : 47D372E55AD6797424C1A09898DCD5E00D258D6D33626B95A2E1BE9919845986
+OPENAI_API_KEY     : eliminada del entorno ANTES de importar agent
+                     (0 llamadas al LLM en toda la medicion)
+
+1. ESTADO DE GIT ANTES Y DESPUES DE MEDIR (solo lectura)
+------------------------------------------------------------------------------
+antes de medir (registrado al iniciar):
+   M agent/rag/logs/rag_consultas.csv
+  ?? diff_correr_banco.txt
+  ?? tests/banco_enrutamiento_test.json
+despues de medir:
+   M agent/rag/logs/rag_consultas.csv
+  ?? diff_correr_banco.txt
+  ?? tests/banco_enrutamiento_test.json
+cambios en agent/ o prompts/ (se ignora agent/rag/logs): NINGUNO
+worktree temporal de 95c3de3: eliminado antes de escribir este informe
+  ignorado:  M agent/rag/logs/rag_consultas.csv
+  fuera de agent/prompts: ?? diff_correr_banco.txt
+  fuera de agent/prompts: ?? tests/banco_enrutamiento_test.json
+
+2. FUNCION DE RUTA USADA EN CADA VERSION
+------------------------------------------------------------------------------
+HEAD      : StatisticalAgent.ruta_de_pregunta
+            (definida en agent/core/orchestrator.py; la misma
+            que tests/test_enrutamiento.py via `ruta(ag, p)`)
+95c3de3   : cascada de puertas del commit (predecesor de ruta_de_pregunta)
+            Ese commit no tiene ruta_de_pregunta: se recorrio
+            su cascada de puertas (prefijo -> _RE_PREGUNTA_CORPUS
+            -> _is_search_request -> classify_scope), que es el
+            predecesor directo de la funcion actual.
+
+==============================================================================
+3. VERSION ACTUAL - HEAD 8d4b113 (UNA corrida)
+==============================================================================
+archivo de corrida : HEAD 8d4b113
+codigo evaluado    : C:\Users\Lenovo-Laptop\Documents\IndiceFelicidad
+fecha de corrida   : 2026-10-08T04:28:44
+funcion de ruta    : StatisticalAgent.ruta_de_pregunta
+banco sha256       : 47D372E55AD6797424C1A09898DCD5E00D258D6D33626B95A2E1BE9919845986
+OPENAI_API_KEY     : ausente -> 0 llamadas al LLM
+reglas nuevas (puerta de documento indexado + busqueda = verbo Y fuente)
+
+MATRIZ DE CONFUSION (filas = esperada, columnas = observada)
+    observada ->  corpus     busqueda   encuesta   abstencion | total
+    --------------------------------------------------------------
+  corpus            3          0          3          0  |  6
+  busqueda          0          5          0          1  |  6
+  encuesta          0          0          6          0  |  6
+  abstencion         0          0          0          6  |  6
+
+ACIERTOS: 20 / 24   (83.3 %)
+
+ACIERTOS POR CLASE
+  corpus    3 / 6
+  busqueda  5 / 6
+  encuesta  6 / 6
+  abstencion 6 / 6
+
+DETALLE POR PREGUNTA
+  id  esperada  observada  plan*   puerta
+    1  corpus    corpus    corpus    4 documento indexado (inventario obra+cita a estudio)
+    2  corpus    corpus    corpus    4 documento indexado (inventario obra+cita a estudio)
+X   3  corpus    encuesta  abstencion 5 classify_scope=en_dominio
+X   4  corpus    encuesta  encuesta  5 classify_scope=en_dominio
+X   5  corpus    encuesta  abstencion 5 classify_scope=en_dominio
+    6  corpus    corpus    corpus    4 documento indexado (inventario obra)
+    7  busqueda  busqueda  busqueda  3 _is_search_request (verbo+fuente)
+    8  busqueda  busqueda  busqueda  3 _is_search_request (verbo+fuente)
+    9  busqueda  busqueda  busqueda  3 _is_search_request (verbo+fuente+peticion explicita)
+   10  busqueda  busqueda  busqueda  3 _is_search_request (verbo+fuente+peticion explicita)
+X  11  busqueda  abstencion abstencion 5 classify_scope=ambigua
+   12  busqueda  busqueda  busqueda  3 _is_search_request (fuente+peticion explicita)
+   13  encuesta  encuesta  abstencion 5 classify_scope=en_dominio
+   14  encuesta  encuesta  abstencion 5 classify_scope=en_dominio
+   15  encuesta  encuesta  encuesta  5 classify_scope=en_dominio
+   16  encuesta  encuesta  encuesta  5 classify_scope=en_dominio
+   17  encuesta  encuesta  abstencion 5 classify_scope=en_dominio
+   18  encuesta  encuesta  encuesta  5 classify_scope=en_dominio
+   19  abstencion abstencion abstencion 5 classify_scope=ambigua
+   20  abstencion abstencion abstencion 5 classify_scope=ambigua
+   21  abstencion abstencion abstencion 5 classify_scope=ambigua
+   22  abstencion abstencion abstencion 5 classify_scope=fuera_de_dominio
+   23  abstencion abstencion abstencion 5 classify_scope=ambigua
+   24  abstencion abstencion abstencion 5 classify_scope=ambigua
+
+  * plan* = ruta que devuelve _generate_plan (seleccion de
+    analisis); con la encuesta sin API_key cae en el fallback
+    de reglas, que a veces abstuvo. La ruta primaria de arriba
+    es la cascada de puertas, no el plan.
+
+FALLOS (4):
+  id 3  esperaba corpus    observo encuesta   [5 classify_scope=en_dominio]
+  id 4  esperaba corpus    observo encuesta   [5 classify_scope=en_dominio]
+  id 5  esperaba corpus    observo encuesta   [5 classify_scope=en_dominio]
+  id 11  esperaba busqueda  observo abstencion  [5 classify_scope=ambigua]
+
+==============================================================================
+4. VERSION ANTERIOR - 95c3de3 (UNA corrida)
+==============================================================================
+archivo de corrida : 95c3de3 (anterior)
+codigo evaluado    : C:\Users\LENOVO~1\AppData\Local\Temp\opencode\wt_95c3de3
+fecha de corrida   : 2026-10-08T04:28:44
+funcion de ruta    : cascada de puertas del commit (predecesor de ruta_de_pregunta)
+banco sha256       : 47D372E55AD6797424C1A09898DCD5E00D258D6D33626B95A2E1BE9919845986
+OPENAI_API_KEY     : ausente -> 0 llamadas al LLM
+reglas previas (sin puerta de documento; busqueda si habia verbo O termino academico)
+
+MATRIZ DE CONFUSION (filas = esperada, columnas = observada)
+    observada ->  corpus     busqueda   encuesta   abstencion | total
+    --------------------------------------------------------------
+  corpus            0          2          3          1  |  6
+  busqueda          0          6          0          0  |  6
+  encuesta          0          0          6          0  |  6
+  abstencion         0          0          0          6  |  6
+
+ACIERTOS: 18 / 24   (75.0 %)
+
+ACIERTOS POR CLASE
+  corpus    0 / 6
+  busqueda  6 / 6
+  encuesta  6 / 6
+  abstencion 6 / 6
+
+DETALLE POR PREGUNTA
+  id  esperada  observada  plan*   puerta
+X   1  corpus    encuesta  abstencion 4 classify_scope=en_dominio (sin puerta de documento en esta version)
+X   2  corpus    abstencion abstencion 4 classify_scope=ambigua
+X   3  corpus    busqueda  busqueda  3 _is_search_request (termino academico)
+X   4  corpus    encuesta  encuesta  4 classify_scope=en_dominio (sin puerta de documento en esta version)
+X   5  corpus    encuesta  abstencion 4 classify_scope=en_dominio (sin puerta de documento en esta version)
+X   6  corpus    busqueda  busqueda  3 _is_search_request (termino academico)
+    7  busqueda  busqueda  busqueda  3 _is_search_request (termino academico)
+    8  busqueda  busqueda  busqueda  3 _is_search_request (verbo(antiguo)+termino academico)
+    9  busqueda  busqueda  busqueda  3 _is_search_request (peticion explicita+termino academico)
+   10  busqueda  busqueda  busqueda  3 _is_search_request (peticion explicita+termino academico)
+   11  busqueda  busqueda  busqueda  3 _is_search_request (termino academico)
+   12  busqueda  busqueda  busqueda  3 _is_search_request (peticion explicita+termino academico)
+   13  encuesta  encuesta  abstencion 4 classify_scope=en_dominio (sin puerta de documento en esta version)
+   14  encuesta  encuesta  abstencion 4 classify_scope=en_dominio (sin puerta de documento en esta version)
+   15  encuesta  encuesta  encuesta  4 classify_scope=en_dominio (sin puerta de documento en esta version)
+   16  encuesta  encuesta  encuesta  4 classify_scope=en_dominio (sin puerta de documento en esta version)
+   17  encuesta  encuesta  abstencion 4 classify_scope=en_dominio (sin puerta de documento en esta version)
+   18  encuesta  encuesta  encuesta  4 classify_scope=en_dominio (sin puerta de documento en esta version)
+   19  abstencion abstencion abstencion 4 classify_scope=ambigua
+   20  abstencion abstencion abstencion 4 classify_scope=ambigua
+   21  abstencion abstencion abstencion 4 classify_scope=ambigua
+   22  abstencion abstencion abstencion 4 classify_scope=fuera_de_dominio
+   23  abstencion abstencion abstencion 4 classify_scope=ambigua
+   24  abstencion abstencion abstencion 4 classify_scope=ambigua
+
+  * plan* = ruta que devuelve _generate_plan (seleccion de
+    analisis); con la encuesta sin API_key cae en el fallback
+    de reglas, que a veces abstuvo. La ruta primaria de arriba
+    es la cascada de puertas, no el plan.
+
+FALLOS (6):
+  id 1  esperaba corpus    observo encuesta   [4 classify_scope=en_dominio (sin puerta de documento en esta version)]
+  id 2  esperaba corpus    observo abstencion  [4 classify_scope=ambigua]
+  id 3  esperaba corpus    observo busqueda   [3 _is_search_request (termino academico)]
+  id 4  esperaba corpus    observo encuesta   [4 classify_scope=en_dominio (sin puerta de documento en esta version)]
+  id 5  esperaba corpus    observo encuesta   [4 classify_scope=en_dominio (sin puerta de documento en esta version)]
+  id 6  esperaba corpus    observo busqueda   [3 _is_search_request (termino academico)]
+
+==============================================================================
+5. EQUIVALENCIA: RUTA DEL AGENTE vs LLAMADA DIRECTA AL RAG
+==============================================================================
+banco            : tests/banco_preguntas_final.json (20)
+fecha            : 2026-10-08T04:32:08
+backend          : embedder=tfidf-local@60000 | store=chroma
+k                : 5
+OPENAI_API_KEY   : ausente -> sin llamada al LLM
+log del repo     : registrar_consulta anulado en memoria (agent/rag/logs no se escribio)
+metodo           : por cada pregunta con ruta=corpus se llama
+                   ag.ask(q) (ruta interna -> ask_corpus ->
+                   ask_with_sources con el MISMO retriever) y
+                   ask_with_sources(q, registrar=False); se
+                   comparan (archivo, paginas, puntaje) de los
+                   k fragmentos, sin redondeo.
+
+preguntas comparadas : 18 / 20
+coinciden EXACTAMENTE : 18 / 18
+resultado            : SI: identicos en todas las comparadas
+
+DETALLE
+  id  ruta     query   fragmentos  puntajes_max           igual
+   1  corpus   igual   5 vs 5     0.128357  SI
+   2  corpus   igual   5 vs 5     0.197624  SI
+   3  corpus   igual   5 vs 5     0.140068  SI
+   4  corpus   igual   5 vs 5     0.217933  SI
+   5  corpus   igual   5 vs 5     0.207442  SI
+   6  encuesta -       -           -                    -  (no comparable, ver seccion 6)
+   7  corpus   igual   5 vs 5     0.235224  SI
+   8  corpus   igual   5 vs 5     0.165122  SI
+   9  corpus   igual   5 vs 5     0.094045  SI
+  10  corpus   igual   5 vs 5     0.108940  SI
+  11  corpus   igual   5 vs 5     0.105471  SI
+  12  corpus   igual   5 vs 5     0.062019  SI
+  13  encuesta -       -           -                    -  (no comparable, ver seccion 6)
+  14  corpus   igual   5 vs 5     0.108686  SI
+  15  corpus   igual   5 vs 5     0.175236  SI
+  16  corpus   igual   5 vs 5     0.056927  SI
+  17  corpus   igual   5 vs 5     0.061909  SI
+  18  corpus   igual   5 vs 5     0.085938  SI
+  19  corpus   igual   5 vs 5     0.070341  SI
+  20  corpus   igual   5 vs 5     0.088654  SI
+
+==============================================================================
+6. PREGUNTAS QUE NO SE PUEDON COMPARAR
+==============================================================================
+id 6 - la ruta del agente no es corpus (encuesta): el agente no llama al RAG, no hay fragmentos que comparar
+       pregunta: ¿Cuántas estudiantes participaron en el estudio de bienestar psicológico de universitarias madres y no madres colombianas, y cómo se dividieron?
+id 13 - la ruta del agente no es corpus (encuesta): el agente no llama al RAG, no hay fragmentos que comparar
+       pregunta: ¿Qué fiabilidad test-retest obtuvo la WEMWBS-E en estudiantes universitarios colombianos?
+
+==============================================================================
+7. CAMBIOS APLICADOS
+==============================================================================
+ninguno: no se modificaron reglas, umbrales ni codigo.
+esta medicion solo leyo agent/, prompts/ y tests/, y escribio
+exclusivamente este archivo de resultados.
+
+archivos de corrida usados (temporal):
+  C:\Users\LENOVO~1\AppData\Local\Temp\opencode\TEST_HEAD.json
+  C:\Users\LENOVO~1\AppData\Local\Temp\opencode\TEST_95c3de3.json
+  C:\Users\LENOVO~1\AppData\Local\Temp\opencode\EQUIVALENCIA.json

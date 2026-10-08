@@ -1,0 +1,146 @@
+[
+  {
+    "id": 1,
+    "pregunta": "¿Cuántos participantes tuvo el estudio de Cobo-Rendón sobre autonomía percibida?",
+    "ruta_esperada": "corpus",
+    "conjunto": "test"
+  },
+  {
+    "id": 2,
+    "pregunta": "¿Qué técnica estadística usó el estudio sobre autoconcepto y rendimiento de Pedraja-Rejas?",
+    "ruta_esperada": "corpus",
+    "conjunto": "test"
+  },
+  {
+    "id": 3,
+    "pregunta": "De acuerdo con los artículos disponibles, ¿qué es el bienestar psicosocial universitario?",
+    "ruta_esperada": "corpus",
+    "conjunto": "test"
+  },
+  {
+    "id": 4,
+    "pregunta": "¿Qué hallazgos reporta la escala WEMWBS-E sobre las diferencias por sexo?",
+    "ruta_esperada": "corpus",
+    "conjunto": "test"
+  },
+  {
+    "id": 5,
+    "pregunta": "¿Cuál fue el diseño del estudio sobre la unidad de bienestar estudiantil en la UNESUM?",
+    "ruta_esperada": "corpus",
+    "conjunto": "test"
+  },
+  {
+    "id": 6,
+    "pregunta": "¿Qué dice el artículo de Dictamen sobre la práctica de mindfulness?",
+    "ruta_esperada": "corpus",
+    "conjunto": "test"
+  },
+  {
+    "id": 7,
+    "pregunta": "¿Hay publicaciones sobre inteligencia emocional y rendimiento académico? pásame algunas",
+    "ruta_esperada": "busqueda",
+    "conjunto": "test"
+  },
+  {
+    "id": 8,
+    "pregunta": "busca bibliografía sobre bienestar de estudiantes madres",
+    "ruta_esperada": "busqueda",
+    "conjunto": "test"
+  },
+  {
+    "id": 9,
+    "pregunta": "quiero fuentes sobre el modelo PERMA en la educación superior",
+    "ruta_esperada": "busqueda",
+    "conjunto": "test"
+  },
+  {
+    "id": 10,
+    "pregunta": "dame artículos recientes sobre salud mental universitaria",
+    "ruta_esperada": "busqueda",
+    "conjunto": "test"
+  },
+  {
+    "id": 11,
+    "pregunta": "lista de referencias sobre becas y permanencia estudiantil",
+    "ruta_esperada": "busqueda",
+    "conjunto": "test"
+  },
+  {
+    "id": 12,
+    "pregunta": "consígueme literatura sobre estrés académico en estudiantes de medicina",
+    "ruta_esperada": "busqueda",
+    "conjunto": "test"
+  },
+  {
+    "id": 13,
+    "pregunta": "¿Cuál es el alfa de Cronbach de la escala en la encuesta de la USTA?",
+    "ruta_esperada": "encuesta",
+    "conjunto": "test"
+  },
+  {
+    "id": 14,
+    "pregunta": "¿Cuántos estudiantes respondieron la encuesta de bienestar?",
+    "ruta_esperada": "encuesta",
+    "conjunto": "test"
+  },
+  {
+    "id": 15,
+    "pregunta": "¿Difiere el bienestar entre pregrado y posgrado en los datos?",
+    "ruta_esperada": "encuesta",
+    "conjunto": "test"
+  },
+  {
+    "id": 16,
+    "pregunta": "¿Hay diferencias de bienestar según el estrato?",
+    "ruta_esperada": "encuesta",
+    "conjunto": "test"
+  },
+  {
+    "id": 17,
+    "pregunta": "¿Qué programa académico tiene el bienestar más alto en la USTA?",
+    "ruta_esperada": "encuesta",
+    "conjunto": "test"
+  },
+  {
+    "id": 18,
+    "pregunta": "Calcula la regresión del T-score según edad y género con los datos de la USTA",
+    "ruta_esperada": "encuesta",
+    "conjunto": "test"
+  },
+  {
+    "id": 19,
+    "pregunta": "¿Cuál es el mejor restaurante cerca de la universidad?",
+    "ruta_esperada": "abstencion",
+    "conjunto": "test"
+  },
+  {
+    "id": 20,
+    "pregunta": "Resume la película Titanic",
+    "ruta_esperada": "abstencion",
+    "conjunto": "test"
+  },
+  {
+    "id": 21,
+    "pregunta": "¿Cómo puedo instalar Python en mi computador?",
+    "ruta_esperada": "abstencion",
+    "conjunto": "test"
+  },
+  {
+    "id": 22,
+    "pregunta": "¿Qué estudios hay sobre bienestar en otros países de América?",
+    "ruta_esperada": "abstencion",
+    "conjunto": "test"
+  },
+  {
+    "id": 23,
+    "pregunta": "Traduce al inglés: buenos días",
+    "ruta_esperada": "abstencion",
+    "conjunto": "test"
+  },
+  {
+    "id": 24,
+    "pregunta": "¿Cuánto cuesta una matrícula en la Universidad Nacional?",
+    "ruta_esperada": "abstencion",
+    "conjunto": "test"
+  }
+]
