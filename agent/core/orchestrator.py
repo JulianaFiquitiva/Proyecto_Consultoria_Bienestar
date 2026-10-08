@@ -36,7 +36,7 @@ from agent.core.config import (
     N_ITEMS,
     REPORTED_RESULTS,
 )
-from agent.core.query_planner import classify_scope
+from agent.core.query_planner import classify_scope, pregunta_sobre_documento_indexado
 
 
 class AnalysisType(Enum):
@@ -490,24 +490,60 @@ class StatisticalAgent:
             return "ninguno", None
         return " + ".join(names), (len(primary) if primary is not None else None)
 
+    def ruta_de_pregunta(self, question: str) -> str:
+        """
+        Enruta la pregunta a una de las cuatro rutas, SIN llamar al LLM.
+
+        Devuelve "corpus" | "busqueda" | "encuesta" | "abstencion".
+
+        Orden de puertas (la primera que decide gana):
+        1. prefijo explicito del usuario ("corpus: ...", "fuentes: ...")
+        2. pide lo que DICEN los documentos del corpus
+        3. pide buscar fuentes en la web (verbo Y fuente)
+        4. nombra un documento concreto del inventario del corpus
+        5. lo demas lo decide classify_scope: en_dominio -> encuesta,
+           fuera_de_dominio o ambigua -> abstencion
+        Es la UNICA cascada: ask(), _generate_plan y los tests la usan.
+        """
+        if pregunta_sobre_corpus(question) is not None:
+            return "corpus"
+        if _RE_PREGUNTA_CORPUS.search(question or ""):
+            return "corpus"
+        if self._is_search_request(question):
+            return "busqueda"
+        if pregunta_sobre_documento_indexado(question):
+            return "corpus"
+        scope, _motivo = classify_scope(question)
+        return "encuesta" if scope == "en_dominio" else "abstencion"
+
     def _generate_plan(self, question: str) -> AnalysisPlan:
         """Genera un plan de analisis usando LLM o fallback por reglas."""
+        # Todas las puertas que NO dependen del LLM viven en
+        # ruta_de_pregunta, para que el enrutado sea el mismo en ask(), aqui
+        # y en los tests.
+        ruta = self.ruta_de_pregunta(question)
+
         # Corpus documental local: se resuelve con el indice RAG y con cita
-        # de archivo y pagina. Va PRIMERO: sin esto, "que dicen los documentos
-        # sobre X" caeria en la busqueda web o en la abstinencia de ambito.
-        if _RE_PREGUNTA_CORPUS.search(question):
-            return self._corpus_plan(question)
+        # de archivo y pagina. Va PRIMERO entre las rutas que no son la
+        # encuesta: sin esto, "que dicen los documentos sobre X" o el nombre
+        # de una obra concreto caeria en la busqueda web o en la abstinencia
+        # de ambito.
+        if ruta == "corpus":
+            return self._corpus_plan(
+                pregunta_sobre_corpus(question) or question
+            )
 
         # Busqueda web explicita: se detecta ANTES del LLM para no malinterpretarla
-        if self._is_search_request(question):
+        if ruta == "busqueda":
             return self._search_plan(question)
 
         # Fuera de dominio o ambigua: ABSTENCION.
         # Se decide ANTES de llamar al LLM, asi no redacta sobre el dataset.
-        scope, motivo = classify_scope(question)
-        if scope != "en_dominio":
+        if ruta == "abstencion":
+            scope, motivo = classify_scope(question)
             return self._abstain_plan(scope, motivo)
 
+        # Ruta "encuesta": hay que elegir que analisis pedir -> LLM o reglas.
         if not self.llm.is_configured:
             return self._fallback_plan(question)
 
@@ -537,19 +573,66 @@ class StatisticalAgent:
         return self._fallback_plan(question)
 
     # ── Patrones de deteccion de busqueda ────────────────────────────────
-    # Verbos de busqueda: "busca X", "buscar X", "búscame X"
-    _RE_SEARCH_VERB = re.compile(
-        r"\b(?:busca(?:r|me|s)?|b[uú]sca(?:r|me|s)?|b[uú]squeda)\b"
+    #
+    # Regla: SOLO hay peticion de busqueda si aparece
+    #   (verbo de peticion) Y (nombre de la fuente pedida), o bien una
+    #   peticion explicita de apoyo documental (_RE_REF_REQUEST), que ya
+    #   trae la peticion escrita en el texto.
+    # Nombrar un tipo de documento sin pedir fuentes ("el articulo de Perez",
+    #  "la revision de Gomez") NO es una busqueda: eso es nombrar
+    # una obra y lo resuelve el corpus.
+    #
+    # Verbos de peticion: ordenar que se busque, se encuentre o se traiga
+    # material. Se listan por families, no por sinonimos sueltos, y SOLO en
+    # forma de peticion (imperativo, infinitivo tras un modal o primera
+    # persona): la accion contada como ocurrida ("se buscaron los articulos",
+    # "el estudio busco...") es un DATO del estudio, no una orden al agente,
+    # y por eso no abre la ruta de busqueda.
+    _RE_VERBO_PETICION = re.compile(
+        r"\b(?:"
+        # buscar: busca / buscar / buscas / búscame / busco / búsqueda
+        # (NO "buscó" ni "buscaron": eso cuenta una accion pasada)
+        r"b[uú]sca(?:r|me|s)?\b|b[uú]sco\b|b[uú]squeda\b"
+        # encontrar / localizar / hallar en forma de peticion
+        r"|encu[eé]ntr(?:a|e|ame|ar)\b|localiz(?:a|e|ame|ar)\b"
+        r"|hall(?:a|e|ame|ar)\b"
+        # pedir en imperativo: dame / dime / digame
+        r"|dame|d[ií]me|d[ií]game"
+        # recomendar / aconsejar / indicar / señalar en forma de peticion
+        r"|recomi[eé]nd(?:a|ame|ar)\b|aconsej(?:a|e|ame|ar)\b"
+        r"|ind[ií]came\b|se[nñ][aá]l(?:a|e|ame)\b"
+        # declarar necesidad o deseo del material en primera persona
+        # (se deja fuera el pretérito "necesitó", que cuenta lo que otro
+        # necesito, y "requiere/quiere", que describen un estado)
+        r"|necesit(?:o|a|e|amos|an|aba)\b|requiero\b|quiero\b|quisier\w*"
+        # traer o mostrar: se exige la forma acentuada del imperativo para
+        # no confundir "muestrame" con el sustantivo "muestra" de la encuesta
+        r"|ens[eé][nñ]am\w*|muéstr\w*|pásam\w*|p[ií]dm\w*"
+        r")",
+        re.IGNORECASE,
     )
 
-    # Terminos academicos / de fuente: "papers", "artículos", "referencias"...
-    _RE_ACADEMIC_TERM = re.compile(
-        r"\b(?:papers?|art[ií]culos?|literatura|bibliograf[ií]a|"
-        r"referencias?|citaciones?|citas?|publicaciones?|"
-        r"doi|revistas?|scholar|crossref|pubmed|fuentes)\b"
+    # Fuentes que se pueden pedir. NO entran las palabras del dataset
+    # (encuesta, muestra, datos, estudiantes, bienestar): nombrarlas no
+    # convierte una pregunta de la encuesta en una peticion de busqueda.
+    _RE_FUENTE_PETICION = re.compile(
+        r"\b(?:"
+        # tipos de publicacion
+        r"papers?|art[ií]culos?|publicaciones?|tesis|ensayos?|trabajos?|"
+        r"textos?|estudios"
+        # apoyos bibliograficos
+        r"|literatura|bibliograf[ií]a|referencias?|citaciones?|citas?|"
+        r"lecturas?|fuentes|autores?|recursos?"
+        # contenedores
+        r"|revistas?"
+        # bases y repositorios
+        r"|doi|scholar|crossref|pubmed"
+        r")\b",
+        re.IGNORECASE,
     )
 
-    # Peticion explicita de apoyo documental o de fuentes en la web
+    # Peticion explicita de apoyo documental o de fuentes en la web.
+    # Va sola (sin verbo) porque la peticion ya esta escrita en el texto.
     _RE_REF_REQUEST = re.compile(
         r"(?:en\s+la\s+web|en\s+internet|"
         r"sustento\s+te[oó]rico|apoyos?\s+te[oó]ricos?|marco\s+te[oó]rico|"
@@ -574,22 +657,24 @@ class StatisticalAgent:
         Detecta si el usuario pide buscar en la web / referencias del tema.
 
         Reglas:
-        1. Verbo de busqueda explicito -> busqueda
-        2. Termino academico (papers, referencias, artículos...) -> busqueda
-        3. Peticion de apoyo documental ("dame referencias", "marco teórico") -> busqueda
-        4. EXCEPCION: si pregunta por las fuentes DEL propio estudio, no es
+        1. EXCEPCION: si pregunta por las fuentes DEL propio estudio, no es
            busqueda web (se responde con documentacion local del proyecto)
+        2. peticion explicita de apoyo documental ("dame referencias",
+           "marco teorico", "en la web") -> busqueda
+        3. verbo de peticion Y nombre de fuente -> busqueda
+        4. en otro caso NO es busqueda: nombrar un articulo, una revista o
+           la literatura sin pedir fuentes no es pedir que se busque
         """
         q = question.lower().strip()
 
         if self._RE_LOCAL_SOURCES.search(q):
             return False
 
-        if self._RE_SEARCH_VERB.search(q):
-            return True
         if self._RE_REF_REQUEST.search(q):
             return True
-        if self._RE_ACADEMIC_TERM.search(q):
+
+        if (self._RE_VERBO_PETICION.search(question)
+                and self._RE_FUENTE_PETICION.search(question)):
             return True
 
         return False

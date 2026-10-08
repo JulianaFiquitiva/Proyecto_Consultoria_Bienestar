@@ -11,8 +11,10 @@ Responsabilidades:
 7. Calcular incertidumbre
 8. Interpretar y advertir limitaciones
 """
+import csv
 from dataclasses import dataclass, field
 from datetime import datetime
+from pathlib import Path
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -227,6 +229,210 @@ WEAK_ONLY_RE = re.compile(
     r"mas|muchos|existe|existen|hay|puedo|quiero|necesito)\b",
     re.IGNORECASE,
 )
+
+
+# ── Terminos que NOMBRAN un documento del corpus indexado ────────────────
+#
+# Regla: cuando la pregunta nombra una obra CONCRETA de docs/rag_corpus
+# (apellido de autor, revista o palabra distintiva del titulo), la respuesta
+# sale del corpus documental, aunque la pregunta tambien toque palabras de
+# la encuesta.
+#
+# El listado NO se escribe a mano aqui: se lee una sola vez al importar
+# este modulo desde docs/corpus_inventario_20.csv, de modo que anadir o
+# quitar un PDF del corpus no exige tocar el enrutador.
+#
+# Para que un token cuente tiene que cumplir a la vez:
+#   1. empezar con MAYUSCULA en el original: en la ficha van con mayuscula
+#      los nombres propios, y asi se separan de las palabras comunes;
+#   2. medir 3 caracteres o mas (evita iniciales y siglas sueltas);
+#   3. NO ser palabra generica (_TERMINOS_GENERICOS);
+#   4. aparecer en UNA SOLA fila del inventario: una palabra que esta en
+#      diez filas no identifica ninguna obra.
+#
+# Y ademas se separan dos conjuntos por el tipo de columna donde aparece:
+#   _TERMINOS_DOCUMENTO: sale de cita_corta / titulo / revista, es decir de
+#       columnas que IDENTIFICAN la obra. Manda sobre cualquier ancla de la
+#       encuesta: si el usuario nombro el documento, va al corpus.
+#   _TERMINOS_MUESTRA: sale solo de poblacion, es decir de la descripcion
+#       de la muestra. Solo cuenta si la pregunta NO trae anclas de la
+#       encuesta (paso 2): nombrar la poblacion no basta para desviar una
+#       pregunta que en realidad va por la encuesta.
+
+_INVENTARIO_CSV = (
+    Path(__file__).resolve().parents[2] / "docs" / "corpus_inventario_20.csv"
+)
+_COLUMNAS_DOCUMENTO = ("cita_corta", "titulo", "revista_volumen_paginas")
+_COLUMNAS_MUESTRA = ("poblacion",)
+
+# Palabras que aunque aparezcan con mayuscula en una sola fila NO nombran
+# una obra: ruido de la propia ficha, titulos de revista en ingles, paises y
+# ciudades (incluida la sede de la encuesta), metodo/instrumento, tipo de
+# documento y temas genericos del campo.
+_TERMINOS_GENERICOS = frozenset({
+    # 1. Ruido de la ficha CSV / tipografia
+    "the", "xxx", "isbn", "pdf", "sin",
+    # 2. Titulos y encabezados de revista en ingles
+    "education", "educational", "international", "journal", "management",
+    "research", "review", "scale", "student", "assessing",
+    # 3. Paises, ciudades y sedes: describen el contexto, no la obra
+    #    (bucaramanga es ademas sede de la encuesta)
+    "colombia", "perú", "nariño", "cali", "bucaramanga", "latinoamérica",
+    "nacional", "altiplano", "niñez", "aula", "becarios", "dos",
+    # 4. Metodo, instrumento, tipo de documento y titulos genericos:
+    #    nombran la CLASE de obra, nunca una obra particular
+    "escala", "revisión", "editorial", "diagnóstico", "dictamen", "autoría",
+    "relación", "informes", "sociales", "económicas", "sociología",
+    "psicológicos", "espacios", "inclusiones", "quinto",
+    # 5. Temas y poblaciones genericos del campo
+    "inteligencia", "emocional", "mental", "política", "prácticas",
+    "estrategias", "fortalecimiento", "importancia", "explorando",
+    "estudiantil", "universitario", "estatal", "carreras", "caso",
+    "facultad", "mundo", "sur", "beca",
+    # 6. Escala de Ryff: es el INSTRUMENTO de la encuesta, no un documento
+    "ryff",
+})
+
+# Instituciones y referentes de la encuesta: ocupan el lugar de un nombre
+# propio pero tampoco nombran una obra.
+_NOMBRES_NO_PROPIOS = _TERMINOS_GENERICOS | frozenset({
+    "universidad", "instituto", "institución", "instituciones", "escuela",
+    "colegio", "fundación", "ministerio", "santo", "tomás", "tomas",
+    "usta", "encuesta", "encuestas", "dataset", "seccional", "seccionales",
+})
+
+# Palabra con guiones o apostrofes; la mayuscula inicial se evalua despues.
+_RE_PALABRA = re.compile(r"[A-Za-zÁÉÍÓÚÜÑáéíóúüñ][\w'-]*")
+
+
+def _terminos_propios(texto: str):
+    """Tokens de 3+ letras que empiezan con mayuscula en el texto original."""
+    for coincidencia in _RE_PALABRA.finditer(texto or ""):
+        palabra = coincidencia.group(0)
+        if len(palabra) >= 3 and palabra[0].isupper():
+            yield palabra.lower()
+
+
+def _cargar_inventario() -> Tuple[frozenset, frozenset]:
+    """(terminos_documento, terminos_muestra) leidos del CSV del inventario.
+
+    Si el archivo falta o viene mal formado se devuelven conjuntos vacios:
+    el enrutador sigue funcionando, solo que sin poder identificar obras
+    por su ficha.
+    """
+    try:
+        with _INVENTARIO_CSV.open(encoding="utf-8-sig", newline="") as fh:
+            filas = list(csv.DictReader(fh))
+    except (OSError, UnicodeDecodeError, csv.Error):
+        return frozenset(), frozenset()
+
+    filas_por_token: Dict[str, set] = {}
+    visto_en_columna_de_documento = set()
+    for fila in filas:
+        try:
+            numero = int(fila.get("n"))
+        except (TypeError, ValueError):
+            continue
+        for columna in _COLUMNAS_DOCUMENTO + _COLUMNAS_MUESTRA:
+            for token in _terminos_propios(fila.get(columna)):
+                filas_por_token.setdefault(token, set()).add(numero)
+                if columna in _COLUMNAS_DOCUMENTO:
+                    visto_en_columna_de_documento.add(token)
+
+    documento, muestra = set(), set()
+    for token, numeros in filas_por_token.items():
+        if len(numeros) != 1 or token in _TERMINOS_GENERICOS:
+            continue
+        destino = documento if token in visto_en_columna_de_documento else muestra
+        destino.add(token)
+    return frozenset(documento), frozenset(muestra)
+
+
+_TERMINOS_DOCUMENTO, _TERMINOS_MUESTRA = _cargar_inventario()
+
+# Anclas propias de la ENCUESTA. Si aparecen y la pregunta no nombra una
+# obra (paso 1), manda la encuesta y NO se va al corpus.
+_ANCLAS_ENCUESTA_RE = re.compile(
+    r"\busta\b"
+    r"|\bencuesta(?:s)?\b"
+    r"|\bt[_\s-]?score\b"
+    r"|\bseccional(?:es)?\b"
+    r"|\bdataset\b"
+    r"|\blos\s+datos\b",
+    re.IGNORECASE,
+)
+
+# Referencia a un estudio por citas, no por ficha: "et al.", un anio entre
+# parentesis o "el/la (estudio|articulo|...) de/sobre <nombre propio>".
+_RE_ET_AL = re.compile(r"\bet\s+al\.?\b", re.IGNORECASE)
+_RE_ANIO_EN_PARENTESIS = re.compile(r"\(\s*(?:19|20)\d{2}\s*\)")
+_RE_MENCION_ESTUDIO = re.compile(
+    r"\b(?:el|la|los|las)\s+"
+    r"(?:estudio|art[ií]culo|revisi[oó]n|editorial|trabajo|tesis|"
+    r"monograf[ií]a|an[aá]lisis)"
+    r"\s+(?:de|del|sobre|realizado\s+en)\s+"
+    r"(?P<nombre>[^,;?.!]{0,80})",
+    re.IGNORECASE,
+)
+
+
+def _aparece(texto: str, terminos: frozenset) -> bool:
+    """True si alguna palabra del texto esta en el conjunto de terminos.
+
+    En el TEXTO del usuario NO se exige mayuscula: ese filtro ya se aplico
+    al construir los terminos del inventario (solo entran palabras que van
+    con mayuscula en la ficha), y el usuario puede citar la obra con la
+    palabra en minuscula ("el estudio sobre mindfulness...").
+    """
+    if not terminos:
+        return False
+    for palabra in _RE_PALABRA.finditer(texto or ""):
+        if palabra.group(0).lower() in terminos:
+            return True
+    return False
+
+
+def referencia_a_estudio(question: str) -> bool:
+    """True si la pregunta cita un estudio por referencia, no por su ficha."""
+    texto = question or ""
+    if _RE_ET_AL.search(texto):
+        return True
+    if _RE_ANIO_EN_PARENTESIS.search(texto):
+        return True
+    for mencion in _RE_MENCION_ESTUDIO.finditer(texto):
+        for token in _terminos_propios(mencion.group("nombre")):
+            if token not in _NOMBRES_NO_PROPIOS:
+                return True
+    return False
+
+
+def pregunta_sobre_documento_indexado(question: str) -> bool:
+    """
+    True si la pregunta NOMBRA un documento concreto del corpus indexado.
+
+    Puerta que va despues de las peticiones de busqueda y antes de
+    classify_scope. Orden de decision:
+    1. hay un termino de las columnas que identifican la obra -> es el
+       documento, manda sobre las anclas de la encuesta;
+    2. si no, la pregunta trae anclas de la encuesta -> manda la encuesta
+       y esto NO es un documento;
+    3. si no, hay un termino que solo describe la muestra -> cuenta como
+       documento (la obra se nombra por su poblacion);
+    4. si no, la pregunta se refiere al estudio por cita ("et al.", anio
+       entre parentesis o "el estudio de <nombre propio>").
+    """
+    texto = question or ""
+
+    if _aparece(texto, _TERMINOS_DOCUMENTO):
+        return True
+
+    if _ANCLAS_ENCUESTA_RE.search(texto):
+        return False
+
+    if _aparece(texto, _TERMINOS_MUESTRA):
+        return True
+
+    return referencia_a_estudio(texto)
 
 
 def classify_scope(question: str) -> Tuple[str, str]:
