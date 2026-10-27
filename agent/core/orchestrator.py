@@ -136,6 +136,8 @@ FUNCIONES DISPONIBLES:
   con IC y pruebas de Wald con la varianza del diseno muestral
 - "adjusted_gap": Brecha posgrado - pregrado bruta y AJUSTADA por edad,
   genero, estrato y seccional (regresion con varianza del diseno)
+- "dif_analysis": Funcionamiento diferencial de los items (DIF): si la
+  escala mide igual por genero o por nivel. parameters.group: "genero" o "nivel"
 - "group_comparison": Comparar T_Global entre dos grupos (muestral, sin pesos)
 - "multi_group_comparison": Comparar entre mas de 2 grupos (muestral, sin pesos)
 - "smart_comparison": Comparacion con seleccion automatica de metodo
@@ -214,6 +216,8 @@ class StatisticalAgent:
         # Indice RAG: se crea solo si alguien consulta el corpus (carga pypdf
         # no, pero si chroma + el vectorizador) y se reutiliza entre consultas.
         self._rag_retriever = None
+        # Resultados de DIF por grupo (cada uno tarda ~35 s)
+        self._dif_cache: Dict[str, Dict[str, Any]] = {}
 
     def load_data(self, data_path: Optional[str] = None):
         """Carga el dataset para analisis."""
@@ -247,6 +251,7 @@ class StatisticalAgent:
             "smart_comparison": self._smart_comparison,
             "design_comparison": self._design_comparison,
             "adjusted_gap": self._adjusted_gap,
+            "dif_analysis": self._dif_analysis,
             "correlation_analysis": self._correlation_analysis,
             "regression_analysis": self._regression_analysis,
             "dimension_profile": self._dimension_profile,
@@ -470,9 +475,12 @@ class StatisticalAgent:
         """
         NO_DATASET = ("abstencion", "literature_search")
         BOTH = ("validate_results", "full_validation")
+        PREPARED = ("dif_analysis",)    # necesita los items, no los T-scores
 
         if function_to_call in NO_DATASET:
             return "ninguno", None
+        if function_to_call in PREPARED and self._data is not None:
+            return self.config.prepared_data_file, len(self._data)
 
         names: List[str] = []
         primary: Optional[pd.DataFrame] = None
@@ -920,6 +928,21 @@ class StatisticalAgent:
                 description="Validacion de resultados",
                 function_to_call="validate_results",
                 parameters={}, variables_needed=["T_Global"], confidence=0.8,
+            )
+        # DIF / invarianza de la escala (pregunta 2.2)
+        elif (re.search(r"\bdif\b", q)
+              or any(w in q for w in ["funcionamiento diferencial", "invarianza",
+                                      "mide igual", "miden igual", "sesgo de los items",
+                                      "sesgo de los ítems", "sesgo de la escala"])):
+            grupo = "nivel" if any(w in q for w in ["nivel", "pregrado", "posgrado",
+                                                     "modalidad"]) else "genero"
+            return AnalysisPlan(
+                analysis_type=AnalysisType.IRT,
+                description=f"Funcionamiento diferencial de los items por {grupo}",
+                function_to_call="dif_analysis",
+                parameters={"group": grupo},
+                variables_needed=["29 items de la escala", grupo],
+                confidence=0.85,
             )
         # Brecha AJUSTADA: va antes de las comparaciones simples, porque la
         # pregunta suele nombrar tambien el nivel, la edad o el genero.
@@ -1465,6 +1488,41 @@ class StatisticalAgent:
                 + ", ".join(resultado["controles_descartados_sin_variacion"]))
         return resultado
 
+    # group -> (columna, focal, referencia)
+    DIF_GRUPOS = {
+        "genero": ("Género", "Femenino", "Masculino"),
+        "nivel": ("modalidad_exp", "Posgrado", "Pregrado"),
+    }
+
+    def _dif_analysis(self, params: Dict) -> Dict[str, Any]:
+        """DIF de los 29 items (pregunta 2.2). Tarda ~35 s: se guarda en memoria."""
+        grupo = params.get("group")
+        if grupo is None:
+            # el LLM suele mandar group_col con el nombre de la columna
+            col = str(params.get("group_col", "")).lower()
+            grupo = "nivel" if col in ("modalidad_exp", "nivel de formación",
+                                       "nivel de formacion") else "genero"
+        if grupo not in self.DIF_GRUPOS:
+            return {"error": f"Grupo de DIF no reconocido: {grupo!r} "
+                             f"(opciones: {', '.join(self.DIF_GRUPOS)})"}
+        if self._data is None:
+            return {"error": "El DIF necesita los items del dataset preparado"}
+        cache = self._dif_cache
+        if grupo not in cache:
+            from agent.data.loader import DataLoader
+            from agent.psychometrics.dif import dif_escala
+            col, focal, ref = self.DIF_GRUPOS[grupo]
+            items = DataLoader(self.config).get_item_columns(self._data)
+            etiquetas = {c: f"{i}. {ITEM_LABELS[i]}" for i, c in enumerate(items, 1)}
+            cache[grupo] = dif_escala(self._data[items], self._data[col],
+                                      focal, ref, etiquetas)
+        r = dict(cache[grupo])
+        r["tabla"] = r["tabla"].head(10).to_dict(orient="records")
+        r["metodo_seleccionado"] = "Regresion logistica ordinal (Zumbo, 1999)"
+        r["razon"] = ("Items Likert 1-6 emparejados por puntaje total; LR con "
+                      "Bonferroni y DeltaR2 de Nagelkerke (Jodoin y Gierl, 2001)")
+        return r
+
     def _dimension_profile(self, params: Dict) -> Dict[str, Any]:
         """Perfil por dimensiones (poblacional si hay diseno)."""
         df = self._irt_data if self._irt_data is not None else self._data
@@ -1743,6 +1801,8 @@ Incluye:
         elif plan.analysis_type == AnalysisType.COMPARISON:
             interp.extend(self._lineas_comparacion(result))
 
+        elif "items_con_dif_relevante" in result:
+            interp.extend(self._lineas_dif(result))
         elif "modelos" in result:
             interp.extend(self._lineas_brecha(result))
 
@@ -1849,6 +1909,8 @@ Incluye:
 
         elif plan.analysis_type == AnalysisType.VALIDATION:
             interp.append(result.get("resumen", "Validacion completada."))
+        elif "items_con_dif_relevante" in result:
+            interp.extend(self._lineas_dif(result))
         elif "modelos" in result:
             interp.extend(self._lineas_brecha(result))
         elif "r_cuadrado" in result:
@@ -1936,6 +1998,23 @@ Incluye:
                 lineas.append(
                     f"  {marca} {c['grupo_1']} - {c['grupo_2']}: "
                     f"{c['diferencia']:+} (p ajustado = {c['p_ajustado_bonferroni']})")
+        return lineas
+
+    def _lineas_dif(self, result: Dict) -> List[str]:
+        lineas = [f"--- DIF: {result.get('comparacion')} "
+                  f"(n = {result.get('n_focal')} / {result.get('n_referencia')}) ---"]
+        lineas.append(
+            f"Items significativos tras Bonferroni: "
+            f"{result.get('items_significativos_bonferroni')} de {result.get('n_items')}")
+        lineas.append(f"DeltaR2 maximo: {result.get('delta_r2_maximo')} "
+                      f"(relevante desde 0.035)")
+        lineas.append(f"Conclusion: {result.get('conclusion')}")
+        lineas.append("")
+        lineas.append("Items con mayor DeltaR2:")
+        for fila in result.get("tabla", [])[:5]:
+            lineas.append(
+                f"  - {fila['item']}: DeltaR2 = {fila['delta_r2']} ({fila['magnitud']}), "
+                f"p ajustado = {fila['p_ajustado']}, favorece a {fila['favorece_a']}")
         return lineas
 
     def _lineas_brecha(self, result: Dict) -> List[str]:
