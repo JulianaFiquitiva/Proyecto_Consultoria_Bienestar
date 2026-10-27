@@ -11,7 +11,8 @@ no tiene una fuente, se abstiene.
 ## Qué contiene
 - `agent/`: agente estadístico (`core/`, `statistics/`, `psychometrics/`,
   `validation/`) y módulo RAG (`agent/rag/`).
-- `app/dashboard.py`: dashboard de resultados (entrega 2).
+- `app/dashboard.py`: app con el contexto del estudio, los resultados y el
+  chat con el agente (entrega 2).
 - `prompts/`: prompt versionado del RAG.
 - `tests/`: pruebas automáticas y bancos de preguntas (19 del primer banco
   y 20 del banco final, con respuesta y página comprobadas).
@@ -59,14 +60,37 @@ lenguaje natural. Ejemplos de la entrega 2:
 - `¿La escala mide igual a hombres y mujeres?` (DIF; tarda unos 35 s la primera vez)
 - `¿Cuánto depende el bienestar del programa?`
 
-### Dashboard (entrega 2)
+### App: contexto, resultados y chat (entrega 2)
     python -m agent.reports.entrega2      # calcula los hallazgos (~1,5 min, una vez)
-    streamlit run app/dashboard.py        # abre el dashboard en el navegador
+    streamlit run app/dashboard.py        # abre la app en el navegador
 
 El primer comando guarda solo agregados en
-`resultados/entrega2/hallazgos_entrega2.json`. El dashboard lo lee; si no
-existe, calcula todo desde `data/`. No usa OpenAI ni internet, y no
-muestra grupos con menos de 30 casos.
+`resultados/entrega2/hallazgos_entrega2.json`. La app lo lee y no muestra
+grupos con menos de 30 casos. Pestañas: El estudio, Resumen, Comparaciones,
+Dimensiones, Hallazgos entrega 2, Pregúntale al agente y Metodología.
+
+El chat (`agent/core/chat.py`) usa las mismas rutas del agente. Las
+preguntas sobre la encuesta se responden con los agregados, sin LLM. Las
+del corpus llaman a OpenAI y citan documento y página.
+
+| Variable | Uso |
+|---|---|
+| `INDICE_MODO` | `publico`: solo agregados. `completo`: además el agente con `data/`. Por defecto (`auto`), completo si están los datos. |
+| `APP_PASSWORD` | Si se define, la app pide contraseña. |
+| `CHAT_MAX_CONSULTAS` | Consultas al corpus y a la búsqueda web por sesión (por defecto 20). |
+
+### Publicar la app (Railway u otro servicio con Docker)
+El `Dockerfile` corre la app en modo público con `requirements_app.txt`.
+Los Excel de `data/` nunca entran en la imagen (`.dockerignore`).
+
+1. Versionar `resultados/entrega2/hallazgos_entrega2.json` (solo agregados).
+2. En Railway: *New project → Deploy from GitHub repo*. Railway detecta el
+   `Dockerfile`.
+3. En *Variables*: `APP_PASSWORD` y, si se quiere el corpus en el chat,
+   `OPENAI_API_KEY`. Conviene poner además un tope de gasto en la cuenta de
+   OpenAI.
+4. El corpus necesita `rag_store/`, que no se versiona. Sin él, el chat
+   avisa que el corpus no está disponible y responde solo sobre la encuesta.
 
 Cada consulta al corpus añade una fila a `agent/rag/logs/rag_consultas.csv`.
 

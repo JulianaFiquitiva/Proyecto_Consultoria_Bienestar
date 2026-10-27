@@ -1,0 +1,26 @@
+# Nunca en la imagen publicada: datos de la contraparte, claves, material de terceros
+data/
+*.xlsx
+.env
+*.env
+notebooks/
+docs/rag_corpus/
+docs/Informe_*
+
+# No hace falta para la app
+.git/
+tests/
+docs/experimento/
+docs/presentacion_entrega2/
+resultados/*.txt
+resultados/*.xlsx
+agent/rag/logs/
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+env/
+.vscode/
+.idea/
+diff_correr_banco.txt
+.venv*/

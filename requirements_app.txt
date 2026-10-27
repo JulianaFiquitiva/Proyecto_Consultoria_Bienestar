@@ -1,0 +1,16 @@
+# Dependencias MINIMAS de la app publicada (app/dashboard.py en modo publico).
+# Las usa el Dockerfile. Para trabajar con todo el proyecto (notebooks,
+# IRT, pruebas) se instala requirements_agent.txt.
+pandas>=2.0
+numpy>=1.24
+scipy>=1.10
+statsmodels>=0.14
+plotly>=5.14
+streamlit>=1.46
+
+# Chat: corpus (RAG) y redaccion de sus respuestas
+openai>=1.0
+chromadb>=1.5
+scikit-learn>=1.4
+joblib>=1.3
+pypdf>=6.0

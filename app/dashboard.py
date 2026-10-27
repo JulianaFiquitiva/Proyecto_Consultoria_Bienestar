@@ -1,14 +1,24 @@
 # -*- coding: utf-8 -*-
 """
-Dashboard del Índice de Bienestar Estudiantil USTA (entrega 2).
+App del Índice de Bienestar Estudiantil USTA: contexto del estudio,
+resultados, gráficas y chat con el agente.
 
     streamlit run app/dashboard.py
 
 Lee resultados/entrega2/hallazgos_entrega2.json (generado con
-`python -m agent.reports.entrega2`). Si no existe, lo calcula desde data/.
-Solo muestra agregados; los grupos con menos de 30 casos no se muestran.
-No usa OpenAI ni internet, y no escribe en data/.
+`python -m agent.reports.entrega2`). Solo muestra agregados; los grupos con
+menos de 30 casos no se muestran. No escribe en data/.
+
+Variables de entorno (todas opcionales):
+- INDICE_MODO: "publico" (solo el JSON de agregados, para publicar la app),
+  "completo" (además el agente con los Excel de data/) o "auto" (por
+  defecto: completo si están los datos).
+- APP_PASSWORD: si se define, la app pide esa contraseña.
+- CHAT_MAX_CONSULTAS: consultas por sesión que usan servicios externos
+  (OpenAI para el corpus, Crossref/PubMed). Por defecto 20.
 """
+import hmac
+import os
 import sys
 from pathlib import Path
 
@@ -18,6 +28,7 @@ import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from agent.core.chat import EJEMPLOS, MotorChat  # noqa: E402
 from agent.reports import entrega2  # noqa: E402
 
 AZUL = "#1B3A5C"
@@ -31,14 +42,57 @@ st.set_page_config(page_title="Índice de Bienestar USTA", page_icon="📊",
                    layout="wide")
 
 
+def _modo() -> str:
+    modo = os.environ.get("INDICE_MODO", "auto").strip().lower()
+    if modo in ("publico", "completo"):
+        return modo
+    from agent.core.config import AgentConfig
+    cfg = AgentConfig()
+    return "completo" if cfg.get_data_path(cfg.irt_data_file).exists() else "publico"
+
+
+MODO = _modo()
+MAX_CONSULTAS = int(os.environ.get("CHAT_MAX_CONSULTAS", "20"))
+
+
+def _pedir_contrasena():
+    """Si APP_PASSWORD está definida, nada se muestra sin ella."""
+    clave = os.environ.get("APP_PASSWORD", "")
+    if not clave or st.session_state.get("autenticado"):
+        return
+    st.title("Índice de Bienestar Estudiantil USTA")
+    intento = st.text_input("Contraseña", type="password")
+    if st.button("Entrar"):
+        if hmac.compare_digest(intento.encode(), clave.encode()):
+            st.session_state["autenticado"] = True
+            st.rerun()
+        st.error("Contraseña incorrecta.")
+    st.stop()
+
+
+_pedir_contrasena()
+
+
 @st.cache_data(show_spinner=False)
-def _hallazgos():
+def _hallazgos(modo):
     guardados = entrega2.cargar()
     if guardados is not None:
         return guardados, "precalculados"
+    if modo == "publico":
+        raise FileNotFoundError(entrega2.SALIDA)
     from agent.data.loader import DataLoader
     loader = DataLoader()
     return entrega2.calcular(loader.load_prepared(), loader.load_irt()), "calculados ahora"
+
+
+@st.cache_resource(show_spinner="Preparando el agente…")
+def _motor(modo):
+    """Un solo motor por proceso: el agente y el índice del corpus se cargan una vez."""
+    from agent.core.orchestrator import StatisticalAgent
+    agente = StatisticalAgent()
+    if modo == "completo":
+        agente.load_data()
+    return MotorChat(_hallazgos(modo)[0], modo=modo, agente=agente)
 
 
 def _layout(fig, alto=380, **kw):
@@ -73,7 +127,7 @@ def _ic(e, dec=1):
 
 # ── Encabezado ─────────────────────────────────────────────────────────
 try:
-    H, origen = _hallazgos()
+    H, origen = _hallazgos(MODO)
 except FileNotFoundError:
     st.error("No hay hallazgos precalculados ni datos en data/. Ejecute "
              "`python -m agent.reports.entrega2` en un equipo con los datos.")
@@ -85,8 +139,82 @@ st.caption(f"Escala de Ryff · n = {R['n']:,} estudiantes que representan a "
            f"N = {R['N']:,} · Estimaciones poblacionales con el diseño muestral "
            f"estratificado · Resultados {origen} ({H['generado'][:10]})")
 
-tab_res, tab_comp, tab_dim, tab_hall, tab_met = st.tabs(
-    ["Resumen", "Comparaciones", "Dimensiones", "Hallazgos entrega 2", "Metodología"])
+tab_est, tab_res, tab_comp, tab_dim, tab_hall, tab_chat, tab_met = st.tabs(
+    ["El estudio", "Resumen", "Comparaciones", "Dimensiones", "Hallazgos entrega 2",
+     "Pregúntale al agente", "Metodología"])
+
+# ── El estudio ─────────────────────────────────────────────────────────
+DIMENSIONES_RYFF = {
+    "Autoaceptación": "Actitud positiva hacia uno mismo y hacia la propia historia.",
+    "Relaciones positivas": "Vínculos cercanos, cálidos y de confianza con otras personas.",
+    "Autonomía": "Capacidad de decidir por uno mismo y resistir la presión social.",
+    "Dominio del entorno": "Sensación de manejar las exigencias de la vida cotidiana.",
+    "Propósito de vida": "Tener metas y sentir que la vida tiene dirección y sentido.",
+    "Crecimiento personal": "Sentir que uno sigue aprendiendo y desarrollando su potencial.",
+}
+
+with tab_est:
+    st.subheader("¿Qué es el Índice de Bienestar Estudiantil?")
+    st.markdown(
+        "Es un estudio de la **Universidad Santo Tomás** que mide el **bienestar "
+        "psicológico** de sus estudiantes de pregrado y posgrado. Su objetivo es estimar "
+        "el nivel de bienestar de toda la población estudiantil y compararlo entre "
+        "seccionales, niveles de formación y grupos demográficos.")
+
+    secc = H["comparaciones"].get("seccional", {}).get("grupos", {})
+    e1, e2, e3, e4 = st.columns(4)
+    e1.metric("Estudiantes en la población", f"{R['N']:,}")
+    e2.metric("Respuestas válidas", f"{R['n']:,}")
+    e3.metric("Seccionales", len(secc) or 4)
+    e4.metric("Preguntas de la escala", 29)
+
+    col_a, col_b = st.columns(2)
+    with col_a:
+        st.markdown("#### Qué mide")
+        st.markdown(
+            "La **escala de bienestar psicológico de Ryff**, con 29 afirmaciones que se "
+            "responden de 1 (totalmente en desacuerdo) a 6 (totalmente de acuerdo). "
+            "Agrupa el bienestar en seis dimensiones:")
+        st.dataframe(pd.DataFrame(DIMENSIONES_RYFF.items(), columns=["Dimensión", "Qué significa"]),
+                     hide_index=True, width="stretch")
+    with col_b:
+        st.markdown("#### A quiénes")
+        st.markdown(
+            "La muestra se tomó por **estratos**: cada seccional, separada en pregrado y "
+            "posgrado (8 estratos). Cada respuesta tiene un **factor de expansión**: "
+            "cuántos estudiantes de la población representa. Así, los resultados describen "
+            "a toda la población y no solo a quienes respondieron.")
+        if secc:
+            st.dataframe(pd.DataFrame([{"Seccional": k, "Respuestas (n)": g["n"],
+                                        "Estudiantes representados (N)": g["N"]}
+                                       for k, g in secc.items()]),
+                         hide_index=True, width="stretch")
+
+    st.markdown("#### Cómo leer los resultados")
+    st.markdown(
+        "Cada estudiante recibe un **puntaje T**, calculado con un modelo de teoría de "
+        "respuesta al ítem (modelo de respuesta graduada). El puntaje tiene **centro 50 y "
+        "desviación 10**:\n"
+        "- **T < 40**: bienestar bajo (en riesgo).\n"
+        "- **40 ≤ T < 60**: rango típico.\n"
+        "- **T ≥ 60**: bienestar alto.")
+
+    st.markdown("#### Recorrido del estudio")
+    st.markdown(
+        "| Etapa | Qué se hizo |\n|---|---|\n"
+        "| **Encuesta** | Aplicación de la escala, con marcos muestrales de 2025 por "
+        "seccional y modalidad. |\n"
+        "| **Análisis original** | Consultorio de Estadística USTA (febrero de 2026): "
+        "depuración y factores de expansión, psicometría, puntajes T con IRT e "
+        "inferencia poblacional. |\n"
+        "| **Entrega 1** | Agente *Nada sin fuente*: responde sobre la encuesta y sobre "
+        "20 documentos académicos, siempre con fuente; si no la tiene, se abstiene. |\n"
+        "| **Entrega 2** | Estimaciones con el diseño muestral, reproducción del estudio "
+        "anterior, DIF, brecha ajustada, modelo multinivel y esta app. |\n"
+        "| **Entrega final** | Encuesta viva (respuestas nuevas que actualizan los "
+        "resultados) y chatbot en línea. |")
+    st.caption("Proyecto del curso Consultoría e Investigación (USTA): Juliana Fiquitiva y "
+               "Luisa Martínez U.")
 
 # ── Resumen ────────────────────────────────────────────────────────────
 with tab_res:
@@ -159,6 +287,8 @@ with tab_hall:
 
     with st.expander("2.0 · ¿Se reproduce el estudio anterior?", expanded=True):
         rep = pd.DataFrame(H["reproducibilidad"])
+        # La columna del Informe Ejecutivo mezcla cifras y "—": como texto, para Arrow
+        rep = rep.astype({c: str for c in rep.columns if rep[c].dtype == object})
         st.dataframe(rep.style.map(lambda v: f"color: {ESTADO_COLOR.get(v, 'inherit')}",
                                    subset=[c for c in rep.columns if c.startswith("Estado")]),
                      hide_index=True, width="stretch")
@@ -236,6 +366,77 @@ with tab_hall:
                     "programa. La mitad de las diferencias entre programas se explica por "
                     "la edad y el nivel de sus estudiantes.")
         st.caption(ML.get("limitacion", ""))
+
+# ── Pregúntale al agente ───────────────────────────────────────────────
+RUTA_ETIQUETA = {"encuesta": "Encuesta", "corpus": "Corpus documental",
+                 "busqueda": "Búsqueda bibliográfica", "abstencion": "Abstención"}
+
+
+def _mostrar_respuesta(r):
+    if r["preformateado"]:
+        st.text(r["texto"])
+    else:
+        st.markdown(r["texto"])
+    st.caption(f"Ruta: {RUTA_ETIQUETA.get(r['ruta'], r['ruta'])} · Fuente: {r['fuente']}"
+               + (f" · Método: {r['metodo']}" if r["metodo"] else ""))
+    if r["avisos"]:
+        with st.expander("Avisos"):
+            for aviso in r["avisos"]:
+                st.write(f"- {aviso}")
+
+
+with tab_chat:
+    st.markdown(
+        "Pregunte en lenguaje natural sobre los resultados del estudio o sobre la "
+        "literatura académica. Cada respuesta dice de dónde sale; si no hay fuente, el "
+        "agente no responde.")
+    if MODO == "publico":
+        st.caption("Versión pública: las cifras salen de resultados agregados; no se usan "
+                   "los datos individuales de la encuesta.")
+    st.session_state.setdefault("chat", [])
+    st.session_state.setdefault("consultas_externas", 0)
+
+    ejemplo = None
+    columnas = st.columns(3)
+    for i, texto in enumerate(EJEMPLOS[:6]):
+        if columnas[i % 3].button(texto, key=f"ejemplo_{i}", width="stretch"):
+            ejemplo = texto
+
+    historial = st.container(height=520)
+    with historial:
+        for mensaje in st.session_state["chat"]:
+            with st.chat_message(mensaje["rol"]):
+                if mensaje["rol"] == "user":
+                    st.markdown(mensaje["texto"])
+                else:
+                    _mostrar_respuesta(mensaje)
+
+    pregunta = st.chat_input("Escriba su pregunta…") or ejemplo
+    if pregunta:
+        st.session_state["chat"].append({"rol": "user", "texto": pregunta})
+        motor = _motor(MODO)
+        externa = motor.agente.ruta_de_pregunta(pregunta) in ("corpus", "busqueda")
+        if externa and st.session_state["consultas_externas"] >= MAX_CONSULTAS:
+            respuesta = {"texto": (f"Se alcanzó el límite de {MAX_CONSULTAS} consultas al "
+                                   "corpus y a la búsqueda bibliográfica en esta sesión. Las "
+                                   "preguntas sobre los resultados de la encuesta siguen "
+                                   "disponibles."),
+                         "ruta": "abstencion", "fuente": "ninguna", "metodo": "",
+                         "preformateado": False, "avisos": []}
+        else:
+            with historial, st.spinner("Buscando la respuesta…"):
+                r = motor.responder(pregunta)
+            if r.usa_servicio_externo:
+                st.session_state["consultas_externas"] += 1
+            respuesta = {"texto": r.texto, "ruta": r.ruta, "fuente": r.fuente,
+                         "metodo": r.metodo, "preformateado": r.preformateado,
+                         "avisos": r.avisos}
+        st.session_state["chat"].append({"rol": "assistant", **respuesta})
+        st.rerun()
+
+    if st.session_state["chat"] and st.button("Borrar conversación"):
+        st.session_state["chat"] = []
+        st.rerun()
 
 # ── Metodología ────────────────────────────────────────────────────────
 with tab_met:
