@@ -47,6 +47,8 @@ class RespuestaChat:
     preformateado: bool = False
     avisos: List[str] = field(default_factory=list)
     citas: List[Dict[str, Any]] = field(default_factory=list)
+    # Gráfico sugerido para la app, p. ej. {"tipo": "comparacion", "clave": "Género"}
+    grafico: Optional[Dict[str, str]] = None
 
 
 def _norm(texto: str) -> str:
@@ -116,28 +118,32 @@ class MotorChat:
         f = plan.function_to_call
         p = plan.parameters or {}
 
-        texto = None
+        texto, grafico = None, None
         if f == "descriptive_overview":
-            texto = self._txt_resumen()
+            texto, grafico = self._txt_resumen(), {"tipo": "niveles"}
         elif f in ("design_comparison", "group_comparison", "multi_group_comparison",
                    "smart_comparison"):
             clave = self._clave_comparacion(p.get("group_col", ""))
             if clave:
                 texto = self._txt_comparacion(clave, pregunta)
+                grafico = {"tipo": "comparacion", "clave": clave}
         elif f == "adjusted_gap":
-            texto = self._txt_brecha()
+            texto, grafico = self._txt_brecha(), {"tipo": "brecha"}
         elif f == "dif_analysis" and "dif" in self.H:
-            texto = self._txt_dif(p.get("group", "genero"))
+            grupo = p.get("group", "genero")
+            texto = self._txt_dif(grupo)
+            grafico = {"tipo": "dif", "grupo": grupo if grupo in self.H["dif"]
+                       else next(iter(self.H["dif"]))}
         elif f == "multilevel_icc":
-            texto = self._txt_multinivel()
+            texto, grafico = self._txt_multinivel(), {"tipo": "multinivel"}
         elif f == "dimension_profile":
-            texto = self._txt_dimensiones()
+            texto, grafico = self._txt_dimensiones(), {"tipo": "dimensiones"}
         elif f in ("validate_results", "full_validation"):
-            texto = self._txt_reproducibilidad()
+            texto, grafico = self._txt_reproducibilidad(), {"tipo": "reproducibilidad"}
 
         if texto is not None:
             return RespuestaChat(texto=texto, ruta="encuesta", fuente=self.fuente_agregados,
-                                 metodo=plan.description)
+                                 metodo=plan.description, grafico=grafico)
 
         # No esta precalculado
         if self.modo == "completo":

@@ -115,10 +115,21 @@ def calcular(prep: pd.DataFrame, irt: pd.DataFrame, incluir_dif: bool = True) ->
         pares = d.pairwise("T_Global", col, min_n=MIN_N)
         excluidos = irt[col].value_counts()
         excluidos = excluidos[excluidos < MIN_N]
+        grupos = {_etiqueta_grupo(k): _est(e) for k, e in
+                  sorted(medias.items(), key=lambda kv: -kv[1].estimate)}
+        # Niveles de bienestar y perfil de dimensiones de cada grupo (n >= 30)
+        for valor in irt[col].dropna().unique():
+            if str(valor) not in medias:
+                continue
+            grupos[_etiqueta_grupo(str(valor))].update({
+                "riesgo": _est(d.proportion("T_Global", lambda s: s < 40, col, valor)),
+                "alto": _est(d.proportion("T_Global", lambda s: s >= 60, col, valor)),
+                "dimensiones": {dim: _est(d.mean(f"T_{dim}", col, valor))
+                                for dim in DIMENSION_ORDER if f"T_{dim}" in irt.columns},
+            })
         comp[col] = {
             "etiqueta": etiqueta,
-            "grupos": {_etiqueta_grupo(k): _est(e) for k, e in
-                       sorted(medias.items(), key=lambda kv: -kv[1].estimate)},
+            "grupos": grupos,
             "pares": [{**p.as_dict(3), "grupo_1": _etiqueta_grupo(p.group1),
                        "grupo_2": _etiqueta_grupo(p.group2)} for p in pares],
             "excluidos": {"categorias": int(len(excluidos)), "casos": int(excluidos.sum())},

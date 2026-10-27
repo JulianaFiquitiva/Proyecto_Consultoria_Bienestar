@@ -143,6 +143,25 @@ def test_encuesta_responde_con_agregados(publico, agente, pregunta, esperado):
     assert agente.llamadas == []          # ni corpus, ni web, ni agente completo
 
 
+@pytest.mark.parametrize("pregunta,tipo", [
+    ("¿Cuál es el nivel general de bienestar?", "niveles"),
+    ("¿La brecha de posgrado se mantiene controlando la edad?", "brecha"),
+    ("¿Cuánto depende el bienestar del programa?", "multinivel"),
+    ("perfil por dimensiones", "dimensiones"),
+    ("¿se reproduce el estudio anterior? valida", "reproducibilidad"),
+    ("compara el bienestar por estrato", "comparacion"),
+])
+def test_respuesta_de_encuesta_trae_grafico(publico, pregunta, tipo):
+    g = publico.responder(pregunta).grafico
+    assert g and g["tipo"] == tipo
+    if tipo == "comparacion":
+        assert g["clave"] in H["comparaciones"]
+
+
+def test_sin_grafico_fuera_de_la_encuesta(publico):
+    assert publico.responder("¿Quién ganó el mundial de 2022?").grafico is None
+
+
 def test_comparacion_en_positivo_y_resalta_el_grupo(publico):
     r = publico.responder("¿Hay diferencias entre hombres y mujeres?")
     assert r.ruta == "encuesta"

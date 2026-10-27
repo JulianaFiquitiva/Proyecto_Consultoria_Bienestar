@@ -1,9 +1,17 @@
 [theme]
-primaryColor = "#1B3A5C"
+base = "light"
+primaryColor = "#2a78d6"
+backgroundColor = "#f7f8fa"
+secondaryBackgroundColor = "#eef2f7"
+textColor = "#1a2433"
 font = "sans serif"
+baseRadius = "0.75rem"
 
 [server]
 headless = false     # abre el navegador al ejecutar streamlit run
+
+[client]
+toolbarMode = "viewer"     # sin el botón "Deploy" ni menús de desarrollo
 
 [browser]
 gatherUsageStats = false
