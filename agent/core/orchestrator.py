@@ -138,6 +138,8 @@ FUNCIONES DISPONIBLES:
   genero, estrato y seccional (regresion con varianza del diseno)
 - "dif_analysis": Funcionamiento diferencial de los items (DIF): si la
   escala mide igual por genero o por nivel. parameters.group: "genero" o "nivel"
+- "multilevel_icc": Modelo multinivel: cuanto del bienestar depende del
+  programa o del NBC (correlacion intraclase, ICC)
 - "group_comparison": Comparar T_Global entre dos grupos (muestral, sin pesos)
 - "multi_group_comparison": Comparar entre mas de 2 grupos (muestral, sin pesos)
 - "smart_comparison": Comparacion con seleccion automatica de metodo
@@ -252,6 +254,7 @@ class StatisticalAgent:
             "design_comparison": self._design_comparison,
             "adjusted_gap": self._adjusted_gap,
             "dif_analysis": self._dif_analysis,
+            "multilevel_icc": self._multilevel_icc,
             "correlation_analysis": self._correlation_analysis,
             "regression_analysis": self._regression_analysis,
             "dimension_profile": self._dimension_profile,
@@ -944,6 +947,20 @@ class StatisticalAgent:
                 variables_needed=["29 items de la escala", grupo],
                 confidence=0.85,
             )
+        # Multinivel / ICC por programa (pregunta 2.4)
+        elif (re.search(r"\bicc\b", q)
+              or re.search(r"\b(?:depende|influye|pesa|importa|efecto)\w*\b.*"
+                           r"\b(?:programas?|carreras?|nbc)\b", q)
+              or any(w in q for w in ["multinivel", "intraclase", "entre programas"])):
+            return AnalysisPlan(
+                analysis_type=AnalysisType.REGRESSION,
+                description="Modelo multinivel: varianza entre programas",
+                function_to_call="multilevel_icc",
+                parameters={"value_col": "T_Global"},
+                variables_needed=["T_Global", "Programa de formación",
+                                  "Núcleo básico de conocimiento", "modalidad_exp", "Edad"],
+                confidence=0.85,
+            )
         # Brecha AJUSTADA: va antes de las comparaciones simples, porque la
         # pregunta suele nombrar tambien el nivel, la edad o el genero.
         elif (any(w in q for w in ["ajustad", "controland", "controlar", "se explica",
@@ -1523,6 +1540,28 @@ class StatisticalAgent:
                       "Bonferroni y DeltaR2 de Nagelkerke (Jodoin y Gierl, 2001)")
         return r
 
+    def _multilevel_icc(self, params: Dict) -> Dict[str, Any]:
+        """ICC por programa y NBC (pregunta 2.4)."""
+        df = self._irt_data if self._irt_data is not None else self._data
+        if df is None:
+            return {"error": "Datos no disponibles"}
+        from agent.statistics.multilevel import icc_programa
+        try:
+            r = icc_programa(df, y_col=params.get("value_col", "T_Global"))
+        except (KeyError, ValueError) as exc:
+            return {"error": f"No se puede ajustar el modelo multinivel: {exc}"}
+        r["metodo_seleccionado"] = "Modelo multinivel de intercepto aleatorio"
+        r["razon"] = r.pop("metodo")
+        r["advertencias"] = [r.pop("limitacion")]
+        if "programa" in r:
+            p = r["programa"]["nulo"]
+            r["advertencias"].append(
+                f"{p['grupos_con_menos_de_10']} de {p['n_grupos']} programas tienen "
+                f"menos de 10 casos; el ranking solo incluye programas con "
+                f"n >= {p['ranking_n_minimo']} y sus efectos son estimaciones "
+                f"contraidas (BLUP), no medias observadas.")
+        return r
+
     def _dimension_profile(self, params: Dict) -> Dict[str, Any]:
         """Perfil por dimensiones (poblacional si hay diseno)."""
         df = self._irt_data if self._irt_data is not None else self._data
@@ -1801,6 +1840,8 @@ Incluye:
         elif plan.analysis_type == AnalysisType.COMPARISON:
             interp.extend(self._lineas_comparacion(result))
 
+        elif isinstance(result.get("programa"), dict) and "nulo" in result["programa"]:
+            interp.extend(self._lineas_multinivel(result))
         elif "items_con_dif_relevante" in result:
             interp.extend(self._lineas_dif(result))
         elif "modelos" in result:
@@ -1909,6 +1950,8 @@ Incluye:
 
         elif plan.analysis_type == AnalysisType.VALIDATION:
             interp.append(result.get("resumen", "Validacion completada."))
+        elif isinstance(result.get("programa"), dict) and "nulo" in result["programa"]:
+            interp.extend(self._lineas_multinivel(result))
         elif "items_con_dif_relevante" in result:
             interp.extend(self._lineas_dif(result))
         elif "modelos" in result:
@@ -1998,6 +2041,31 @@ Incluye:
                 lineas.append(
                     f"  {marca} {c['grupo_1']} - {c['grupo_2']}: "
                     f"{c['diferencia']:+} (p ajustado = {c['p_ajustado_bonferroni']})")
+        return lineas
+
+    def _lineas_multinivel(self, result: Dict) -> List[str]:
+        lineas = []
+        nombres = {"programa": "Programa de formacion", "nbc": "Nucleo basico (NBC)"}
+        for clave, nombre in nombres.items():
+            bloque = result.get(clave)
+            if not bloque:
+                continue
+            nulo, cond = bloque["nulo"], bloque["condicional_nivel_edad"]
+            lineas.append(f"--- {nombre}: {nulo['n_grupos']} grupos ---")
+            lineas.append(
+                f"  ICC sin controles: {nulo['icc'] * 100:.1f}% de la varianza "
+                f"esta entre grupos (p = {nulo['p_valor_tau2_cero']})")
+            lineas.append(
+                f"  ICC controlando nivel y edad: {cond['icc'] * 100:.1f}% "
+                f"(p = {cond['p_valor_tau2_cero']})")
+            altos = ", ".join(f"{g['grupo']} ({g['efecto_estimado']:+})"
+                              for g in cond["grupos_mas_altos"][:3])
+            bajos = ", ".join(f"{g['grupo']} ({g['efecto_estimado']:+})"
+                              for g in cond["grupos_mas_bajos"][:3])
+            if altos:
+                lineas.append(f"  Mas altos (n >= {cond['ranking_n_minimo']}): {altos}")
+                lineas.append(f"  Mas bajos (n >= {cond['ranking_n_minimo']}): {bajos}")
+            lineas.append("")
         return lineas
 
     def _lineas_dif(self, result: Dict) -> List[str]:
