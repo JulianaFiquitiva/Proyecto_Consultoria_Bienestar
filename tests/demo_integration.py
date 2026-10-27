@@ -8,7 +8,7 @@ Uso:
     python -m tests.demo_integration
     
 Requiere:
-    - Datos en C:/Users/Lenovo-Laptop/Documents/IndiceFelicidad/
+    - Datos en data/ (o en la carpeta de INDICE_DATA_DIR)
     - API key configurada (opcional, funciona sin LLM)
 """
 

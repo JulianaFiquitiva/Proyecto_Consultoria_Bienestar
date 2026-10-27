@@ -67,7 +67,8 @@ def main():
 
     while True:
         try:
-            question = input("Tu pregunta > ").strip()
+            # lstrip del BOM: PowerShell lo antepone al texto enviado por tuberia
+            question = input("Tu pregunta > ").strip().lstrip("﻿")
         except (EOFError, KeyboardInterrupt):
             print("\nHasta pronto!")
             break

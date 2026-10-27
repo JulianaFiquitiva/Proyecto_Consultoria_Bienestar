@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
-from scipy import stats as sp_stats
+from agent.scipy_compat import stats as sp_stats
 
 
 class DescriptiveStats:

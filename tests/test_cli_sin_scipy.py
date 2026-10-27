@@ -64,6 +64,32 @@ def test_la_cli_arranca_aunque_scipy_este_bloqueado():
     assert "Control de aplicaciones" in proc.stdout, salida
 
 
+SCRIPT_MODULOS = SCRIPT_BLOQUEO.split("import agent.ui.cli")[0] + """
+import agent.statistics.descriptive
+import agent.statistics.inference
+import agent.statistics.regression
+import agent.statistics.statistical_engine
+import agent.psychometrics.irt
+print("MODULOS_IMPORTAN_SIN_SCIPY")
+
+from agent.scipy_compat import ScipyNoDisponible, stats
+try:
+    stats.norm.ppf(0.975)
+except ScipyNoDisponible as exc:
+    print("ERROR_CLARO=", "Smart App Control" in str(exc))
+"""
+
+
+def test_los_modulos_estadisticos_importan_aunque_scipy_este_bloqueado():
+    """El dashboard importa estos modulos: no pueden caer por el import."""
+    proc = _ejecutar(SCRIPT_MODULOS)
+    salida = (proc.stdout or "") + (proc.stderr or "")
+    assert proc.returncode == 0, salida
+    assert "MODULOS_IMPORTAN_SIN_SCIPY" in proc.stdout, salida
+    # usar scipy si falla, pero con un mensaje que explica la causa
+    assert "ERROR_CLARO= True" in proc.stdout, salida
+
+
 def test_scipy_cargado_no_deja_error():
     """Si scipy SI carga, SCIPY_ERROR tiene que ser None (no un falso positivo)."""
     proc = _ejecutar("from agent.core.orchestrator import SCIPY_ERROR\n"

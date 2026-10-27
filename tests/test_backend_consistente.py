@@ -84,9 +84,16 @@ def test_retriever_toma_la_dimension_del_almacen(dobles):
     assert r.embedder.dimension == 60000
 
 
-def test_indice_real_y_vectorizador_persistido_coinciden():
+def test_indice_real_y_vectorizador_persistido_coinciden(tmp_path):
+    import shutil
     from agent.rag.vectorstore import STORE_DIR, create_vectorstore
-    store = create_vectorstore()
+    if not (STORE_DIR / "chroma.sqlite3").exists():
+        pytest.skip("no hay indice construido en rag_store/")
+    # Chroma escribe en su sqlite con solo abrirlo: se abre una COPIA para
+    # que la prueba no modifique la base vectorial real.
+    copia = tmp_path / "rag_store"
+    shutil.copytree(STORE_DIR, copia)
+    store = create_vectorstore(persist_dir=copia)
     if store.count() == 0:
         pytest.skip("indice vacio: no hay nada que comprobar")
     dim_indice = store.dimension

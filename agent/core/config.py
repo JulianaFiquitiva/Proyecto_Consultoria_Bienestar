@@ -4,9 +4,13 @@ Configuración central del agente.
 Define rutas, constantes del instrumento y parámetros del pipeline.
 """
 
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional
+
+# Raiz del proyecto: agent/core/config.py -> parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 # ── Constantes del instrumento Ryff ──────────────────────────────────────
@@ -146,15 +150,20 @@ REPORTED_RESULTS = {
 class AgentConfig:
     """Configuración central del agente."""
 
-    # Rutas
-    project_root: Path = field(default_factory=lambda: Path("."))
+    # Rutas. La raiz es la carpeta del proyecto, no el directorio desde el
+    # que se ejecuta: asi el agente encuentra data/ en cualquier equipo.
+    project_root: Path = field(default_factory=lambda: PROJECT_ROOT)
     data_dir: Path = field(default_factory=lambda: Path("data"))
     notebooks_dir: Path = field(default_factory=lambda: Path("notebooks"))
     docs_dir: Path = field(default_factory=lambda: Path("docs"))
-    
-    # Ruta al proyecto original (donde están los datos)
-    original_project_path: Path = field(
-        default_factory=lambda: Path(r"C:\Users\Lenovo-Laptop\Documents\IndiceFelicidad\data")
+
+    # Carpeta de datos externa (opcional): variable de entorno INDICE_DATA_DIR.
+    # Si no esta definida se usa project_root / data_dir.
+    external_data_dir: Optional[Path] = field(
+        default_factory=lambda: (
+            Path(os.environ["INDICE_DATA_DIR"])
+            if os.environ.get("INDICE_DATA_DIR") else None
+        )
     )
 
     # Datos
@@ -183,11 +192,12 @@ class AgentConfig:
 
     def get_data_path(self, filename: str) -> Path:
         """Retorna la ruta completa a un archivo de datos."""
-        # Primero buscar en el proyecto original
-        original_path = self.original_project_path / filename
-        if original_path.exists():
-            return original_path
-        # Si no, buscar en el directorio de datos local
+        # Primero la carpeta externa (INDICE_DATA_DIR), si existe el archivo
+        if self.external_data_dir is not None:
+            external_path = self.external_data_dir / filename
+            if external_path.exists():
+                return external_path
+        # Si no, el directorio de datos del proyecto
         return self.project_root / self.data_dir / filename
 
     def get_notebook_path(self, filename: str) -> Path:

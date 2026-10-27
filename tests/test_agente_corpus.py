@@ -229,6 +229,8 @@ class TestElAgenteUsaElRag:
         monkeypatch.setattr(
             "agent.rag.rag_engine.ask_with_sources",
             lambda *a, **k: _respuesta_llm_falla(""))
+        monkeypatch.setattr("agent.rag.retriever.Retriever",
+                            lambda *a, **k: _IndiceFalso())
         resp = agente.ask(PREGUNTA_DOCUMENTOS)
         assert resp.success is True
         assert resp.result["llamada_llm"] is True
@@ -266,6 +268,7 @@ class TestElRagNoInvadeElCaminoEstadistico:
         assert resp.plan.analysis_type == AnalysisType.OUT_OF_DOMAIN
         assert "NO SE EJECUTO NINGUN ANALISIS" in resp.interpretation
 
+    @pytest.mark.red          # consulta Crossref y PubMed
     def test_pregunta_de_busqueda_sigue_yendo_a_la_web(self, agente, monkeypatch):
         llamadas = []
         monkeypatch.setattr(

@@ -1,3 +1,7 @@
+# Archivo UNICO de dependencias del proyecto:
+#   pip install -r requirements_agent.txt
+# (requirements.txt es una copia local antigua y no se versiona)
+
 # Dependencias base del proyecto original
 pandas>=2.0
 numpy>=1.24
@@ -17,6 +21,9 @@ python-docx>=0.8
 openai>=1.0
 pytest>=7.0
 pytest-cov>=4.0
+# Otros proveedores de agent/api_client.py - OPCIONALES (por defecto OpenAI):
+# anthropic>=0.40
+# google-generativeai>=0.8
 
 # Modulo RAG (agent/rag/) - opcion 2 del enunciado: TF-IDF local
 pypdf>=6.0          # extraccion de texto de los PDF

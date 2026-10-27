@@ -20,6 +20,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from agent.core.orchestrator import AnalysisType, StatisticalAgent
 
+# Todo el modulo carga el dataset real de la encuesta
+pytestmark = pytest.mark.datos
+
 
 # ── Casos REALES registrados (texto literal, con sus typos originales) ──
 PREGUNTAS_FUERA_DE_DOMINIO = [
@@ -111,6 +114,7 @@ class TestTresCasosRegistrados:
 # ── Preguntas validas: no deben romperse ─────────────────────────────────
 
 class TestPreguntasValidas:
+    @pytest.mark.red          # exige que el LLM interprete (OpenAI)
     def test_comparacion_genero_sigue_funcionando(self, agent, llm_spy):
         plan = agent._generate_plan(PREGUNTA_VALIDA)
         assert plan.analysis_type != AnalysisType.OUT_OF_DOMAIN
@@ -130,6 +134,7 @@ class TestPreguntasValidas:
         assert plan.analysis_type == AnalysisType.SEARCH
         assert plan.function_to_call == "literature_search"
 
+    @pytest.mark.red          # consulta Crossref y PubMed
     def test_busqueda_no_cita_dataset(self, agent, llm_spy):
         resp = agent.ask(PREGUNTA_BUSQUEDA)
         assert resp.traceability["dataset"] == "ninguno"
