@@ -1,0 +1,1883 @@
+{
+ "generado": "2026-10-26T19:48:39",
+ "min_n_grupo": 30,
+ "resumen": {
+  "T_global": {
+   "media": 50.684,
+   "ic": [
+    50.194,
+    51.175
+   ],
+   "se": 0.25,
+   "deff": 1.102,
+   "n": 1813,
+   "N": 29950
+  },
+  "riesgo": {
+   "media": 0.148,
+   "ic": [
+    0.132,
+    0.165
+   ],
+   "se": 0.0084,
+   "deff": 1.084,
+   "n": 1813,
+   "N": 29950
+  },
+  "alto": {
+   "media": 0.194,
+   "ic": [
+    0.175,
+    0.213
+   ],
+   "se": 0.0097,
+   "deff": 1.161,
+   "n": 1813,
+   "N": 29950
+  },
+  "media_sin_ponderar": 50.436,
+  "n": 1813,
+  "N": 29950,
+  "deff_kish_pesos": 1.126,
+  "histograma": [
+   10.3,
+   20.7,
+   30.0,
+   80.0,
+   310.6,
+   846.5,
+   1601.9,
+   3316.1,
+   3707.2,
+   5081.6,
+   4785.4,
+   3062.6,
+   2255.5,
+   2517.9,
+   987.8,
+   603.5,
+   551.5,
+   180.8,
+   0.0,
+   0.0
+  ],
+  "histograma_bordes": [
+   10,
+   14,
+   18,
+   22,
+   26,
+   30,
+   34,
+   38,
+   42,
+   46,
+   50,
+   54,
+   58,
+   62,
+   66,
+   70,
+   74,
+   78,
+   82,
+   86,
+   90
+  ]
+ },
+ "reproducibilidad": [
+  {
+   "Indicador": "Muestra válida (n)",
+   "Referencia entrega 1": 1813.0,
+   "Informe Ejecutivo": 1813,
+   "Reproducido": 1813.0,
+   "Estado vs. Referencia entrega 1": "VALIDADO",
+   "Estado vs. Informe Ejecutivo": "VALIDADO"
+  },
+  {
+   "Indicador": "Población (N)",
+   "Referencia entrega 1": 29950.0,
+   "Informe Ejecutivo": 29950,
+   "Reproducido": 29950.0,
+   "Estado vs. Referencia entrega 1": "VALIDADO",
+   "Estado vs. Informe Ejecutivo": "VALIDADO"
+  },
+  {
+   "Indicador": "T global poblacional",
+   "Referencia entrega 1": 50.7,
+   "Informe Ejecutivo": 51.2,
+   "Reproducido": 50.6845,
+   "Estado vs. Referencia entrega 1": "VALIDADO",
+   "Estado vs. Informe Ejecutivo": "DIFERENCIA IMPORTANTE"
+  },
+  {
+   "Indicador": "IC 95 % T global (inferior)",
+   "Referencia entrega 1": 50.2,
+   "Informe Ejecutivo": 50.6,
+   "Reproducido": 50.1944,
+   "Estado vs. Referencia entrega 1": "VALIDADO",
+   "Estado vs. Informe Ejecutivo": "DIFERENCIA MENOR"
+  },
+  {
+   "Indicador": "IC 95 % T global (superior)",
+   "Referencia entrega 1": 51.2,
+   "Informe Ejecutivo": 51.8,
+   "Reproducido": 51.1746,
+   "Estado vs. Referencia entrega 1": "VALIDADO",
+   "Estado vs. Informe Ejecutivo": "DIFERENCIA IMPORTANTE"
+  },
+  {
+   "Indicador": "Alfa de Cronbach",
+   "Referencia entrega 1": 0.909,
+   "Informe Ejecutivo": 0.909,
+   "Reproducido": 0.9091,
+   "Estado vs. Referencia entrega 1": "VALIDADO",
+   "Estado vs. Informe Ejecutivo": "VALIDADO"
+  },
+  {
+   "Indicador": "Proporción en riesgo (T < 40)",
+   "Referencia entrega 1": 0.148,
+   "Informe Ejecutivo": 0.195,
+   "Reproducido": 0.1481,
+   "Estado vs. Referencia entrega 1": "VALIDADO",
+   "Estado vs. Informe Ejecutivo": "DIFERENCIA IMPORTANTE"
+  },
+  {
+   "Indicador": "Proporción alta (T ≥ 60)",
+   "Referencia entrega 1": 0.192,
+   "Informe Ejecutivo": 0.296,
+   "Reproducido": 0.1937,
+   "Estado vs. Referencia entrega 1": "DIFERENCIA MENOR",
+   "Estado vs. Informe Ejecutivo": "DIFERENCIA IMPORTANTE"
+  },
+  {
+   "Indicador": "Efecto de diseño (Kish)",
+   "Referencia entrega 1": 1.12,
+   "Informe Ejecutivo": 1.12,
+   "Reproducido": 1.1201,
+   "Estado vs. Referencia entrega 1": "VALIDADO",
+   "Estado vs. Informe Ejecutivo": "VALIDADO"
+  },
+  {
+   "Indicador": "Muestra efectiva",
+   "Referencia entrega 1": 1619.0,
+   "Informe Ejecutivo": 1619,
+   "Reproducido": 1618.5785,
+   "Estado vs. Referencia entrega 1": "VALIDADO",
+   "Estado vs. Informe Ejecutivo": "VALIDADO"
+  },
+  {
+   "Indicador": "T pregrado",
+   "Referencia entrega 1": 49.3,
+   "Informe Ejecutivo": "—",
+   "Reproducido": 49.3287,
+   "Estado vs. Referencia entrega 1": "VALIDADO",
+   "Estado vs. Informe Ejecutivo": "—"
+  },
+  {
+   "Indicador": "T posgrado",
+   "Referencia entrega 1": 54.0,
+   "Informe Ejecutivo": "—",
+   "Reproducido": 54.0471,
+   "Estado vs. Referencia entrega 1": "VALIDADO",
+   "Estado vs. Informe Ejecutivo": "—"
+  },
+  {
+   "Indicador": "Brecha posgrado − pregrado",
+   "Referencia entrega 1": 4.7,
+   "Informe Ejecutivo": "—",
+   "Reproducido": 4.7185,
+   "Estado vs. Referencia entrega 1": "VALIDADO",
+   "Estado vs. Informe Ejecutivo": "—"
+  }
+ ],
+ "ic_metodos": [
+  {
+   "metodo": "Muestral, sin pesos (MAS)",
+   "media": 50.436,
+   "ic": [
+    49.959,
+    50.913
+   ],
+   "se": 0.2435
+  },
+  {
+   "metodo": "Ponderada, varianza de MAS",
+   "media": 50.684,
+   "ic": [
+    50.203,
+    51.166
+   ],
+   "se": 0.2457
+  },
+  {
+   "metodo": "Ponderada, varianza del diseño (Taylor)",
+   "media": 50.684,
+   "ic": [
+    50.194,
+    51.175
+   ],
+   "se": 0.25
+  }
+ ],
+ "dimensiones": {
+  "Autoaceptación": {
+   "media": 50.125,
+   "ic": [
+    49.686,
+    50.564
+   ],
+   "se": 0.2241,
+   "deff": 1.097,
+   "n": 1813,
+   "N": 29950
+  },
+  "Crecimiento personal": {
+   "media": 50.442,
+   "ic": [
+    50.022,
+    50.862
+   ],
+   "se": 0.2145,
+   "deff": 1.061,
+   "n": 1813,
+   "N": 29950
+  },
+  "Propósito de vida": {
+   "media": 50.342,
+   "ic": [
+    49.898,
+    50.786
+   ],
+   "se": 0.2266,
+   "deff": 1.089,
+   "n": 1813,
+   "N": 29950
+  },
+  "Dominio del entorno": {
+   "media": 50.544,
+   "ic": [
+    50.151,
+    50.937
+   ],
+   "se": 0.2006,
+   "deff": 1.08,
+   "n": 1813,
+   "N": 29950
+  },
+  "Relaciones positivas": {
+   "media": 50.383,
+   "ic": [
+    49.952,
+    50.814
+   ],
+   "se": 0.2201,
+   "deff": 1.131,
+   "n": 1813,
+   "N": 29950
+  },
+  "Autonomía": {
+   "media": 50.299,
+   "ic": [
+    49.867,
+    50.731
+   ],
+   "se": 0.2204,
+   "deff": 1.11,
+   "n": 1813,
+   "N": 29950
+  }
+ },
+ "comparaciones": {
+  "seccional": {
+   "etiqueta": "Seccional",
+   "grupos": {
+    "Bogotá": {
+     "media": 51.064,
+     "ic": [
+      50.246,
+      51.883
+     ],
+     "se": 0.4176,
+     "deff": 1.037,
+     "n": 653,
+     "N": 13608
+    },
+    "Tunja": {
+     "media": 50.648,
+     "ic": [
+      49.839,
+      51.458
+     ],
+     "se": 0.413,
+     "deff": 0.986,
+     "n": 538,
+     "N": 6824
+    },
+    "Bucaramanga": {
+     "media": 50.237,
+     "ic": [
+      49.037,
+      51.437
+     ],
+     "se": 0.6123,
+     "deff": 0.954,
+     "n": 261,
+     "N": 5556
+    },
+    "Villavicencio": {
+     "media": 50.069,
+     "ic": [
+      49.047,
+      51.092
+     ],
+     "se": 0.5215,
+     "deff": 1.012,
+     "n": 361,
+     "N": 3962
+    }
+   },
+   "pares": [
+    {
+     "grupo_1": "Bogotá",
+     "grupo_2": "Bucaramanga",
+     "media_1": 51.064,
+     "media_2": 50.237,
+     "diferencia": 0.827,
+     "error_estandar": 0.741,
+     "ic_inferior": -0.625,
+     "ic_superior": 2.28,
+     "z": 1.116,
+     "p_valor": 0.264,
+     "p_ajustado_bonferroni": 1.0,
+     "significativo": false
+    },
+    {
+     "grupo_1": "Bogotá",
+     "grupo_2": "Tunja",
+     "media_1": 51.064,
+     "media_2": 50.648,
+     "diferencia": 0.416,
+     "error_estandar": 0.587,
+     "ic_inferior": -0.735,
+     "ic_superior": 1.567,
+     "z": 0.708,
+     "p_valor": 0.479,
+     "p_ajustado_bonferroni": 1.0,
+     "significativo": false
+    },
+    {
+     "grupo_1": "Bogotá",
+     "grupo_2": "Villavicencio",
+     "media_1": 51.064,
+     "media_2": 50.069,
+     "diferencia": 0.995,
+     "error_estandar": 0.668,
+     "ic_inferior": -0.315,
+     "ic_superior": 2.304,
+     "z": 1.489,
+     "p_valor": 0.136,
+     "p_ajustado_bonferroni": 0.819,
+     "significativo": false
+    },
+    {
+     "grupo_1": "Bucaramanga",
+     "grupo_2": "Tunja",
+     "media_1": 50.237,
+     "media_2": 50.648,
+     "diferencia": -0.411,
+     "error_estandar": 0.739,
+     "ic_inferior": -1.859,
+     "ic_superior": 1.036,
+     "z": -0.557,
+     "p_valor": 0.578,
+     "p_ajustado_bonferroni": 1.0,
+     "significativo": false
+    },
+    {
+     "grupo_1": "Bucaramanga",
+     "grupo_2": "Villavicencio",
+     "media_1": 50.237,
+     "media_2": 50.069,
+     "diferencia": 0.168,
+     "error_estandar": 0.804,
+     "ic_inferior": -1.409,
+     "ic_superior": 1.744,
+     "z": 0.208,
+     "p_valor": 0.835,
+     "p_ajustado_bonferroni": 1.0,
+     "significativo": false
+    },
+    {
+     "grupo_1": "Tunja",
+     "grupo_2": "Villavicencio",
+     "media_1": 50.648,
+     "media_2": 50.069,
+     "diferencia": 0.579,
+     "error_estandar": 0.665,
+     "ic_inferior": -0.725,
+     "ic_superior": 1.883,
+     "z": 0.87,
+     "p_valor": 0.384,
+     "p_ajustado_bonferroni": 1.0,
+     "significativo": false
+    }
+   ],
+   "excluidos": {
+    "categorias": 0,
+    "casos": 0
+   }
+  },
+  "modalidad_exp": {
+   "etiqueta": "Pregrado / posgrado",
+   "grupos": {
+    "Posgrado": {
+     "media": 54.047,
+     "ic": [
+      52.957,
+      55.138
+     ],
+     "se": 0.5563,
+     "deff": 1.204,
+     "n": 411,
+     "N": 8606
+    },
+    "Pregrado": {
+     "media": 49.329,
+     "ic": [
+      48.8,
+      49.857
+     ],
+     "se": 0.2696,
+     "deff": 1.063,
+     "n": 1402,
+     "N": 21344
+    }
+   },
+   "pares": [
+    {
+     "grupo_1": "Posgrado",
+     "grupo_2": "Pregrado",
+     "media_1": 54.047,
+     "media_2": 49.329,
+     "diferencia": 4.718,
+     "error_estandar": 0.618,
+     "ic_inferior": 3.507,
+     "ic_superior": 5.93,
+     "z": 7.632,
+     "p_valor": 0.0,
+     "p_ajustado_bonferroni": 0.0,
+     "significativo": true
+    }
+   ],
+   "excluidos": {
+    "categorias": 0,
+    "casos": 0
+   }
+  },
+  "Género": {
+   "etiqueta": "Género",
+   "grupos": {
+    "Masculino": {
+     "media": 51.278,
+     "ic": [
+      50.571,
+      51.986
+     ],
+     "se": 0.3609,
+     "deff": 1.147,
+     "n": 918,
+     "N": 14532
+    },
+    "Femenino": {
+     "media": 50.131,
+     "ic": [
+      49.435,
+      50.828
+     ],
+     "se": 0.3552,
+     "deff": 1.099,
+     "n": 881,
+     "N": 15372
+    }
+   },
+   "pares": [
+    {
+     "grupo_1": "Femenino",
+     "grupo_2": "Masculino",
+     "media_1": 50.131,
+     "media_2": 51.278,
+     "diferencia": -1.147,
+     "error_estandar": 0.512,
+     "ic_inferior": -2.151,
+     "ic_superior": -0.143,
+     "z": -2.239,
+     "p_valor": 0.025,
+     "p_ajustado_bonferroni": 0.025,
+     "significativo": true
+    }
+   ],
+   "excluidos": {
+    "categorias": 4,
+    "casos": 14
+   }
+  },
+  "Estrato socioeconómico": {
+   "etiqueta": "Estrato socioeconómico",
+   "grupos": {
+    "Estrato 5": {
+     "media": 54.088,
+     "ic": [
+      51.24,
+      56.936
+     ],
+     "se": 1.453,
+     "deff": 1.347,
+     "n": 82,
+     "N": 1324
+    },
+    "Estrato 4": {
+     "media": 51.811,
+     "ic": [
+      50.633,
+      52.988
+     ],
+     "se": 0.6007,
+     "deff": 1.133,
+     "n": 356,
+     "N": 5944
+    },
+    "Estrato 1": {
+     "media": 51.261,
+     "ic": [
+      49.375,
+      53.147
+     ],
+     "se": 0.9624,
+     "deff": 1.212,
+     "n": 126,
+     "N": 2091
+    },
+    "Estrato 3": {
+     "media": 50.485,
+     "ic": [
+      49.8,
+      51.171
+     ],
+     "se": 0.3499,
+     "deff": 1.134,
+     "n": 836,
+     "N": 13645
+    },
+    "Estrato 2": {
+     "media": 49.048,
+     "ic": [
+      47.959,
+      50.137
+     ],
+     "se": 0.5556,
+     "deff": 1.078,
+     "n": 386,
+     "N": 6562
+    }
+   },
+   "pares": [
+    {
+     "grupo_1": "Estrato 1",
+     "grupo_2": "Estrato 2",
+     "media_1": 51.261,
+     "media_2": 49.048,
+     "diferencia": 2.213,
+     "error_estandar": 1.113,
+     "ic_inferior": 0.032,
+     "ic_superior": 4.394,
+     "z": 1.989,
+     "p_valor": 0.047,
+     "p_ajustado_bonferroni": 0.467,
+     "significativo": false
+    },
+    {
+     "grupo_1": "Estrato 1",
+     "grupo_2": "Estrato 3",
+     "media_1": 51.261,
+     "media_2": 50.485,
+     "diferencia": 0.775,
+     "error_estandar": 1.025,
+     "ic_inferior": -1.234,
+     "ic_superior": 2.785,
+     "z": 0.756,
+     "p_valor": 0.449,
+     "p_ajustado_bonferroni": 1.0,
+     "significativo": false
+    },
+    {
+     "grupo_1": "Estrato 1",
+     "grupo_2": "Estrato 4",
+     "media_1": 51.261,
+     "media_2": 51.811,
+     "diferencia": -0.55,
+     "error_estandar": 1.136,
+     "ic_inferior": -2.776,
+     "ic_superior": 1.676,
+     "z": -0.484,
+     "p_valor": 0.628,
+     "p_ajustado_bonferroni": 1.0,
+     "significativo": false
+    },
+    {
+     "grupo_1": "Estrato 1",
+     "grupo_2": "Estrato 5",
+     "media_1": 51.261,
+     "media_2": 54.088,
+     "diferencia": -2.827,
+     "error_estandar": 1.745,
+     "ic_inferior": -6.248,
+     "ic_superior": 0.593,
+     "z": -1.62,
+     "p_valor": 0.105,
+     "p_ajustado_bonferroni": 1.0,
+     "significativo": false
+    },
+    {
+     "grupo_1": "Estrato 2",
+     "grupo_2": "Estrato 3",
+     "media_1": 49.048,
+     "media_2": 50.485,
+     "diferencia": -1.438,
+     "error_estandar": 0.661,
+     "ic_inferior": -2.733,
+     "ic_superior": -0.143,
+     "z": -2.176,
+     "p_valor": 0.03,
+     "p_ajustado_bonferroni": 0.296,
+     "significativo": false
+    },
+    {
+     "grupo_1": "Estrato 2",
+     "grupo_2": "Estrato 4",
+     "media_1": 49.048,
+     "media_2": 51.811,
+     "diferencia": -2.763,
+     "error_estandar": 0.823,
+     "ic_inferior": -4.377,
+     "ic_superior": -1.149,
+     "z": -3.356,
+     "p_valor": 0.001,
+     "p_ajustado_bonferroni": 0.008,
+     "significativo": true
+    },
+    {
+     "grupo_1": "Estrato 2",
+     "grupo_2": "Estrato 5",
+     "media_1": 49.048,
+     "media_2": 54.088,
+     "diferencia": -5.04,
+     "error_estandar": 1.56,
+     "ic_inferior": -8.098,
+     "ic_superior": -1.983,
+     "z": -3.232,
+     "p_valor": 0.001,
+     "p_ajustado_bonferroni": 0.012,
+     "significativo": true
+    },
+    {
+     "grupo_1": "Estrato 3",
+     "grupo_2": "Estrato 4",
+     "media_1": 50.485,
+     "media_2": 51.811,
+     "diferencia": -1.325,
+     "error_estandar": 0.7,
+     "ic_inferior": -2.698,
+     "ic_superior": 0.047,
+     "z": -1.892,
+     "p_valor": 0.058,
+     "p_ajustado_bonferroni": 0.585,
+     "significativo": false
+    },
+    {
+     "grupo_1": "Estrato 3",
+     "grupo_2": "Estrato 5",
+     "media_1": 50.485,
+     "media_2": 54.088,
+     "diferencia": -3.603,
+     "error_estandar": 1.499,
+     "ic_inferior": -6.542,
+     "ic_superior": -0.664,
+     "z": -2.403,
+     "p_valor": 0.016,
+     "p_ajustado_bonferroni": 0.163,
+     "significativo": false
+    },
+    {
+     "grupo_1": "Estrato 4",
+     "grupo_2": "Estrato 5",
+     "media_1": 51.811,
+     "media_2": 54.088,
+     "diferencia": -2.278,
+     "error_estandar": 1.577,
+     "ic_inferior": -5.369,
+     "ic_superior": 0.814,
+     "z": -1.444,
+     "p_valor": 0.149,
+     "p_ajustado_bonferroni": 1.0,
+     "significativo": false
+    }
+   ],
+   "excluidos": {
+    "categorias": 1,
+    "casos": 18
+   }
+  },
+  "Nivel de formación": {
+   "etiqueta": "Nivel de formación",
+   "grupos": {
+    "Especialización": {
+     "media": 54.118,
+     "ic": [
+      52.61,
+      55.627
+     ],
+     "se": 0.7696,
+     "deff": 1.166,
+     "n": 224,
+     "N": 4755
+    },
+    "Maestría": {
+     "media": 53.949,
+     "ic": [
+      52.378,
+      55.521
+     ],
+     "se": 0.8019,
+     "deff": 1.25,
+     "n": 181,
+     "N": 3666
+    },
+    "Pregrado": {
+     "media": 49.343,
+     "ic": [
+      48.799,
+      49.887
+     ],
+     "se": 0.2775,
+     "deff": 1.061,
+     "n": 1328,
+     "N": 20207
+    },
+    "Técnico Profesional": {
+     "media": 48.085,
+     "ic": [
+      44.862,
+      51.308
+     ],
+     "se": 1.6445,
+     "deff": 1.128,
+     "n": 40,
+     "N": 620
+    }
+   },
+   "pares": [
+    {
+     "grupo_1": "Especialización",
+     "grupo_2": "Maestría",
+     "media_1": 54.118,
+     "media_2": 53.949,
+     "diferencia": 0.169,
+     "error_estandar": 1.112,
+     "ic_inferior": -2.009,
+     "ic_superior": 2.348,
+     "z": 0.152,
+     "p_valor": 0.879,
+     "p_ajustado_bonferroni": 1.0,
+     "significativo": false
+    },
+    {
+     "grupo_1": "Especialización",
+     "grupo_2": "Pregrado",
+     "media_1": 54.118,
+     "media_2": 49.343,
+     "diferencia": 4.775,
+     "error_estandar": 0.818,
+     "ic_inferior": 3.172,
+     "ic_superior": 6.379,
+     "z": 5.837,
+     "p_valor": 0.0,
+     "p_ajustado_bonferroni": 0.0,
+     "significativo": true
+    },
+    {
+     "grupo_1": "Especialización",
+     "grupo_2": "Técnico Profesional",
+     "media_1": 54.118,
+     "media_2": 48.085,
+     "diferencia": 6.033,
+     "error_estandar": 1.816,
+     "ic_inferior": 2.475,
+     "ic_superior": 9.592,
+     "z": 3.323,
+     "p_valor": 0.001,
+     "p_ajustado_bonferroni": 0.005,
+     "significativo": true
+    },
+    {
+     "grupo_1": "Maestría",
+     "grupo_2": "Pregrado",
+     "media_1": 53.949,
+     "media_2": 49.343,
+     "diferencia": 4.606,
+     "error_estandar": 0.849,
+     "ic_inferior": 2.943,
+     "ic_superior": 6.269,
+     "z": 5.428,
+     "p_valor": 0.0,
+     "p_ajustado_bonferroni": 0.0,
+     "significativo": true
+    },
+    {
+     "grupo_1": "Maestría",
+     "grupo_2": "Técnico Profesional",
+     "media_1": 53.949,
+     "media_2": 48.085,
+     "diferencia": 5.864,
+     "error_estandar": 1.83,
+     "ic_inferior": 2.278,
+     "ic_superior": 9.45,
+     "z": 3.205,
+     "p_valor": 0.001,
+     "p_ajustado_bonferroni": 0.008,
+     "significativo": true
+    },
+    {
+     "grupo_1": "Pregrado",
+     "grupo_2": "Técnico Profesional",
+     "media_1": 49.343,
+     "media_2": 48.085,
+     "diferencia": 1.258,
+     "error_estandar": 1.667,
+     "ic_inferior": -2.01,
+     "ic_superior": 4.526,
+     "z": 0.755,
+     "p_valor": 0.45,
+     "p_ajustado_bonferroni": 1.0,
+     "significativo": false
+    }
+   ],
+   "excluidos": {
+    "categorias": 4,
+    "casos": 40
+   }
+  }
+ },
+ "brecha": {
+  "pregunta": "¿La brecha Posgrado − Pregrado se mantiene al controlar edad, género, estrato y seccional?",
+  "modelos": [
+   {
+    "modelo": "M0: brecha bruta",
+    "brecha": 4.665,
+    "ic_inferior": 3.452,
+    "ic_superior": 5.877,
+    "p_valor": 0.0,
+    "r_cuadrado": 0.0407,
+    "n": 1804
+   },
+   {
+    "modelo": "M1: + edad",
+    "brecha": 2.452,
+    "ic_inferior": 0.852,
+    "ic_superior": 4.051,
+    "p_valor": 0.0027,
+    "r_cuadrado": 0.0532,
+    "n": 1804
+   },
+   {
+    "modelo": "M2: + edad, género, estrato y seccional",
+    "brecha": 2.574,
+    "ic_inferior": 0.966,
+    "ic_superior": 4.181,
+    "p_valor": 0.0017,
+    "r_cuadrado": 0.0647,
+    "n": 1804
+   }
+  ],
+  "brecha_bruta": 4.665,
+  "brecha_ajustada": 2.574,
+  "porcentaje_explicado_por_controles": 44.8,
+  "edad_media_ponderada": {
+   "Posgrado": 33.2,
+   "Pregrado": 21.4
+  },
+  "modelo_completo": {
+   "n": 1804,
+   "r_cuadrado": 0.0647,
+   "coeficientes": {
+    "Intercepto": {
+     "coef": 47.4931,
+     "se": 0.9425,
+     "ic_inferior": 45.6458,
+     "ic_superior": 49.3404,
+     "z": 50.3905,
+     "p_valor": 0.0
+    },
+    "Posgrado": {
+     "coef": 2.5738,
+     "se": 0.8201,
+     "ic_inferior": 0.9665,
+     "ic_superior": 4.1811,
+     "z": 3.1385,
+     "p_valor": 0.0017
+    },
+    "Edad (años, centrada)": {
+     "coef": 0.1928,
+     "se": 0.0448,
+     "ic_inferior": 0.105,
+     "ic_superior": 0.2806,
+     "z": 4.305,
+     "p_valor": 0.0
+    },
+    "Femenino (vs. masculino)": {
+     "coef": -0.9982,
+     "se": 0.4991,
+     "ic_inferior": -1.9764,
+     "ic_superior": -0.0201,
+     "z": -2.0001,
+     "p_valor": 0.0455
+    },
+    "Otro género (vs. masculino)": {
+     "coef": -4.3038,
+     "se": 2.0276,
+     "ic_inferior": -8.2778,
+     "ic_superior": -0.3299,
+     "z": -2.1227,
+     "p_valor": 0.0338
+    },
+    "Estrato socioeconómico": {
+     "coef": 0.9174,
+     "se": 0.2673,
+     "ic_inferior": 0.3936,
+     "ic_superior": 1.4413,
+     "z": 3.4325,
+     "p_valor": 0.0006
+    },
+    "Bucaramanga (vs. Bogotá)": {
+     "coef": 0.0389,
+     "se": 0.7296,
+     "ic_inferior": -1.3911,
+     "ic_superior": 1.469,
+     "z": 0.0534,
+     "p_valor": 0.9574
+    },
+    "Tunja (vs. Bogotá)": {
+     "coef": 0.5027,
+     "se": 0.5859,
+     "ic_inferior": -0.6456,
+     "ic_superior": 1.6511,
+     "z": 0.8581,
+     "p_valor": 0.3909
+    },
+    "Villavicencio (vs. Bogotá)": {
+     "coef": 0.9773,
+     "se": 0.6728,
+     "ic_inferior": -0.3414,
+     "ic_superior": 2.2961,
+     "z": 1.4525,
+     "p_valor": 0.1464
+    }
+   }
+  },
+  "n_excluidos_por_faltantes": 9,
+  "controles_descartados_sin_variacion": [],
+  "metodo": "Regresión ponderada (factores de expansión) con errores estándar de diseño: linealización de Binder en 8 estratos"
+ },
+ "multinivel": {
+  "programa": {
+   "nulo": {
+    "agrupamiento": "Programa de formación",
+    "covariables": [],
+    "n": 1813,
+    "n_grupos": 114,
+    "tamano_mediano_grupo": 4.0,
+    "grupos_con_menos_de_10": 76,
+    "tau2_entre_grupos": 10.925,
+    "sigma2_dentro": 100.692,
+    "icc": 0.0979,
+    "lr_tau2_cero": 42.91,
+    "p_valor_tau2_cero": 0.0,
+    "ranking_n_minimo": 30,
+    "grupos_mas_altos": [
+     {
+      "grupo": "ADMINISTRACIÓN DE EMPRESAS AGROPECUARIAS",
+      "n": 32,
+      "efecto_estimado": 1.16
+     },
+     {
+      "grupo": "INGENIERÍA CIVIL",
+      "n": 90,
+      "efecto_estimado": 1.05
+     },
+     {
+      "grupo": "INGENIERÍA INDUSTRIAL",
+      "n": 60,
+      "efecto_estimado": 0.96
+     },
+     {
+      "grupo": "DERECHO",
+      "n": 210,
+      "efecto_estimado": 0.77
+     },
+     {
+      "grupo": "ESPECIALIZACIÓN EN DERECHO ADMINISTRATIVO",
+      "n": 33,
+      "efecto_estimado": 0.53
+     }
+    ],
+    "grupos_mas_bajos": [
+     {
+      "grupo": "LICENCIATURA EN LENGUAS EXTRANJERAS",
+      "n": 61,
+      "efecto_estimado": -4.12
+     },
+     {
+      "grupo": "PSICOLOGÍA",
+      "n": 68,
+      "efecto_estimado": -3.9
+     },
+     {
+      "grupo": "ARQUITECTURA",
+      "n": 173,
+      "efecto_estimado": -2.94
+     },
+     {
+      "grupo": "LICENCIATURA EN ESPAÑOL Y LENGUAS EXTRANJERAS INGLÉS Y FRANCÉS",
+      "n": 43,
+      "efecto_estimado": -1.8
+     },
+     {
+      "grupo": "INGENIERÍA DE SISTEMAS",
+      "n": 68,
+      "efecto_estimado": -1.2
+     }
+    ]
+   },
+   "condicional_nivel_edad": {
+    "agrupamiento": "Programa de formación",
+    "covariables": [
+     "_posgrado",
+     "Edad"
+    ],
+    "n": 1813,
+    "n_grupos": 114,
+    "tamano_mediano_grupo": 4.0,
+    "grupos_con_menos_de_10": 76,
+    "tau2_entre_grupos": 4.881,
+    "sigma2_dentro": 98.946,
+    "icc": 0.047,
+    "lr_tau2_cero": 21.68,
+    "p_valor_tau2_cero": 0.0,
+    "ranking_n_minimo": 30,
+    "grupos_mas_altos": [
+     {
+      "grupo": "INGENIERÍA CIVIL",
+      "n": 90,
+      "efecto_estimado": 2.34
+     },
+     {
+      "grupo": "INGENIERÍA INDUSTRIAL",
+      "n": 60,
+      "efecto_estimado": 2.3
+     },
+     {
+      "grupo": "NEGOCIOS INTERNACIONALES",
+      "n": 126,
+      "efecto_estimado": 2.12
+     },
+     {
+      "grupo": "ADMINISTRACIÓN DE EMPRESAS AGROPECUARIAS",
+      "n": 32,
+      "efecto_estimado": 2.02
+     },
+     {
+      "grupo": "DERECHO",
+      "n": 210,
+      "efecto_estimado": 1.71
+     }
+    ],
+    "grupos_mas_bajos": [
+     {
+      "grupo": "PSICOLOGÍA",
+      "n": 68,
+      "efecto_estimado": -1.94
+     },
+     {
+      "grupo": "LICENCIATURA EN LENGUAS EXTRANJERAS",
+      "n": 61,
+      "efecto_estimado": -1.76
+     },
+     {
+      "grupo": "ARQUITECTURA",
+      "n": 173,
+      "efecto_estimado": -0.85
+     },
+     {
+      "grupo": "ESPECIALIZACIÓN EN DERECHO ADMINISTRATIVO",
+      "n": 33,
+      "efecto_estimado": -0.82
+     },
+     {
+      "grupo": "LICENCIATURA EN ESPAÑOL Y LENGUAS EXTRANJERAS INGLÉS Y FRANCÉS",
+      "n": 43,
+      "efecto_estimado": -0.04
+     }
+    ]
+   }
+  },
+  "nbc": {
+   "nulo": {
+    "agrupamiento": "Núcleo básico de conocimiento",
+    "covariables": [],
+    "n": 1813,
+    "n_grupos": 29,
+    "tamano_mediano_grupo": 37.0,
+    "grupos_con_menos_de_10": 5,
+    "tau2_entre_grupos": 3.374,
+    "sigma2_dentro": 104.228,
+    "icc": 0.0314,
+    "lr_tau2_cero": 30.72,
+    "p_valor_tau2_cero": 0.0,
+    "ranking_n_minimo": 30,
+    "grupos_mas_altos": [
+     {
+      "grupo": "Derecho y afines",
+      "n": 291,
+      "efecto_estimado": 2.53
+     },
+     {
+      "grupo": "Ingeniería industrial y afines",
+      "n": 64,
+      "efecto_estimado": 1.99
+     },
+     {
+      "grupo": "Administración",
+      "n": 152,
+      "efecto_estimado": 1.89
+     },
+     {
+      "grupo": "Ingeniería civil y afines",
+      "n": 118,
+      "efecto_estimado": 1.27
+     },
+     {
+      "grupo": "Negocios internacionales y afines",
+      "n": 126,
+      "efecto_estimado": 0.99
+     }
+    ],
+    "grupos_mas_bajos": [
+     {
+      "grupo": "Diseño",
+      "n": 37,
+      "efecto_estimado": -2.68
+     },
+     {
+      "grupo": "Psicología",
+      "n": 78,
+      "efecto_estimado": -2.15
+     },
+     {
+      "grupo": "Ingeniería electrónica, telecomunicaciones y afines",
+      "n": 40,
+      "efecto_estimado": -1.74
+     },
+     {
+      "grupo": "Arquitectura y afines",
+      "n": 175,
+      "efecto_estimado": -1.69
+     },
+     {
+      "grupo": "Ingeniería mecánica y afines",
+      "n": 102,
+      "efecto_estimado": -1.14
+     }
+    ]
+   },
+   "condicional_nivel_edad": {
+    "agrupamiento": "Núcleo básico de conocimiento",
+    "covariables": [
+     "_posgrado",
+     "Edad"
+    ],
+    "n": 1813,
+    "n_grupos": 29,
+    "tamano_mediano_grupo": 37.0,
+    "grupos_con_menos_de_10": 5,
+    "tau2_entre_grupos": 1.595,
+    "sigma2_dentro": 100.938,
+    "icc": 0.0156,
+    "lr_tau2_cero": 14.94,
+    "p_valor_tau2_cero": 0.0001,
+    "ranking_n_minimo": 30,
+    "grupos_mas_altos": [
+     {
+      "grupo": "Ingeniería industrial y afines",
+      "n": 64,
+      "efecto_estimado": 1.71
+     },
+     {
+      "grupo": "Derecho y afines",
+      "n": 291,
+      "efecto_estimado": 1.55
+     },
+     {
+      "grupo": "Negocios internacionales y afines",
+      "n": 126,
+      "efecto_estimado": 1.48
+     },
+     {
+      "grupo": "Administración",
+      "n": 152,
+      "efecto_estimado": 1.0
+     },
+     {
+      "grupo": "Ingeniería civil y afines",
+      "n": 118,
+      "efecto_estimado": 0.82
+     }
+    ],
+    "grupos_mas_bajos": [
+     {
+      "grupo": "Psicología",
+      "n": 78,
+      "efecto_estimado": -1.51
+     },
+     {
+      "grupo": "Diseño",
+      "n": 37,
+      "efecto_estimado": -1.42
+     },
+     {
+      "grupo": "Educación",
+      "n": 177,
+      "efecto_estimado": -1.15
+     },
+     {
+      "grupo": "Ingeniería electrónica, telecomunicaciones y afines",
+      "n": 40,
+      "efecto_estimado": -0.98
+     },
+     {
+      "grupo": "Arquitectura y afines",
+      "n": 175,
+      "efecto_estimado": -0.85
+     }
+    ]
+   }
+  },
+  "metodo": "Modelo multinivel de intercepto aleatorio (MixedLM, REML); prueba de tau2 = 0 por razon de verosimilitudes con mezcla de chi2 (Self y Liang, 1987)",
+  "limitacion": "MixedLM no admite factores de expansion: el ICC es muestral, no poblacional."
+ },
+ "dif": {
+  "genero": {
+   "comparacion": "Femenino vs. Masculino",
+   "n_focal": 881,
+   "n_referencia": 918,
+   "n_items": 29,
+   "items_significativos_bonferroni": 8,
+   "items_con_dif_relevante": [],
+   "delta_r2_maximo": 0.0147,
+   "tabla": [
+    {
+     "item": "18. Confianza opiniones",
+     "n": 1799,
+     "chi2_uniforme": 41.43,
+     "chi2_no_uniforme": 0.08,
+     "p_ajustado": 0.0,
+     "delta_r2": 0.0147,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "3. No temo opinar",
+     "n": 1799,
+     "chi2_uniforme": 22.2,
+     "chi2_no_uniforme": 4.27,
+     "p_ajustado": 0.0001,
+     "delta_r2": 0.012,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "13. Influenciado*",
+     "n": 1799,
+     "chi2_uniforme": 22.02,
+     "chi2_no_uniforme": 0.0,
+     "p_ajustado": 0.0005,
+     "delta_r2": 0.0117,
+     "magnitud": "despreciable",
+     "favorece_a": "Femenino"
+    },
+    {
+     "item": "5. Difícil dirigir vida*",
+     "n": 1799,
+     "chi2_uniforme": 28.89,
+     "chi2_no_uniforme": 0.94,
+     "p_ajustado": 0.0,
+     "delta_r2": 0.0099,
+     "magnitud": "despreciable",
+     "favorece_a": "Femenino"
+    },
+    {
+     "item": "7. Seguro conmigo",
+     "n": 1799,
+     "chi2_uniforme": 36.47,
+     "chi2_no_uniforme": 0.05,
+     "p_ajustado": 0.0,
+     "delta_r2": 0.0097,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "26. No he mejorado*",
+     "n": 1799,
+     "chi2_uniforme": 13.3,
+     "chi2_no_uniforme": 1.5,
+     "p_ajustado": 0.0177,
+     "delta_r2": 0.0075,
+     "magnitud": "despreciable",
+     "favorece_a": "Femenino"
+    },
+    {
+     "item": "22. Pocas relaciones*",
+     "n": 1799,
+     "chi2_uniforme": 9.12,
+     "chi2_no_uniforme": 5.19,
+     "p_ajustado": 0.0226,
+     "delta_r2": 0.0065,
+     "magnitud": "despreciable",
+     "favorece_a": "Femenino"
+    },
+    {
+     "item": "8. Pocos escuchan*",
+     "n": 1799,
+     "chi2_uniforme": 14.32,
+     "chi2_no_uniforme": 0.58,
+     "p_ajustado": 0.0168,
+     "delta_r2": 0.0059,
+     "magnitud": "despreciable",
+     "favorece_a": "Femenino"
+    },
+    {
+     "item": "19. Demandas deprimen*",
+     "n": 1799,
+     "chi2_uniforme": 0.12,
+     "chi2_no_uniforme": 9.44,
+     "p_ajustado": 0.2432,
+     "delta_r2": 0.0035,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "2. Solo/pocos amigos*",
+     "n": 1799,
+     "chi2_uniforme": 5.57,
+     "chi2_no_uniforme": 1.68,
+     "p_ajustado": 0.7746,
+     "delta_r2": 0.003,
+     "magnitud": "despreciable",
+     "favorece_a": "Femenino"
+    },
+    {
+     "item": "1. Contento con mi historia",
+     "n": 1799,
+     "chi2_uniforme": 6.1,
+     "chi2_no_uniforme": 0.82,
+     "p_ajustado": 0.9114,
+     "delta_r2": 0.0028,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "20. Clara dirección",
+     "n": 1799,
+     "chi2_uniforme": 8.44,
+     "chi2_no_uniforme": 0.12,
+     "p_ajustado": 0.4032,
+     "delta_r2": 0.0028,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "14. Responsable situación",
+     "n": 1799,
+     "chi2_uniforme": 4.94,
+     "chi2_no_uniforme": 0.27,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0025,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "16. Objetivos: satisfacción",
+     "n": 1799,
+     "chi2_uniforme": 2.88,
+     "chi2_no_uniforme": 4.68,
+     "p_ajustado": 0.6606,
+     "delta_r2": 0.0024,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "23. Difícil opinar*",
+     "n": 1799,
+     "chi2_uniforme": 0.05,
+     "chi2_no_uniforme": 5.06,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0022,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "6. Planes futuro",
+     "n": 1799,
+     "chi2_uniforme": 2.65,
+     "chi2_no_uniforme": 1.97,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0017,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "9. Preocupa opinión*",
+     "n": 1799,
+     "chi2_uniforme": 3.61,
+     "chi2_no_uniforme": 0.38,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0016,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "27. Desarrollado mucho",
+     "n": 1799,
+     "chi2_uniforme": 4.94,
+     "chi2_no_uniforme": 0.06,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0015,
+     "magnitud": "despreciable",
+     "favorece_a": "Femenino"
+    },
+    {
+     "item": "11. Activo proyectos",
+     "n": 1799,
+     "chi2_uniforme": 1.82,
+     "chi2_no_uniforme": 1.8,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0012,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "12. Amistades aportan",
+     "n": 1799,
+     "chi2_uniforme": 0.69,
+     "chi2_no_uniforme": 1.63,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0011,
+     "magnitud": "despreciable",
+     "favorece_a": "Femenino"
+    },
+    {
+     "item": "24. Orgulloso de mí",
+     "n": 1799,
+     "chi2_uniforme": 3.27,
+     "chi2_no_uniforme": 0.1,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0009,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "15. Bien pasado/futuro",
+     "n": 1799,
+     "chi2_uniforme": 2.45,
+     "chi2_no_uniforme": 0.0,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0008,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "28. Vida: estudio/cambio",
+     "n": 1799,
+     "chi2_uniforme": 1.67,
+     "chi2_no_uniforme": 0.8,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0008,
+     "magnitud": "despreciable",
+     "favorece_a": "Femenino"
+    },
+    {
+     "item": "17. Gusta personalidad",
+     "n": 1799,
+     "chi2_uniforme": 1.78,
+     "chi2_no_uniforme": 0.67,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0007,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "21. Sigo aprendiendo",
+     "n": 1799,
+     "chi2_uniforme": 0.78,
+     "chi2_no_uniforme": 0.34,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0004,
+     "magnitud": "despreciable",
+     "favorece_a": "Femenino"
+    },
+    {
+     "item": "25. Confianza amigos",
+     "n": 1799,
+     "chi2_uniforme": 0.03,
+     "chi2_no_uniforme": 0.96,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0004,
+     "magnitud": "despreciable",
+     "favorece_a": "Femenino"
+    },
+    {
+     "item": "10. Hogar a gusto",
+     "n": 1799,
+     "chi2_uniforme": 0.01,
+     "chi2_no_uniforme": 0.15,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0001,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "29. Pasos para cambiar",
+     "n": 1799,
+     "chi2_uniforme": 0.15,
+     "chi2_no_uniforme": 0.05,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0001,
+     "magnitud": "despreciable",
+     "favorece_a": "Masculino"
+    },
+    {
+     "item": "4. Preocupa eval. ajena*",
+     "n": 1799,
+     "chi2_uniforme": 0.02,
+     "chi2_no_uniforme": 0.08,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0,
+     "magnitud": "despreciable",
+     "favorece_a": "Femenino"
+    }
+   ],
+   "conclusion": "Ningún ítem presenta DIF de magnitud relevante (ΔR² < 0,035 en todos): la escala permite comparar estos grupos."
+  },
+  "nivel": {
+   "comparacion": "Posgrado vs. Pregrado",
+   "n_focal": 411,
+   "n_referencia": 1402,
+   "n_items": 29,
+   "items_significativos_bonferroni": 3,
+   "items_con_dif_relevante": [],
+   "delta_r2_maximo": 0.0112,
+   "tabla": [
+    {
+     "item": "22. Pocas relaciones*",
+     "n": 1813,
+     "chi2_uniforme": 3.97,
+     "chi2_no_uniforme": 20.98,
+     "p_ajustado": 0.0001,
+     "delta_r2": 0.0112,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "14. Responsable situación",
+     "n": 1813,
+     "chi2_uniforme": 13.16,
+     "chi2_no_uniforme": 6.1,
+     "p_ajustado": 0.0019,
+     "delta_r2": 0.0091,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "5. Difícil dirigir vida*",
+     "n": 1813,
+     "chi2_uniforme": 0.16,
+     "chi2_no_uniforme": 15.37,
+     "p_ajustado": 0.0123,
+     "delta_r2": 0.0051,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "19. Demandas deprimen*",
+     "n": 1813,
+     "chi2_uniforme": 0.0,
+     "chi2_no_uniforme": 11.12,
+     "p_ajustado": 0.1118,
+     "delta_r2": 0.0041,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "10. Hogar a gusto",
+     "n": 1813,
+     "chi2_uniforme": 8.77,
+     "chi2_no_uniforme": 0.01,
+     "p_ajustado": 0.3582,
+     "delta_r2": 0.0033,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "8. Pocos escuchan*",
+     "n": 1813,
+     "chi2_uniforme": 1.09,
+     "chi2_no_uniforme": 4.8,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0023,
+     "magnitud": "despreciable",
+     "favorece_a": "Pregrado"
+    },
+    {
+     "item": "3. No temo opinar",
+     "n": 1813,
+     "chi2_uniforme": 2.5,
+     "chi2_no_uniforme": 2.15,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0021,
+     "magnitud": "despreciable",
+     "favorece_a": "Pregrado"
+    },
+    {
+     "item": "11. Activo proyectos",
+     "n": 1813,
+     "chi2_uniforme": 6.11,
+     "chi2_no_uniforme": 0.06,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.002,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "13. Influenciado*",
+     "n": 1813,
+     "chi2_uniforme": 0.47,
+     "chi2_no_uniforme": 3.12,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0019,
+     "magnitud": "despreciable",
+     "favorece_a": "Pregrado"
+    },
+    {
+     "item": "18. Confianza opiniones",
+     "n": 1813,
+     "chi2_uniforme": 1.27,
+     "chi2_no_uniforme": 3.39,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0017,
+     "magnitud": "despreciable",
+     "favorece_a": "Pregrado"
+    },
+    {
+     "item": "7. Seguro conmigo",
+     "n": 1813,
+     "chi2_uniforme": 0.22,
+     "chi2_no_uniforme": 5.68,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0016,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "2. Solo/pocos amigos*",
+     "n": 1813,
+     "chi2_uniforme": 0.6,
+     "chi2_no_uniforme": 3.38,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0016,
+     "magnitud": "despreciable",
+     "favorece_a": "Pregrado"
+    },
+    {
+     "item": "25. Confianza amigos",
+     "n": 1813,
+     "chi2_uniforme": 2.2,
+     "chi2_no_uniforme": 1.5,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0016,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "15. Bien pasado/futuro",
+     "n": 1813,
+     "chi2_uniforme": 4.82,
+     "chi2_no_uniforme": 0.13,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0016,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "4. Preocupa eval. ajena*",
+     "n": 1813,
+     "chi2_uniforme": 2.34,
+     "chi2_no_uniforme": 1.41,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0015,
+     "magnitud": "despreciable",
+     "favorece_a": "Pregrado"
+    },
+    {
+     "item": "17. Gusta personalidad",
+     "n": 1813,
+     "chi2_uniforme": 3.61,
+     "chi2_no_uniforme": 0.83,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0013,
+     "magnitud": "despreciable",
+     "favorece_a": "Pregrado"
+    },
+    {
+     "item": "9. Preocupa opinión*",
+     "n": 1813,
+     "chi2_uniforme": 3.01,
+     "chi2_no_uniforme": 0.47,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0013,
+     "magnitud": "despreciable",
+     "favorece_a": "Pregrado"
+    },
+    {
+     "item": "26. No he mejorado*",
+     "n": 1813,
+     "chi2_uniforme": 2.04,
+     "chi2_no_uniforme": 0.2,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0011,
+     "magnitud": "despreciable",
+     "favorece_a": "Pregrado"
+    },
+    {
+     "item": "29. Pasos para cambiar",
+     "n": 1813,
+     "chi2_uniforme": 1.94,
+     "chi2_no_uniforme": 0.73,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0011,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "23. Difícil opinar*",
+     "n": 1813,
+     "chi2_uniforme": 0.28,
+     "chi2_no_uniforme": 1.76,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0009,
+     "magnitud": "despreciable",
+     "favorece_a": "Pregrado"
+    },
+    {
+     "item": "28. Vida: estudio/cambio",
+     "n": 1813,
+     "chi2_uniforme": 1.25,
+     "chi2_no_uniforme": 1.15,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0008,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "1. Contento con mi historia",
+     "n": 1813,
+     "chi2_uniforme": 0.2,
+     "chi2_no_uniforme": 1.63,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0007,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "12. Amistades aportan",
+     "n": 1813,
+     "chi2_uniforme": 0.56,
+     "chi2_no_uniforme": 0.93,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0007,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "24. Orgulloso de mí",
+     "n": 1813,
+     "chi2_uniforme": 0.28,
+     "chi2_no_uniforme": 1.84,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0006,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "21. Sigo aprendiendo",
+     "n": 1813,
+     "chi2_uniforme": 0.82,
+     "chi2_no_uniforme": 0.76,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0006,
+     "magnitud": "despreciable",
+     "favorece_a": "Pregrado"
+    },
+    {
+     "item": "16. Objetivos: satisfacción",
+     "n": 1813,
+     "chi2_uniforme": 0.35,
+     "chi2_no_uniforme": 1.34,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0005,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "20. Clara dirección",
+     "n": 1813,
+     "chi2_uniforme": 0.98,
+     "chi2_no_uniforme": 0.06,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0003,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "27. Desarrollado mucho",
+     "n": 1813,
+     "chi2_uniforme": 0.42,
+     "chi2_no_uniforme": 0.4,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0002,
+     "magnitud": "despreciable",
+     "favorece_a": "Posgrado"
+    },
+    {
+     "item": "6. Planes futuro",
+     "n": 1813,
+     "chi2_uniforme": 0.35,
+     "chi2_no_uniforme": 0.01,
+     "p_ajustado": 1.0,
+     "delta_r2": 0.0001,
+     "magnitud": "despreciable",
+     "favorece_a": "Pregrado"
+    }
+   ],
+   "conclusion": "Ningún ítem presenta DIF de magnitud relevante (ΔR² < 0,035 en todos): la escala permite comparar estos grupos."
+  }
+ }
+}
