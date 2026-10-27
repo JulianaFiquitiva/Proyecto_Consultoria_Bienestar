@@ -25,6 +25,9 @@ pytest-cov>=4.0
 # anthropic>=0.40
 # google-generativeai>=0.8
 
+# Dashboard de la entrega 2 (app/dashboard.py)
+streamlit>=1.46     # width="stretch" en los graficos
+
 # Modulo RAG (agent/rag/) - opcion 2 del enunciado: TF-IDF local
 pypdf>=6.0          # extraccion de texto de los PDF
 scikit-learn>=1.4   # TfidfVectorizer

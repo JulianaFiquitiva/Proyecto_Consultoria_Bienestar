@@ -11,6 +11,7 @@ no tiene una fuente, se abstiene.
 ## Qué contiene
 - `agent/`: agente estadístico (`core/`, `statistics/`, `psychometrics/`,
   `validation/`) y módulo RAG (`agent/rag/`).
+- `app/dashboard.py`: dashboard de resultados (entrega 2).
 - `prompts/`: prompt versionado del RAG.
 - `tests/`: pruebas automáticas y bancos de preguntas (19 del primer banco
   y 20 del banco final, con respuesta y página comprobadas).
@@ -52,7 +53,20 @@ Todos los comandos se ejecutan desde la carpeta del proyecto.
 Dentro del agente: `resumen`, `genero`, `seccional`, `modalidad`, `estrato`,
 `dimensiones`, `edad`, `regresion`, `validar`, `validacion`,
 `corpus <pregunta>`, `buscar <tema>`, `ayuda`, `salir`, o preguntas en
-lenguaje natural.
+lenguaje natural. Ejemplos de la entrega 2:
+
+- `¿La brecha de posgrado se mantiene controlando la edad?`
+- `¿La escala mide igual a hombres y mujeres?` (DIF; tarda unos 35 s la primera vez)
+- `¿Cuánto depende el bienestar del programa?`
+
+### Dashboard (entrega 2)
+    python -m agent.reports.entrega2      # calcula los hallazgos (~1,5 min, una vez)
+    streamlit run app/dashboard.py        # abre el dashboard en el navegador
+
+El primer comando guarda solo agregados en
+`resultados/entrega2/hallazgos_entrega2.json`. El dashboard lo lee; si no
+existe, calcula todo desde `data/`. No usa OpenAI ni internet, y no
+muestra grupos con menos de 30 casos.
 
 Cada consulta al corpus añade una fila a `agent/rag/logs/rag_consultas.csv`.
 
