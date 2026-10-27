@@ -11,7 +11,9 @@ streamlit>=1.46
 
 # Chat: corpus (RAG) y redaccion de sus respuestas
 openai>=1.0
-chromadb>=1.5
-scikit-learn>=1.4
+# Las mismas versiones con que se construyo rag_store/ (el indice no se
+# lee con otras: el vectorizador va serializado con joblib)
+chromadb==1.5.9
+scikit-learn==1.9.0
 joblib>=1.3
 pypdf>=6.0

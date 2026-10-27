@@ -7,9 +7,8 @@
 !resultados/*.csv
 # hojas de revision ciega exportadas a Excel (tests/hoja_a_xlsx.py)
 !resultados/*.xlsx
-# indice RAG: ~100 MB de binarios, se regenera con
-#   python -m agent.rag.index --rebuild
-rag_store/*
+# indice RAG (~100 MB): se versiona para que la app publicada responda con
+# el corpus. Se regenera con  python -m agent.rag.index --rebuild
 !rag_store/calibracion.csv
 !agent/rag/logs/*.csv
 
@@ -40,11 +39,8 @@ env/
 # Archivos grandes innecesarios
 IndiceFelicidad/
 
-# Corpus de articulos y su indice
+# Corpus de articulos (los PDF no se suben; su indice en rag_store/ si)
 docs/rag_corpus/*.pdf
-rag_store/*
-!rag_store/BACKEND.txt
-!rag_store/calibracion.csv
 
 # Datos de la contraparte y claves
 data/*.xlsx
