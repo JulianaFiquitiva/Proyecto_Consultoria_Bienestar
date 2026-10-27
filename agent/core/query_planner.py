@@ -47,7 +47,7 @@ class QueryPlan:
 
 @dataclass
 class QueryResult:
-    plan: QueryResult
+    plan: QueryPlan
     data: Any
     interpretation: str
     warnings: List[str]
