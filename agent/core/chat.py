@@ -49,6 +49,8 @@ class RespuestaChat:
     citas: List[Dict[str, Any]] = field(default_factory=list)
     # Gráfico sugerido para la app, p. ej. {"tipo": "comparacion", "clave": "Género"}
     grafico: Optional[Dict[str, str]] = None
+    # Pasos con los que el agente eligió el método (entrega 1), en markdown
+    decision: List[str] = field(default_factory=list)
 
 
 def _norm(texto: str) -> str:
@@ -143,7 +145,8 @@ class MotorChat:
 
         if texto is not None:
             return RespuestaChat(texto=texto, ruta="encuesta", fuente=self.fuente_agregados,
-                                 metodo=plan.description, grafico=grafico)
+                                 metodo=self._con_tildes(plan.description), grafico=grafico,
+                                 decision=self._decision(plan, grafico))
 
         # No esta precalculado
         if self.modo == "completo":
@@ -167,7 +170,10 @@ class MotorChat:
             fuente=str(r.traceability.get("dataset", "data/")),
             metodo=str(r.traceability.get("method") or r.plan.description),
             usa_servicio_externo=bool(self.agente.llm.is_configured),
-            preformateado=True, avisos=list(r.warnings))
+            preformateado=True, avisos=list(r.warnings),
+            decision=["**Ruta:** encuesta, con los datos de data/.",
+                      f"**Análisis detectado:** {r.plan.description.lower()}.",
+                      f"**Método:** {r.traceability.get('method') or r.plan.function_to_call}."])
 
     def _clave_comparacion(self, group_col: str) -> Optional[str]:
         objetivo = _norm(group_col)
@@ -178,6 +184,96 @@ class MotorChat:
             if _norm(clave).split()[0] == objetivo.split()[0]:
                 return clave
         return None
+
+    # ── Cómo decidió el agente ───────────────────────────────────────────
+    # Método de cada análisis del plan: (qué hace, por qué ese método)
+    METODOS = {
+        "descriptive_overview": (
+            "Media y proporciones ponderadas con los factores de expansión; intervalos "
+            "con la varianza del diseño estratificado (linealización de Taylor).",
+            "La pregunta pide un resumen de toda la población, no una comparación."),
+        "adjusted_gap": (
+            "Regresión ponderada con errores estándar de diseño, en tres modelos anidados "
+            "(sin controles, + edad, + género, estrato y seccional).",
+            "«Controlando» o «se mantiene» pide separar la brecha de otras variables: "
+            "una prueba de dos grupos no puede hacerlo."),
+        "dif_analysis": (
+            "Regresión logística ordinal por ítem (Zumbo) y ΔR² de Nagelkerke.",
+            "«Mide igual» es una pregunta sobre los ítems de la escala, no sobre las medias."),
+        "multilevel_icc": (
+            "Modelo multinivel de intercepto aleatorio y correlación intraclase (ICC).",
+            "Los estudiantes están anidados en programas: el ICC dice qué parte de la "
+            "variación está entre programas."),
+        "dimension_profile": (
+            "Media ponderada de cada dimensión de Ryff con su intervalo de diseño.",
+            "La pregunta pide el perfil por dimensiones."),
+        "validate_results": (
+            "Comparación de cada cifra reproducida con la reportada, con tolerancia "
+            "según su redondeo.",
+            "La pregunta pide verificar el estudio anterior."),
+    }
+    METODOS["full_validation"] = METODOS["validate_results"]
+    # Las descripciones del plan van sin tildes y con nombres de columna
+    TILDES = {"comparacion": "comparación", "genero": "género", "validacion": "validación",
+              "items": "ítems", "analisis": "análisis", "correlacion": "correlación",
+              "regresion": "regresión"}
+    NOMBRES = {"T_Global": "puntaje T global", "modalidad_exp": "pregrado/posgrado",
+               "Edad": "edad", "Género": "género", "seccional": "seccional",
+               "Estrato socioeconómico": "estrato", "Programa de formación": "programa",
+               "Núcleo básico de conocimiento": "núcleo básico"}
+
+    @classmethod
+    def _con_tildes(cls, texto: str) -> str:
+        for sin, con in cls.TILDES.items():
+            texto = texto.replace(sin, con).replace(sin.capitalize(), con.capitalize())
+        return texto
+
+    def _decision(self, plan, grafico) -> List[str]:
+        """Pasos del agente de la entrega 1: ruta -> análisis -> método -> resultado."""
+        variables = ", ".join(self.NOMBRES.get(v, v.removeprefix("T_"))
+                              for v in (plan.variables_needed or []) if v)
+        analisis = self._con_tildes(plan.description).lower()
+        pasos = ["**Ruta:** encuesta. La pregunta es sobre los datos, no sobre la "
+                 "literatura, así que no se consulta el corpus ni el modelo de lenguaje.",
+                 f"**Análisis detectado:** {analisis}"
+                 + (f" (variables: {variables})." if variables else ".")]
+        f = plan.function_to_call
+        if grafico and grafico.get("tipo") == "comparacion":
+            pasos += self._decision_comparacion(grafico["clave"])
+        elif f in self.METODOS:
+            que, porque = self.METODOS[f]
+            pasos += [f"**Método elegido:** {que}", f"**Por qué:** {porque}"]
+        return pasos
+
+    def _decision_comparacion(self, clave: str) -> List[str]:
+        C = self.H["comparaciones"][clave]
+        k = len(C["grupos"])
+        pasos = [f"**Grupos:** {k} con al menos {self.H.get('min_n_grupo', 30)} respuestas"
+                 + (f" ({C['excluidos']['categorias']} categoría(s) pequeñas quedan fuera)."
+                    if C.get("excluidos", {}).get("categorias") else ".")]
+        s = C.get("seleccion")
+        if s:
+            normal = [a for a in s["supuestos"] if a["prueba"] == "Shapiro-Wilk"]
+            levene = next((a for a in s["supuestos"] if a["prueba"] == "Levene"), None)
+            no_normal = sum(not a["cumple"] for a in normal)
+            pasos.append(f"**Revisa supuestos:** normalidad (Shapiro-Wilk) en cada grupo: "
+                         f"{no_normal} de {len(normal)} no la cumplen"
+                         + (f"; varianzas iguales (Levene): p = {levene['p']:.3f}, "
+                            f"{'se cumple' if levene['cumple'] else 'no se cumple'}"
+                            if levene else "") + ".")
+            pasos.append(f"**Elige la prueba:** {s['prueba']}, porque {s['razon'].lower()}. "
+                         f"Alternativa: {s['alternativa']}.")
+            r = s.get("resultado")
+            if r:
+                p = r["p"]
+                efecto = (f", {r['efecto_nombre']} = {r['efecto']:.3f}"
+                          if r.get("efecto") is not None else "")
+                pasos.append(f"**Resultado de la prueba:** estadístico = {r['estadistico']:.2f}, "
+                             f"p {'< 0.001' if p < 0.001 else f'= {p:.3f}'}{efecto}.")
+        pasos.append("**Con el diseño muestral (entrega 2):** medias ponderadas e intervalos "
+                     "de Taylor; cada par se prueba con Wald y la corrección de Bonferroni. "
+                     "Son las cifras de la respuesta.")
+        return pasos
 
     # ── Plantillas ───────────────────────────────────────────────────────
     def _txt_resumen(self) -> str:

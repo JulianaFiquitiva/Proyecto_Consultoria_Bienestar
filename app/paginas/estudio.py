@@ -71,10 +71,13 @@ hitos = [
                  "modalidad.", ""),
     ("Análisis original", "Consultorio de Estadística USTA (febrero de 2026): depuración, "
                           "factores de expansión, psicometría, puntajes T e inferencia.", ""),
-    ("Entrega 1", "Agente «Nada sin fuente»: responde sobre la encuesta y 20 documentos "
-                  "académicos, siempre con fuente; sin fuente, se abstiene.", ""),
+    ("Entrega 1", "Agente estadístico: recibe una pregunta sobre los datos en lenguaje "
+                  "natural, decide qué análisis hacer, elige el método (revisa supuestos y "
+                  "escoge la prueba), lo ejecuta e interpreta el resultado.", ""),
+    ("Avance", "RAG: el agente responde también sobre 20 documentos académicos, citando "
+               "documento y página; sin fuente, se abstiene.", ""),
     ("Entrega 2", "Estimaciones con el diseño muestral, reproducción del estudio anterior, DIF, "
-                  "brecha ajustada, modelo multinivel y esta app.", ""),
+                  "brecha ajustada, modelo multinivel y esta app con el agente en línea.", ""),
     ("Entrega final", "Encuesta viva: respuestas nuevas que actualizan los resultados.", "futuro"),
 ]
 st.markdown('<div class="linea">' + "".join(

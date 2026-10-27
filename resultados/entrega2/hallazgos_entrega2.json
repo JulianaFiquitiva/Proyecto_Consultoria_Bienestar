@@ -1,5 +1,5 @@
 {
- "generado": "2026-10-26T22:18:27",
+ "generado": "2026-10-26T22:57:40",
  "min_n_grupo": 30,
  "resumen": {
   "T_global": {
@@ -786,6 +786,50 @@
    "excluidos": {
     "categorias": 0,
     "casos": 0
+   },
+   "seleccion": {
+    "prueba": "Kruskal-Wallis",
+    "razon": "Normalidad o homogeneidad no cumplidas (prueba no paramétrica)",
+    "alternativa": "ANOVA de una vía (si se transforman los datos)",
+    "supuestos": [
+     {
+      "nombre": "Normalidad en Bogotá",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.0,
+      "cumple": false
+     },
+     {
+      "nombre": "Normalidad en Villavicencio",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.0511,
+      "cumple": true
+     },
+     {
+      "nombre": "Normalidad en Tunja",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.001,
+      "cumple": false
+     },
+     {
+      "nombre": "Normalidad en Bucaramanga",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.3493,
+      "cumple": true
+     },
+     {
+      "nombre": "Homogeneidad de varianzas",
+      "prueba": "Levene",
+      "p": 0.649,
+      "cumple": true
+     }
+    ],
+    "resultado": {
+     "prueba": "Kruskal-Wallis",
+     "estadistico": 1.078,
+     "p": 0.7823896784426497,
+     "efecto": 0.001,
+     "efecto_nombre": "η²"
+    }
    }
   },
   "modalidad_exp": {
@@ -1013,6 +1057,38 @@
    "excluidos": {
     "categorias": 0,
     "casos": 0
+   },
+   "seleccion": {
+    "prueba": "Mann-Whitney U",
+    "razon": "Normalidad no cumplida (prueba no paramétrica)",
+    "alternativa": "t-test de Welch (si se transforman los datos)",
+    "supuestos": [
+     {
+      "nombre": "Normalidad en Pregrado",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.0,
+      "cumple": false
+     },
+     {
+      "nombre": "Normalidad en Posgrado",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.0144,
+      "cumple": false
+     },
+     {
+      "nombre": "Homogeneidad de varianzas",
+      "prueba": "Levene",
+      "p": 0.1893,
+      "cumple": true
+     }
+    ],
+    "resultado": {
+     "prueba": "Mann-Whitney U",
+     "estadistico": 217785.5,
+     "p": 4.8719945790281887e-14,
+     "efecto": -0.43,
+     "efecto_nombre": "Cohen's d"
+    }
    }
   },
   "Género": {
@@ -1240,6 +1316,38 @@
    "excluidos": {
     "categorias": 4,
     "casos": 14
+   },
+   "seleccion": {
+    "prueba": "Mann-Whitney U",
+    "razon": "Normalidad no cumplida (prueba no paramétrica)",
+    "alternativa": "t-test de Welch (si se transforman los datos)",
+    "supuestos": [
+     {
+      "nombre": "Normalidad en Masculino",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.0,
+      "cumple": false
+     },
+     {
+      "nombre": "Normalidad en Femenino",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.0,
+      "cumple": false
+     },
+     {
+      "nombre": "Homogeneidad de varianzas",
+      "prueba": "Levene",
+      "p": 0.978,
+      "cumple": true
+     }
+    ],
+    "resultado": {
+     "prueba": "Mann-Whitney U",
+     "estadistico": 441310.0,
+     "p": 0.0007991630913936963,
+     "efecto": 0.136,
+     "efecto_nombre": "Cohen's d"
+    }
    }
   },
   "Estrato socioeconómico": {
@@ -1896,6 +2004,56 @@
    "excluidos": {
     "categorias": 1,
     "casos": 18
+   },
+   "seleccion": {
+    "prueba": "Kruskal-Wallis",
+    "razon": "Normalidad o homogeneidad no cumplidas (prueba no paramétrica)",
+    "alternativa": "ANOVA de una vía (si se transforman los datos)",
+    "supuestos": [
+     {
+      "nombre": "Normalidad en Estrato 3",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.0,
+      "cumple": false
+     },
+     {
+      "nombre": "Normalidad en Estrato 2",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.4665,
+      "cumple": true
+     },
+     {
+      "nombre": "Normalidad en Estrato 1",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.2023,
+      "cumple": true
+     },
+     {
+      "nombre": "Normalidad en Estrato 4",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.0205,
+      "cumple": false
+     },
+     {
+      "nombre": "Normalidad en Estrato 5",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.2394,
+      "cumple": true
+     },
+     {
+      "nombre": "Homogeneidad de varianzas",
+      "prueba": "Levene",
+      "p": 0.0055,
+      "cumple": false
+     }
+    ],
+    "resultado": {
+     "prueba": "Kruskal-Wallis",
+     "estadistico": 17.854,
+     "p": 0.0013181473362768193,
+     "efecto": 0.012,
+     "efecto_nombre": "η²"
+    }
    }
   },
   "Nivel de formación": {
@@ -2395,6 +2553,50 @@
    "excluidos": {
     "categorias": 4,
     "casos": 40
+   },
+   "seleccion": {
+    "prueba": "Kruskal-Wallis",
+    "razon": "Normalidad o homogeneidad no cumplidas (prueba no paramétrica)",
+    "alternativa": "ANOVA de una vía (si se transforman los datos)",
+    "supuestos": [
+     {
+      "nombre": "Normalidad en Pregrado",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.0,
+      "cumple": false
+     },
+     {
+      "nombre": "Normalidad en Técnico Profesional",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.2422,
+      "cumple": true
+     },
+     {
+      "nombre": "Normalidad en Especialización",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.1733,
+      "cumple": true
+     },
+     {
+      "nombre": "Normalidad en Maestría",
+      "prueba": "Shapiro-Wilk",
+      "p": 0.0768,
+      "cumple": true
+     },
+     {
+      "nombre": "Homogeneidad de varianzas",
+      "prueba": "Levene",
+      "p": 0.2167,
+      "cumple": true
+     }
+    ],
+    "resultado": {
+     "prueba": "Kruskal-Wallis",
+     "estadistico": 57.874,
+     "p": 1.6725458706822335e-12,
+     "efecto": 0.032,
+     "efecto_nombre": "η²"
+    }
    }
   }
  },

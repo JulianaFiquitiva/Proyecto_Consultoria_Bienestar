@@ -52,6 +52,9 @@ def mostrar_respuesta(m):
     else:
         st.markdown(m["texto"])
     grafico(m.get("grafico"))
+    if m.get("decision"):
+        with st.expander("Cómo eligió el método el agente", icon=":material/account_tree:"):
+            st.markdown("\n".join(f"{i}. {paso}" for i, paso in enumerate(m["decision"], 1)))
     etiqueta, icono = RUTA.get(m["ruta"], (m["ruta"], ":material/help:"))
     st.caption(f"{etiqueta} · Fuente: {m['fuente']}"
                + (f" · Método: {m['metodo']}" if m["metodo"] else ""))
@@ -69,19 +72,22 @@ def responder(pregunta):
                           "la búsqueda bibliográfica en esta sesión. Las preguntas sobre los "
                           "resultados de la encuesta siguen disponibles."),
                 "ruta": "abstencion", "fuente": "ninguna", "metodo": "",
-                "preformateado": False, "avisos": [], "grafico": None}
+                "preformateado": False, "avisos": [], "grafico": None, "decision": []}
     r = motor.responder(pregunta)
     if r.usa_servicio_externo:
         st.session_state["consultas_externas"] += 1
     return {"texto": r.texto, "ruta": r.ruta, "fuente": r.fuente, "metodo": r.metodo,
-            "preformateado": r.preformateado, "avisos": r.avisos, "grafico": r.grafico}
+            "preformateado": r.preformateado, "avisos": r.avisos, "grafico": r.grafico,
+            "decision": r.decision}
 
 
 # ── Barra lateral ─────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("### Pregúntale al agente")
-    st.caption("Responde sobre los resultados de la encuesta y sobre 20 documentos "
-               "académicos. Cada respuesta dice de dónde sale; si no hay fuente, no responde.")
+    st.caption("Ante una pregunta sobre los datos, el agente decide qué análisis hacer, "
+               "elige el método estadístico y explica el resultado. Para la literatura "
+               "usa el RAG con 20 documentos académicos. Cada respuesta dice de dónde sale; "
+               "si no hay fuente, no responde.")
     if MODO == "publico":
         st.caption("Versión pública: las cifras salen de resultados agregados, nunca de los "
                    "datos individuales.")
@@ -96,9 +102,10 @@ with st.sidebar:
 ejemplo = None
 if not st.session_state["chat"]:
     c.hero("Chat", "Pregúntale al agente",
-           "Escriba su pregunta en la caja de abajo o elija un ejemplo. Las preguntas sobre la "
-           "encuesta se responden con cifras y un gráfico; para la literatura académica, "
-           "empiece con <b>corpus</b>.")
+           "Pregunte sobre los datos y el agente decide qué método estadístico usar, lo "
+           "aplica y explica el resultado con cifras y un gráfico. Abra «Cómo eligió el "
+           "método» en cada respuesta para ver el paso a paso. Para la literatura "
+           "académica, empiece con <b>corpus</b>.")
     cols = st.columns(2)
     for i, texto in enumerate(EJEMPLOS):
         if cols[i % 2].button(texto, key=f"ejemplo_{i}", width="stretch",

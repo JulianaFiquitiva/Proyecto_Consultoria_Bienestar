@@ -175,6 +175,10 @@ def ic(e, dec=1, pct=False):
     return f"IC 95 %: {e['ic'][0]:.{dec}f} – {e['ic'][1]:.{dec}f}"
 
 
+def valor_p(p):
+    return "< 0.001" if p < 0.001 else f"{p:.3f}"
+
+
 # ── Gráficos ──────────────────────────────────────────────────────────
 def layout(fig, alto=380, **kw):
     kw.setdefault("margin", dict(l=10, r=10, t=50, b=10))

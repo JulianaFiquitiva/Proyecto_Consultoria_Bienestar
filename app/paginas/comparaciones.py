@@ -72,6 +72,25 @@ else:
                          "p ajustado", "Significativa"]
         st.dataframe(pares, hide_index=True, width="stretch")
 
+s = datos.get("seleccion")
+if s:
+    with st.expander(f"Cómo eligió la prueba el agente: {s['prueba']}",
+                     icon=":material/account_tree:"):
+        st.markdown(f"El agente de la entrega 1 revisa los supuestos antes de elegir la prueba. "
+                    f"Aquí eligió **{s['prueba']}** porque {s['razon'].lower()} "
+                    f"(alternativa: {s['alternativa']}).")
+        st.table(pd.DataFrame([{"Supuesto": a["nombre"], "Prueba": a["prueba"],
+                                "p": "< 0.001" if a["p"] < 0.001 else f"{a['p']:.3f}",
+                                "¿Se cumple?": "Sí" if a["cumple"] else "No"}
+                               for a in s["supuestos"]]).set_index("Supuesto"))
+        r = s.get("resultado")
+        if r:
+            p_txt = "< 0.001" if r["p"] < 0.001 else f"= {r['p']:.3f}"
+            st.markdown(f"Resultado: estadístico = {r['estadistico']:.2f}, p {p_txt}"
+                        + (f", {r['efecto_nombre']} = {r['efecto']:.3f}"
+                           if r.get("efecto") is not None else "") + ".")
+        st.caption("Las cifras de arriba agregan la varianza del diseño muestral (entrega 2).")
+
 with st.expander("Ver los datos de cada grupo"):
     st.dataframe(pd.DataFrame([{"Grupo": k, "n": g["n"], "N estimado": g["N"], "T": g["media"],
                                 "IC inf.": g["ic"][0], "IC sup.": g["ic"][1],

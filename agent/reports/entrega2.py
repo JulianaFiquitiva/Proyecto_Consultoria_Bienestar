@@ -53,6 +53,36 @@ def _etiqueta_grupo(g: str) -> str:
         return g
 
 
+def _seleccion_metodo(df: pd.DataFrame, col: str) -> Optional[Dict[str, Any]]:
+    """Cómo elige la prueba el agente de la entrega 1 (supuestos -> prueba) para
+    esta comparación. Solo estadísticos agregados, para mostrarlo en la app."""
+    from agent.statistics.statistical_engine import StatisticalEngine
+    try:
+        plan, res = StatisticalEngine().run_comparison(df, "T_Global", col, "factor_expansion")
+    except Exception:          # la app sigue sin esta parte si una prueba falla
+        return None
+    if plan.method == "none":
+        return None
+
+    def tildes(s):       # el motor escribe sin tildes
+        return s.replace("parametrica", "paramétrica").replace("una via", "una vía")
+
+    return {
+        "prueba": plan.test_name, "razon": tildes(plan.reason),
+        "alternativa": tildes(plan.alternative),
+        "supuestos": [{"nombre": a.name.replace(a.name.removeprefix("Normalidad en "),
+                                                _etiqueta_grupo(a.name.removeprefix(
+                                                    "Normalidad en "))),
+                       "prueba": a.test_name, "p": float(a.p_value),
+                       "cumple": bool(a.passed)} for a in plan.assumptions_checked],
+        "resultado": None if res is None else {
+            "prueba": res.test_name, "estadistico": round(float(res.statistic), 3),
+            "p": float(res.p_value), "efecto": round(float(res.effect_size), 3)
+            if res.effect_size is not None else None,
+            "efecto_nombre": res.effect_size_name},
+    }
+
+
 def calcular(prep: pd.DataFrame, irt: pd.DataFrame, incluir_dif: bool = True) -> Dict[str, Any]:
     from agent.statistics.gap_analysis import adjusted_gap
     from agent.statistics.multilevel import icc_programa
@@ -133,6 +163,7 @@ def calcular(prep: pd.DataFrame, irt: pd.DataFrame, incluir_dif: bool = True) ->
             "pares": [{**p.as_dict(3), "grupo_1": _etiqueta_grupo(p.group1),
                        "grupo_2": _etiqueta_grupo(p.group2)} for p in pares],
             "excluidos": {"categorias": int(len(excluidos)), "casos": int(excluidos.sum())},
+            "seleccion": _seleccion_metodo(irt[irt[col].astype(str).isin(medias)], col),
         }
     out["comparaciones"] = comp
 

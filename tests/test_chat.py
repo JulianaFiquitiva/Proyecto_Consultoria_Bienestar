@@ -158,6 +158,15 @@ def test_respuesta_de_encuesta_trae_grafico(publico, pregunta, tipo):
         assert g["clave"] in H["comparaciones"]
 
 
+def test_decision_explica_el_metodo(publico):
+    r = publico.responder("¿Cuánto depende el bienestar del programa?")
+    assert any("Método elegido" in p for p in r.decision)
+    assert any("Por qué" in p for p in r.decision)
+    r = publico.responder("compara el bienestar por estrato")
+    assert any("Con el diseño muestral" in p for p in r.decision)
+    assert publico.responder("¿Quién ganó el mundial de 2022?").decision == []
+
+
 def test_sin_grafico_fuera_de_la_encuesta(publico):
     assert publico.responder("¿Quién ganó el mundial de 2022?").grafico is None
 
