@@ -79,18 +79,22 @@ del corpus llaman a OpenAI y citan documento y página.
 | `APP_PASSWORD` | Si se define, la app pide contraseña. |
 | `CHAT_MAX_CONSULTAS` | Consultas al corpus y a la búsqueda web por sesión (por defecto 20). |
 
-### Publicar la app (Railway u otro servicio con Docker)
-El `Dockerfile` corre la app en modo público con `requirements_app.txt`.
-Los Excel de `data/` nunca entran en la imagen (`.dockerignore`).
+### Publicar la app
+La app publicada lee `resultados/entrega2/hallazgos_entrega2.json` (solo
+agregados, versionado). Sin los Excel de `data/`, el modo `auto` pasa a
+público solo. Dependencias mínimas: `app/requirements.txt`.
 
-1. Versionar `resultados/entrega2/hallazgos_entrega2.json` (solo agregados).
-2. En Railway: *New project → Deploy from GitHub repo*. Railway detecta el
-   `Dockerfile`.
-3. En *Variables*: `APP_PASSWORD` y, si se quiere el corpus en el chat,
-   `OPENAI_API_KEY`. Conviene poner además un tope de gasto en la cuenta de
-   OpenAI.
-4. El corpus necesita `rag_store/`, que no se versiona. Sin él, el chat
-   avisa que el corpus no está disponible y responde solo sobre la encuesta.
+**Streamlit Community Cloud (gratis):** *Create app → Deploy a public app
+from GitHub*, rama `entrega-2`, archivo principal `app/dashboard.py`. Las
+variables (`APP_PASSWORD`, `OPENAI_API_KEY`...) van en *Advanced settings →
+Secrets*, en formato TOML.
+
+**Railway u otro servicio con Docker:** el `Dockerfile` corre la app en
+modo público, y los Excel de `data/` nunca entran en la imagen
+(`.dockerignore`). Las variables se configuran en el servicio.
+
+El corpus necesita `rag_store/`, que no se versiona. Sin él, el chat avisa
+que el corpus no está disponible y responde solo sobre la encuesta.
 
 Cada consulta al corpus añade una fila a `agent/rag/logs/rag_consultas.csv`.
 

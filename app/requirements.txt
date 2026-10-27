@@ -1,6 +1,7 @@
 # Dependencias MINIMAS de la app publicada (app/dashboard.py en modo publico).
-# Las usa el Dockerfile. Para trabajar con todo el proyecto (notebooks,
-# IRT, pruebas) se instala requirements_agent.txt.
+# Las usan Streamlit Community Cloud (busca requirements.txt junto a la app)
+# y el Dockerfile. Para trabajar con todo el proyecto (notebooks, IRT,
+# pruebas) se instala requirements_agent.txt.
 pandas>=2.0
 numpy>=1.24
 scipy>=1.10

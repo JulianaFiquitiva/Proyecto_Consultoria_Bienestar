@@ -14,8 +14,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     INDICE_MODO=publico
 
-COPY requirements_app.txt .
-RUN pip install --no-cache-dir -r requirements_app.txt
+COPY app/requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
