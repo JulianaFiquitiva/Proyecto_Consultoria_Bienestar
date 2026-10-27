@@ -3,7 +3,7 @@ primaryColor = "#1B3A5C"
 font = "sans serif"
 
 [server]
-headless = true
+headless = false     # abre el navegador al ejecutar streamlit run
 
 [browser]
 gatherUsageStats = false
