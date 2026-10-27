@@ -125,6 +125,43 @@ class TestEstratificado:
             SurveyDesign(pd.DataFrame({"y": [1.0]}), weight_col="w")
 
 
+class TestRegresionDeDiseno:
+    def _datos(self, seed=4, n=500):
+        rng = np.random.default_rng(seed)
+        df = pd.DataFrame({
+            "x1": rng.normal(0, 1, n),
+            "x2": rng.binomial(1, 0.4, n).astype(float),
+            "w": rng.uniform(1, 20, n),
+            "estrato": "unico",
+            "N_h": 10 ** 9,                    # fpc despreciable
+        })
+        df["y"] = 50 + 2 * df["x1"] - 3 * df["x2"] + rng.normal(0, 5 + 3 * df["x2"], n)
+        return df
+
+    def test_coeficientes_iguales_a_wls(self):
+        sm = pytest.importorskip("statsmodels.api")
+        df = self._datos()
+        reg = _diseno(df).regression("y", df[["x1", "x2"]])
+        fit = sm.WLS(df["y"], sm.add_constant(df[["x1", "x2"]]), weights=df["w"]).fit()
+        np.testing.assert_allclose(reg.coefficients["coef"].values, fit.params.values, rtol=1e-9)
+
+    def test_un_estrato_equivale_a_sandwich_robusto(self):
+        """Sin estratos ni fpc: V = HC0 · n/(n−1)."""
+        sm = pytest.importorskip("statsmodels.api")
+        df = self._datos()
+        reg = _diseno(df).regression("y", df[["x1", "x2"]])
+        fit = sm.WLS(df["y"], sm.add_constant(df[["x1", "x2"]]),
+                     weights=df["w"]).fit(cov_type="HC0")
+        n = len(df)
+        np.testing.assert_allclose(reg.coefficients["se"].values,
+                                   fit.bse.values * np.sqrt(n / (n - 1)), rtol=1e-6)
+
+    def test_excluye_filas_con_faltantes(self):
+        df = self._datos()
+        df.loc[:9, "x1"] = np.nan
+        assert _diseno(df).regression("y", df[["x1", "x2"]]).n == len(df) - 10
+
+
 class TestDeffKish:
     def test_pesos_iguales_dan_uno(self):
         w = pd.Series(np.full(100, 7.0))

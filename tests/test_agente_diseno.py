@@ -23,6 +23,9 @@ COMANDOS_CLI = {
     "Cual es el perfil por dimensiones de bienestar?": "dimension_profile",
     "Valida los resultados contra el estudio anterior": "validate_results",
     "Haz una validacion completa del pipeline": "full_validation",
+    # Pregunta 2.3 (no es comando rapido, pero se pregunta en la demo)
+    "¿La brecha de posgrado se mantiene controlando la edad?": "adjusted_gap",
+    "¿La diferencia entre pregrado y posgrado se explica por la edad?": "adjusted_gap",
 }
 
 
@@ -31,12 +34,16 @@ def _dataset(seed=7):
     n = 600
     seccional = rng.choice(["Bogotá", "Tunja", "Villavicencio"], n)
     modalidad = rng.choice(["Pregrado", "Posgrado"], n, p=[0.75, 0.25])
+    # La brecha de posgrado es TODA de edad: T sube 0.4 por año y el
+    # posgrado es ~10 años mayor; el nivel no tiene efecto propio.
+    edad = np.where(modalidad == "Posgrado", rng.normal(32, 6, n), rng.normal(21, 3, n))
     df = pd.DataFrame({
         "seccional": seccional,
         "modalidad_exp": modalidad,
+        "Edad": edad.round(),
         "Género": rng.choice(["Femenino", "Masculino"], n),
         "Estrato socioeconómico": rng.choice([1.0, 2.0, 3.0, 4.0], n),
-        "T_Global": rng.normal(50, 10, n) + np.where(modalidad == "Posgrado", 5, 0),
+        "T_Global": 41 + 0.4 * edad + rng.normal(0, 8, n),
     })
     df.loc[:4, "Género"] = "Respuesta libre de una persona"   # n = 5 < 30
     tamanos = {("Bogotá", "Pregrado"): 9000, ("Bogotá", "Posgrado"): 3000,
@@ -115,6 +122,31 @@ class TestComparacionConDiseno:
     def test_variable_inexistente(self, agente):
         r = agente._design_comparison({"value_col": "T_Global", "group_col": "No existe"})
         assert "error" in r
+
+
+class TestBrechaAjustada:
+    def test_la_edad_explica_la_brecha(self, agente):
+        """En los datos sinteticos la brecha es toda de edad."""
+        r = agente._adjusted_gap({})
+        m0, m1 = r["modelos"][0], r["modelos"][1]
+        assert m0["brecha"] > 3 and m0["p_valor"] < 0.001
+        assert m1["ic_inferior"] < 0 < m1["ic_superior"]
+        assert r["porcentaje_explicado_por_controles"] > 60
+        assert r["edad_media_ponderada"]["Posgrado"] > r["edad_media_ponderada"]["Pregrado"]
+
+    def test_todos_los_modelos_usan_la_misma_muestra(self, agente):
+        agente._irt_data.loc[:19, "Estrato socioeconómico"] = np.nan
+        r = agente._adjusted_gap({})
+        assert len({m["n"] for m in r["modelos"]}) == 1
+        assert r["n_excluidos_por_faltantes"] == 20
+        # las filas 0-4 eran las unicas de "otro genero": ese control se descarta
+        assert r["controles_descartados_sin_variacion"] == ["Otro género (vs. masculino)"]
+
+    def test_respuesta_completa(self, agente):
+        resp = agente.ask("¿La brecha de posgrado se mantiene controlando la edad?")
+        assert resp.success, resp.error
+        assert "M0: brecha bruta" in resp.interpretation
+        assert "Modelo completo" in resp.interpretation
 
 
 def test_perfil_por_dimensiones_con_ic(agente):

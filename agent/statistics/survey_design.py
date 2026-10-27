@@ -105,6 +105,29 @@ class DesignDifference:
         }
 
 
+@dataclass
+class DesignRegression:
+    """Regresión ponderada con errores estándar de diseño."""
+
+    coefficients: pd.DataFrame   # coef, se, ic_inferior, ic_superior, z, p_valor
+    n: int
+    r_squared: float             # R² ponderado
+    y_col: str
+
+    def coef(self, name: str) -> float:
+        return float(self.coefficients.loc[name, "coef"])
+
+    def as_dict(self, decimals: int = 4) -> Dict[str, Any]:
+        return {
+            "n": self.n,
+            "r_cuadrado": round(self.r_squared, decimals),
+            "coeficientes": {
+                var: {k: round(float(v), decimals) for k, v in fila.items()}
+                for var, fila in self.coefficients.iterrows()
+            },
+        }
+
+
 class SurveyDesign:
     """
     Diseño estratificado con factores de expansión.
@@ -249,6 +272,63 @@ class SurveyDesign:
         for par in pares:
             par.p_adjusted = min(par.p_value * m, 1.0)
         return pares
+
+    def regression(self, y_col: str, X: pd.DataFrame) -> DesignRegression:
+        """
+        Mínimos cuadrados ponderados con varianza de diseño (Binder, 1983):
+
+            β̂ = (X'WX)⁻¹ X'Wy
+            V(β̂) = (X'WX)⁻¹ · Σ_h (1 − f_h) n_h/(n_h − 1) Σ_i (u_hi − ū_h)(u_hi − ū_h)' · (X'WX)⁻¹
+            u_i = w_i · x_i · e_i
+
+        A diferencia de statsmodels WLS (que supone errores homocedásticos e
+        independientes), este error estándar refleja los estratos y los pesos.
+
+        Args:
+            y_col: variable dependiente (columna de self.df).
+            X: predictores con el mismo índice que self.df, SIN constante
+               (se añade). Las filas con faltantes en y o X se excluyen.
+        """
+        y_all = self.df[y_col].to_numpy(dtype=float)
+        X_all = X.to_numpy(dtype=float)
+        validos = (~np.isnan(y_all) & ~np.isnan(self._w)
+                   & ~np.isnan(X_all).any(axis=1))
+        Xv = np.column_stack([np.ones(validos.sum()), X_all[validos]])
+        yv, wv = y_all[validos], self._w[validos]
+        nombres = ["Intercepto"] + list(X.columns)
+
+        XtWX = Xv.T @ (Xv * wv[:, None])
+        beta = np.linalg.solve(XtWX, Xv.T @ (wv * yv))
+        e = yv - Xv @ beta
+
+        # Contribuciones linealizadas; fuera de la submuestra valen 0
+        u = np.zeros((len(y_all), Xv.shape[1]))
+        u[validos] = Xv * (wv * e)[:, None]
+        meat = np.zeros((Xv.shape[1], Xv.shape[1]))
+        for h in np.unique(self._strata):
+            uh = u[self._strata == h]
+            n_h = len(uh)
+            if n_h < 2:
+                continue
+            f_h = min(n_h / self._N_h[h], 1.0) if self._N_h.get(h) else 0.0
+            dh = uh - uh.mean(axis=0)
+            meat += (1 - f_h) * n_h / (n_h - 1) * dh.T @ dh
+        bread = np.linalg.inv(XtWX)
+        se = np.sqrt(np.diag(bread @ meat @ bread))
+
+        z = beta / se
+        p = np.array([2 * (1 - NormalDist().cdf(abs(v))) for v in z])
+        tabla = pd.DataFrame({
+            "coef": beta, "se": se,
+            "ic_inferior": beta - self.z_crit * se,
+            "ic_superior": beta + self.z_crit * se,
+            "z": z, "p_valor": p,
+        }, index=nombres)
+
+        media = np.average(yv, weights=wv)
+        r2 = 1 - np.sum(wv * e ** 2) / np.sum(wv * (yv - media) ** 2)
+        return DesignRegression(coefficients=tabla, n=int(validos.sum()),
+                                r_squared=float(r2), y_col=y_col)
 
     def kish_deff(self) -> float:
         """Efecto de diseño por variabilidad de pesos: n·Σw² / (Σw)²."""

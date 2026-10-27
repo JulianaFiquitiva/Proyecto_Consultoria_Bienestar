@@ -134,6 +134,8 @@ FUNCIONES DISPONIBLES:
 - "descriptive_overview": Resumen general del bienestar (poblacional, con IC)
 - "design_comparison": PREFERIDA para comparar grupos: medias poblacionales
   con IC y pruebas de Wald con la varianza del diseno muestral
+- "adjusted_gap": Brecha posgrado - pregrado bruta y AJUSTADA por edad,
+  genero, estrato y seccional (regresion con varianza del diseno)
 - "group_comparison": Comparar T_Global entre dos grupos (muestral, sin pesos)
 - "multi_group_comparison": Comparar entre mas de 2 grupos (muestral, sin pesos)
 - "smart_comparison": Comparacion con seleccion automatica de metodo
@@ -244,6 +246,7 @@ class StatisticalAgent:
             "multi_group_comparison": self._multi_group_comparison,
             "smart_comparison": self._smart_comparison,
             "design_comparison": self._design_comparison,
+            "adjusted_gap": self._adjusted_gap,
             "correlation_analysis": self._correlation_analysis,
             "regression_analysis": self._regression_analysis,
             "dimension_profile": self._dimension_profile,
@@ -918,6 +921,21 @@ class StatisticalAgent:
                 function_to_call="validate_results",
                 parameters={}, variables_needed=["T_Global"], confidence=0.8,
             )
+        # Brecha AJUSTADA: va antes de las comparaciones simples, porque la
+        # pregunta suele nombrar tambien el nivel, la edad o el genero.
+        elif (any(w in q for w in ["ajustad", "controland", "controlar", "se explica",
+                                   "explica por", "se mantiene", "independiente de"])
+              and any(w in q for w in ["brecha", "posgrado", "pregrado", "edad",
+                                       "nivel", "diferencia"])):
+            return AnalysisPlan(
+                analysis_type=AnalysisType.REGRESSION,
+                description="Brecha posgrado - pregrado ajustada",
+                function_to_call="adjusted_gap",
+                parameters={"value_col": "T_Global"},
+                variables_needed=["T_Global", "modalidad_exp", "Edad", "Género",
+                                  "Estrato socioeconómico", "seccional"],
+                confidence=0.85,
+            )
         elif any(w in q for w in ["genero", "hombre", "mujer", "sexo", "masculino", "femenino"]):
             return AnalysisPlan(
                 analysis_type=AnalysisType.COMPARISON,
@@ -1421,6 +1439,32 @@ class StatisticalAgent:
             "advertencias": [],
         }
 
+    def _adjusted_gap(self, params: Dict) -> Dict[str, Any]:
+        """Brecha posgrado - pregrado bruta y ajustada (pregunta 2.3)."""
+        df = self._irt_data if self._irt_data is not None else self._data
+        if df is None:
+            return {"error": "Datos no disponibles"}
+        from agent.statistics.gap_analysis import adjusted_gap
+        try:
+            resultado = adjusted_gap(df, y_col=params.get("value_col", "T_Global"))
+        except (KeyError, ValueError) as exc:
+            return {"error": f"No se puede ajustar la brecha: {exc}"}
+        resultado["metodo_seleccionado"] = "Regresion ponderada con varianza del diseno"
+        resultado["razon"] = resultado.pop("metodo")
+        resultado["advertencias"] = [
+            "Edad y nivel se solapan poco (pregrado: mediana 20 anos; posgrado: "
+            "30): el ajuste por edad extrapola en los extremos.",
+        ]
+        if resultado["n_excluidos_por_faltantes"]:
+            resultado["advertencias"].append(
+                f"{resultado['n_excluidos_por_faltantes']} casos excluidos por "
+                f"datos faltantes en los controles.")
+        if resultado["controles_descartados_sin_variacion"]:
+            resultado["advertencias"].append(
+                "Controles descartados por no variar en la submuestra: "
+                + ", ".join(resultado["controles_descartados_sin_variacion"]))
+        return resultado
+
     def _dimension_profile(self, params: Dict) -> Dict[str, Any]:
         """Perfil por dimensiones (poblacional si hay diseno)."""
         df = self._irt_data if self._irt_data is not None else self._data
@@ -1699,6 +1743,9 @@ Incluye:
         elif plan.analysis_type == AnalysisType.COMPARISON:
             interp.extend(self._lineas_comparacion(result))
 
+        elif "modelos" in result:
+            interp.extend(self._lineas_brecha(result))
+
         elif "r_cuadrado" in result:
             interp.append("--- Resultados del modelo ---")
             interp.append(f"Tipo: {result.get('metodo_seleccionado', 'N/A')}")
@@ -1802,6 +1849,8 @@ Incluye:
 
         elif plan.analysis_type == AnalysisType.VALIDATION:
             interp.append(result.get("resumen", "Validacion completada."))
+        elif "modelos" in result:
+            interp.extend(self._lineas_brecha(result))
         elif "r_cuadrado" in result:
             # Regresion
             interp.append("--- Resultados del modelo ---")
@@ -1887,6 +1936,32 @@ Incluye:
                 lineas.append(
                     f"  {marca} {c['grupo_1']} - {c['grupo_2']}: "
                     f"{c['diferencia']:+} (p ajustado = {c['p_ajustado_bonferroni']})")
+        return lineas
+
+    def _lineas_brecha(self, result: Dict) -> List[str]:
+        lineas = ["--- Brecha bruta y ajustada ---"]
+        for m in result.get("modelos", []):
+            lineas.append(
+                f"  {m['modelo']}: {m['brecha']:+} "
+                f"(IC 95%: {m['ic_inferior']} - {m['ic_superior']}; "
+                f"p = {m['p_valor']}; R2 = {m['r_cuadrado']})")
+        lineas.append("")
+        lineas.append(
+            f"Los controles explican el {result.get('porcentaje_explicado_por_controles')}% "
+            f"de la brecha bruta.")
+        edad = result.get("edad_media_ponderada") or {}
+        if edad:
+            lineas.append("Edad media ponderada: " + ", ".join(
+                f"{g} {v} anos" for g, v in edad.items()))
+        coef = (result.get("modelo_completo") or {}).get("coeficientes", {})
+        if coef:
+            lineas.append("")
+            lineas.append("--- Modelo completo (M2) ---")
+            for var, v in coef.items():
+                marca = "*" if v.get("p_valor", 1) < 0.05 else " "
+                lineas.append(
+                    f"  {marca} {var}: {v['coef']:+} (IC 95%: {v['ic_inferior']} - "
+                    f"{v['ic_superior']}; p = {v['p_valor']})")
         return lineas
 
     def _suggest_visualization(self, plan: AnalysisPlan) -> Optional[str]:
