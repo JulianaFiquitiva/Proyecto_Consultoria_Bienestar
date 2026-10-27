@@ -207,7 +207,9 @@ DOMAIN_TERMS_RE = re.compile(
     r"alpha|cronbach|pregrado|posgrado|especializaci[oó]n|maestr[ií]a|"
     r"estudiantes?|muestra|encuesta|respuestas|participantes|registros|"
     r"dataset|correlaci[oó]n|regresi[oó]n|coeficiente|media|mediana|"
-    r"desviaci[oó]n|promedio|significativo|p[\s-]?valor|universidad\s+santo\s+tom[aá]s)\b",
+    r"desviaci[oó]n|promedio|significativo|p[\s-]?valor|universidad\s+santo\s+tom[aá]s|"
+    # validar el propio estudio (comandos "validar" y "validacion" de la CLI)
+    r"resultados|estudio\s+anterior|pipeline|validaci[oó]n|reproducibilidad)\b",
     re.IGNORECASE,
 )
 

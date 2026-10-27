@@ -47,13 +47,16 @@ class IRTValidator:
         """
         results = []
 
-        # 1. Theta presente
-        has_theta = "theta" in df.columns
+        # 1. Theta presente (el dataset del estudio la llama "θ_Global")
+        theta_col = next((c for c in ("theta", "θ_Global") if c in df.columns), None)
+        has_theta = theta_col is not None
+        # Estimaciones poblacionales si hay factores de expansion
+        w = df["factor_expansion"] if "factor_expansion" in df.columns else None
         results.append(IRTValidationResult(
             check_name="Theta presente",
             passed=has_theta,
-            expected="Columna 'theta'",
-            actual="Presente" if has_theta else "Ausente",
+            expected="Columna 'theta' o 'θ_Global'",
+            actual=f"Presente ({theta_col})" if has_theta else "Ausente",
             message="Theta es la estimacion EAP del GRM",
             severity="error",
         ))
@@ -71,11 +74,12 @@ class IRTValidator:
 
         # 3. T_Global media ~50
         if has_t:
-            t_mean = df["T_Global"].mean()
+            t_mean = (float(np.average(df["T_Global"], weights=w)) if w is not None
+                      else df["T_Global"].mean())
             expected_mean = REPORTED_RESULTS["T_global_mean"]
             diff = abs(t_mean - expected_mean)
             results.append(IRTValidationResult(
-                check_name="T_Global media ~50",
+                check_name="T_Global media poblacional",
                 passed=diff < 1.0,
                 expected=f"~{expected_mean}",
                 actual=f"{t_mean:.2f} (diff: {diff:.2f})",
@@ -155,8 +159,8 @@ class IRTValidator:
         # 7. Clasificacion de bienestar
         if has_t:
             t = df["T_Global"]
-            risk_pct = (t < 40).mean()
-            high_pct = (t >= 60).mean()
+            risk_pct = float(np.average(t < 40, weights=w))
+            high_pct = float(np.average(t >= 60, weights=w))
             expected_risk = REPORTED_RESULTS["risk_proportion"]
             expected_high = REPORTED_RESULTS["high_proportion"]
 
@@ -180,7 +184,7 @@ class IRTValidator:
 
         # 8. Relacion theta-T_score
         if has_theta and has_t:
-            corr = df["theta"].corr(df["T_Global"])
+            corr = df[theta_col].corr(df["T_Global"])
             results.append(IRTValidationResult(
                 check_name="Correlacion theta-T_Global",
                 passed=corr > 0.99,
@@ -190,15 +194,16 @@ class IRTValidator:
                 severity="error",
             ))
 
-            # Verificar T = 50 + 10*theta
-            expected_t = 50 + 10 * df["theta"]
+            # Verificar T = 50 + 10*theta. El dataset guarda T con un decimal,
+            # asi que la diferencia por redondeo llega a 0.05.
+            expected_t = 50 + 10 * df[theta_col]
             diff_t = (df["T_Global"] - expected_t).abs().max()
             results.append(IRTValidationResult(
                 check_name="T = 50 + 10*theta",
-                passed=diff_t < 0.01,
-                expected="Diferencia max < 0.01",
+                passed=diff_t <= 0.05 + 1e-6,
+                expected="Diferencia max <= 0.05 (T redondeado a 1 decimal)",
                 actual=f"{diff_t:.4f}",
-                message="T_global debe ser exactamente 50 + 10*theta",
+                message="T_global debe ser 50 + 10*theta (prior N(0,1))",
                 severity="error",
             ))
 

@@ -128,7 +128,11 @@ NBC_MAP: Dict[str, str] = {
     "TECNOLOGÍA EN LABORATORIO DENTAL": "Odontología",
 }
 
-# Resultados reportados por el estudio anterior (para validación)
+# Resultados de referencia para la validación (entrega 1, commit 4be2bf1).
+# Coinciden con data/03_dataset_IRT_ponderado.xlsx al estimar CON los
+# factores de expansión. deff y n efectivo se corrigieron en la entrega 2:
+# valían 1.03 y 1752, pero el notebook 01 y los informes del estudio dicen
+# 1.120 y 1619 (Kish con factor_expansion_original).
 REPORTED_RESULTS = {
     "n_valid": 1813,
     "N_population": 29950,
@@ -138,11 +142,27 @@ REPORTED_RESULTS = {
     "alpha_cronbach": 0.909,
     "risk_proportion": 0.148,  # T < 40
     "high_proportion": 0.192,  # T >= 60
-    "deff": 1.03,
-    "effective_sample_size": 1752,
+    "deff": 1.120,
+    "effective_sample_size": 1619,
     "pre_posgrado_gap": 4.7,
     "pre_posgrado_T_pre": 49.3,
     "pre_posgrado_T_pos": 54.0,
+}
+
+# Cifras del Informe Ejecutivo del estudio anterior
+# (docs/Informe_Ejecutivo_Felicidad.tex, secciones 3 y 12). Varias NO se
+# reproducen con los datos disponibles: ver la validación de la entrega 2.
+REPORTED_INFORME_EJECUTIVO = {
+    "n_valid": 1813,
+    "N_population": 29950,
+    "T_global_mean": 51.2,
+    "T_global_ci_lower": 50.6,
+    "T_global_ci_upper": 51.8,
+    "alpha_cronbach": 0.909,
+    "risk_proportion": 0.195,  # "≈ 19.5 %"
+    "high_proportion": 0.296,  # "≈ 29.6 %"
+    "deff": 1.120,
+    "effective_sample_size": 1619,
 }
 
 

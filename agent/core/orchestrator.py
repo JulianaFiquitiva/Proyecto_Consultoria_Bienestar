@@ -131,9 +131,11 @@ RESPONDE SIEMPRE EN JSON con esta estructura:
 }
 
 FUNCIONES DISPONIBLES:
-- "descriptive_overview": Resumen general del bienestar
-- "group_comparison": Comparar T_Global entre dos grupos
-- "multi_group_comparison": Comparar entre mas de 2 grupos
+- "descriptive_overview": Resumen general del bienestar (poblacional, con IC)
+- "design_comparison": PREFERIDA para comparar grupos: medias poblacionales
+  con IC y pruebas de Wald con la varianza del diseno muestral
+- "group_comparison": Comparar T_Global entre dos grupos (muestral, sin pesos)
+- "multi_group_comparison": Comparar entre mas de 2 grupos (muestral, sin pesos)
 - "smart_comparison": Comparacion con seleccion automatica de metodo
 - "correlation_analysis": Correlacion entre variables
 - "regression_analysis": Modelo predictivo
@@ -241,6 +243,7 @@ class StatisticalAgent:
             "group_comparison": self._group_comparison,
             "multi_group_comparison": self._multi_group_comparison,
             "smart_comparison": self._smart_comparison,
+            "design_comparison": self._design_comparison,
             "correlation_analysis": self._correlation_analysis,
             "regression_analysis": self._regression_analysis,
             "dimension_profile": self._dimension_profile,
@@ -890,12 +893,23 @@ class StatisticalAgent:
         if scope != "en_dominio":
             return self._abstain_plan(scope, motivo)
 
-        if any(w in q for w in ["resumen", "general", "global", "descripcion", "como va"]):
+        # "como va" con limites de palabra: si no, "como varia" (comandos
+        # seccional y estrato) caia en el resumen global.
+        if (any(w in q for w in ["resumen", "general", "global", "descripcion"])
+                or re.search(r"\bcomo va\b", q)):
             return AnalysisPlan(
                 analysis_type=AnalysisType.OVERVIEW,
                 description="Resumen general del bienestar",
                 function_to_call="descriptive_overview",
                 parameters={}, variables_needed=["T_Global"], confidence=0.7,
+            )
+        # La completa va ANTES: "validacion" contiene "valida".
+        elif any(w in q for w in ["validacion completa", "todo", "integral", "pipeline"]):
+            return AnalysisPlan(
+                analysis_type=AnalysisType.VALIDATION,
+                description="Validacion completa del pipeline",
+                function_to_call="full_validation",
+                parameters={}, variables_needed=["T_Global"], confidence=0.9,
             )
         elif any(w in q for w in ["valida", "reproduce", "compara con", "correcto"]):
             return AnalysisPlan(
@@ -904,18 +918,11 @@ class StatisticalAgent:
                 function_to_call="validate_results",
                 parameters={}, variables_needed=["T_Global"], confidence=0.8,
             )
-        elif any(w in q for w in ["validacion completa", "todo", "integral"]):
-            return AnalysisPlan(
-                analysis_type=AnalysisType.VALIDATION,
-                description="Validacion completa del pipeline",
-                function_to_call="full_validation",
-                parameters={}, variables_needed=["T_Global"], confidence=0.9,
-            )
         elif any(w in q for w in ["genero", "hombre", "mujer", "sexo", "masculino", "femenino"]):
             return AnalysisPlan(
                 analysis_type=AnalysisType.COMPARISON,
                 description="Comparacion por genero",
-                function_to_call="smart_comparison",
+                function_to_call="design_comparison",
                 parameters={"value_col": "T_Global", "group_col": "Género"},
                 variables_needed=["T_Global", "Género"], confidence=0.8,
             )
@@ -923,7 +930,7 @@ class StatisticalAgent:
             return AnalysisPlan(
                 analysis_type=AnalysisType.COMPARISON,
                 description="Comparacion por seccional",
-                function_to_call="smart_comparison",
+                function_to_call="design_comparison",
                 parameters={"value_col": "T_Global", "group_col": "seccional"},
                 variables_needed=["T_Global", "seccional"], confidence=0.8,
             )
@@ -931,7 +938,7 @@ class StatisticalAgent:
             return AnalysisPlan(
                 analysis_type=AnalysisType.COMPARISON,
                 description="Comparacion por modalidad",
-                function_to_call="smart_comparison",
+                function_to_call="design_comparison",
                 parameters={"value_col": "T_Global", "group_col": "modalidad_exp"},
                 variables_needed=["T_Global", "modalidad_exp"], confidence=0.8,
             )
@@ -956,7 +963,7 @@ class StatisticalAgent:
             return AnalysisPlan(
                 analysis_type=AnalysisType.COMPARISON,
                 description="Comparacion por estrato",
-                function_to_call="multi_group_comparison",
+                function_to_call="design_comparison",
                 parameters={"value_col": "T_Global", "group_col": estrato_col},
                 variables_needed=["T_Global", estrato_col], confidence=0.8,
             )
@@ -996,24 +1003,153 @@ class StatisticalAgent:
                 "regresion).",
             )
 
+    # Grupos con menos casos no se comparan: la estimacion es inestable
+    MIN_N_GRUPO = 30
+
+    def _survey_design(self):
+        """Diseno estratificado del estudio, o None si faltan columnas."""
+        from agent.statistics.survey_design import SurveyDesign
+        df = self._irt_data if self._irt_data is not None else self._data
+        if df is None:
+            return None
+        try:
+            return SurveyDesign(df)
+        except ValueError:
+            return None
+
     def _descriptive_overview(self, params: Dict) -> Dict[str, Any]:
-        """Resumen general del bienestar."""
+        """Resumen general del bienestar: estimaciones POBLACIONALES."""
         df = self._irt_data if self._irt_data is not None else self._data
         if df is None or "T_Global" not in df.columns:
             return {"error": "T_Global no disponible"}
 
         t = df["T_Global"]
+        design = self._survey_design()
+        if design is None:
+            # Sin factores de expansion solo hay estadisticos muestrales
+            return {
+                "n": len(t),
+                "media": round(float(t.mean()), 2),
+                "mediana": round(float(t.median()), 2),
+                "desv_std": round(float(t.std()), 2),
+                "min": round(float(t.min()), 2),
+                "max": round(float(t.max()), 2),
+                "pct_bajo": round(float((t < 40).mean() * 100), 1),
+                "pct_alto": round(float((t >= 60).mean() * 100), 1),
+                "clasificacion": self._classify_t(float(t.mean())),
+                "advertencias": ["Sin factores de expansion: cifras muestrales, no poblacionales."],
+            }
+
+        from agent.statistics.descriptive import DescriptiveStats as D
+        w = df[design.weight_col]
+        g = design.mean("T_Global")
+        riesgo = design.proportion("T_Global", lambda s: s < 40)
+        alto = design.proportion("T_Global", lambda s: s >= 60)
         return {
             "n": len(t),
-            "media": round(float(t.mean()), 2),
-            "mediana": round(float(t.median()), 2),
-            "desv_std": round(float(t.std()), 2),
+            "N_poblacion": round(g.population),
+            "media": round(g.estimate, 2),
+            "ic_95": [round(g.ci_lower, 2), round(g.ci_upper, 2)],
+            "error_estandar": round(g.se, 3),
+            "deff": round(g.deff, 3) if g.deff else None,
+            "mediana": round(D.weighted_median(t, w), 2),
+            "desv_std": round(D.weighted_std(t, w), 2),
             "min": round(float(t.min()), 2),
             "max": round(float(t.max()), 2),
-            "pct_bajo": round(float((t < 40).mean() * 100), 1),
-            "pct_alto": round(float((t >= 60).mean() * 100), 1),
-            "clasificacion": self._classify_t(float(t.mean())),
+            "pct_bajo": round(riesgo.estimate * 100, 1),
+            "pct_bajo_ic_95": [round(riesgo.ci_lower * 100, 1), round(riesgo.ci_upper * 100, 1)],
+            "pct_alto": round(alto.estimate * 100, 1),
+            "pct_alto_ic_95": [round(alto.ci_lower * 100, 1), round(alto.ci_upper * 100, 1)],
+            "media_muestral_sin_ponderar": round(float(t.mean()), 2),
+            "clasificacion": self._classify_t(g.estimate),
+            "metodo_seleccionado": "Estimacion poblacional con diseno estratificado",
+            "razon": ("Factores de expansion + varianza por linealizacion de "
+                      "Taylor (8 estratos seccional x nivel)"),
         }
+
+    def _design_comparison(self, params: Dict) -> Dict[str, Any]:
+        """
+        Comparacion entre grupos con el diseno muestral: medias
+        poblacionales con IC y pruebas de Wald por pares (Bonferroni).
+        """
+        df = self._irt_data if self._irt_data is not None else self._data
+        if df is None:
+            return {"error": "Datos no disponibles"}
+        value_col = params.get("value_col", "T_Global")
+        group_col = params.get("group_col")
+        if group_col not in df.columns:
+            return {"error": f"Variable '{group_col}' no encontrada"}
+
+        design = self._survey_design()
+        if design is None:
+            return self._smart_comparison(params)
+
+        from agent.statistics.descriptive import DescriptiveStats as D
+        conteo = df[group_col].value_counts()
+        pequenos = {str(g): int(n) for g, n in conteo.items() if n < self.MIN_N_GRUPO}
+        medias = design.domain_means(value_col, group_col, min_n=self.MIN_N_GRUPO)
+
+        grupos = {}
+        for g, est in sorted(medias.items(), key=lambda kv: -kv[1].estimate):
+            sub = df[df[group_col].astype(str) == g]
+            grupos[g] = {
+                "n": est.n,
+                "N_estimado": round(est.population),
+                "media": round(est.estimate, 2),
+                "ic_95": [round(est.ci_lower, 2), round(est.ci_upper, 2)],
+                "desv_std": round(D.weighted_std(sub[value_col], sub[design.weight_col]), 2),
+            }
+
+        pares = design.pairwise(value_col, group_col, min_n=self.MIN_N_GRUPO)
+        comparaciones = []
+        for p in pares:
+            fila = p.as_dict(3)
+            s1 = grupos[p.group1]["desv_std"]
+            s2 = grupos[p.group2]["desv_std"]
+            pooled = np.sqrt((s1 ** 2 + s2 ** 2) / 2)
+            fila["d_cohen"] = round(p.difference / pooled, 3) if pooled > 0 else None
+            comparaciones.append(fila)
+
+        advertencias = []
+        if pequenos:
+            # Solo conteos: las etiquetas de grupos minimos pueden ser texto
+            # libre de una sola persona y la identificarian.
+            advertencias.append(
+                f"No se comparan {len(pequenos)} categoria(s) con n < "
+                f"{self.MIN_N_GRUPO} ({sum(pequenos.values())} casos en total): "
+                f"la estimacion seria inestable y podria identificar personas.")
+
+        resultado = {
+            "metodo_seleccionado": "Prueba de Wald con varianza del diseno",
+            "razon": ("Medias poblacionales con factores de expansion; error "
+                      "estandar por linealizacion de Taylor en 8 estratos; "
+                      "Bonferroni para comparaciones multiples"),
+            "estadisticos_por_grupo": grupos,
+            "comparaciones": comparaciones,
+            "advertencias": advertencias,
+        }
+        if len(pares) == 1:
+            p = comparaciones[0]
+            resultado["prueba_estadistica"] = {
+                "test": "Wald (diseno estratificado)",
+                "estadistico": p["z"],
+                "p_valor": p["p_valor"],
+                "tamano_efecto": p["d_cohen"],
+                "significativo": p["significativo"],
+                "diferencia": p["diferencia"],
+                "ic_95_diferencia": [p["ic_inferior"], p["ic_superior"]],
+            }
+        elif pares:
+            n_sig = sum(1 for p in comparaciones if p["significativo"])
+            resultado["prueba_estadistica"] = {
+                "test": f"Wald por pares con Bonferroni ({len(pares)} comparaciones)",
+                "estadistico": None,
+                "p_valor": min(p["p_ajustado_bonferroni"] for p in comparaciones),
+                "tamano_efecto": None,
+                "significativo": n_sig > 0,
+                "pares_significativos": n_sig,
+            }
+        return resultado
 
     def _group_comparison(self, params: Dict) -> Dict[str, Any]:
         """Compara dos grupos."""
@@ -1286,22 +1422,36 @@ class StatisticalAgent:
         }
 
     def _dimension_profile(self, params: Dict) -> Dict[str, Any]:
-        """Perfil por dimensiones."""
+        """Perfil por dimensiones (poblacional si hay diseno)."""
         df = self._irt_data if self._irt_data is not None else self._data
         if df is None:
             return {"error": "Datos no disponibles"}
 
+        from agent.statistics.descriptive import DescriptiveStats as D
+        design = self._survey_design()
         profile = {}
         for dim in DIMENSION_ORDER:
             col = f"T_{dim}"
-            if col in df.columns:
-                t = df[col]
+            if col not in df.columns:
+                continue
+            t = df[col]
+            if design is None:
                 profile[dim] = {
                     "media": round(float(t.mean()), 2),
                     "desv_std": round(float(t.std()), 2),
                     "pct_bajo": round(float((t < 40).mean() * 100), 1),
                     "pct_alto": round(float((t >= 60).mean() * 100), 1),
                 }
+                continue
+            est = design.mean(col)
+            w = df[design.weight_col]
+            profile[dim] = {
+                "media": round(est.estimate, 2),
+                "ic_95": [round(est.ci_lower, 2), round(est.ci_upper, 2)],
+                "desv_std": round(D.weighted_std(t, w), 2),
+                "pct_bajo": round(float(np.average(t < 40, weights=w)) * 100, 1),
+                "pct_alto": round(float(np.average(t >= 60, weights=w)) * 100, 1),
+            }
 
         if profile:
             min_dim = min(profile, key=lambda x: profile[x]["media"])
@@ -1544,26 +1694,10 @@ Incluye:
                 interp.append("")
 
         elif plan.analysis_type == AnalysisType.OVERVIEW:
-            interp.append("--- Resultados ---")
-            interp.append(f"Media T-score: {result.get('media', 'N/A')}")
-            interp.append(f"Clasificacion: {result.get('clasificacion', 'N/A')}")
-            interp.append(f"En riesgo (T<40): {result.get('pct_bajo', 0)}%")
-            interp.append(f"Bienestar alto (T>=60): {result.get('pct_alto', 0)}%")
+            interp.extend(self._lineas_resumen(result))
 
         elif plan.analysis_type == AnalysisType.COMPARISON:
-            interp.append("--- Resultados ---")
-            prueba = result.get("prueba_estadistica", {})
-            interp.append(f"Prueba: {prueba.get('test', 'N/A')}")
-            interp.append(f"Estadistico: {prueba.get('estadistico', 'N/A')}")
-            interp.append(f"p-value: {prueba.get('p_valor', 'N/A')}")
-            interp.append(f"Tamano del efecto: {prueba.get('tamano_efecto', 'N/A')}")
-            interp.append(f"Significativo: {'Si' if str(prueba.get('significativo', '')).lower() == 'true' else 'No'}")
-            interp.append("")
-            interp.append("--- Datos por grupo ---")
-            estadisticos_grupo = result.get("estadisticos_por_grupo", {})
-            if estadisticos_grupo:
-                for key, val in estadisticos_grupo.items():
-                    interp.append(f"  - {key}: n={val.get('n', 'N/A')}, media={val.get('media', 'N/A')}, SD={val.get('desv_std', 'N/A')}")
+            interp.extend(self._lineas_comparacion(result))
 
         elif "r_cuadrado" in result:
             interp.append("--- Resultados del modelo ---")
@@ -1585,10 +1719,24 @@ Incluye:
         elif plan.analysis_type == AnalysisType.PROFILE:
             interp.append("--- Perfil de dimensiones ---")
             perfil = result
+            for dim, val in perfil.items():
+                if dim != "_resumen" and isinstance(val, dict):
+                    interp.append(f"  - {dim}: T={val.get('media')}{self._ic(val.get('ic_95'))}")
             if "_resumen" in perfil:
                 res = perfil["_resumen"]
                 interp.append(f"Dimension mas alta: {res['dimension_mas_alta']} (T={perfil[res['dimension_mas_alta']]['media']})")
                 interp.append(f"Dimension mas baja: {res['dimension_mas_baja']} (T={perfil[res['dimension_mas_baja']]['media']})")
+
+        elif plan.analysis_type == AnalysisType.VALIDATION:
+            if "resumen" in result:
+                interp.append(result["resumen"])
+            else:
+                # full_validation: un resumen por bloque
+                for bloque, val in result.items():
+                    if isinstance(val, dict):
+                        interp.append(f"--- {bloque} ---")
+                        interp.append(str(val.get("resumen") or val.get("error") or val))
+                        interp.append("")
 
         else:
             interp.append("Analisis completado.")
@@ -1633,34 +1781,10 @@ Incluye:
             interp.append("")
 
         if plan.analysis_type == AnalysisType.OVERVIEW:
-            interp.append(
-                f"El bienestar global tiene una media de T={result.get('media', 'N/A')} "
-                f"({result.get('clasificacion', 'N/A')}). "
-                f"El {result.get('pct_bajo', 0)}% esta en riesgo (T<40) y "
-                f"el {result.get('pct_alto', 0)}% tiene bienestar alto (T>=60)."
-            )
+            interp.extend(self._lineas_resumen(result))
 
         elif plan.analysis_type == AnalysisType.COMPARISON:
-            prueba = result.get("prueba_estadistica", {})
-            interp.append("--- Resultados ---")
-            interp.append(f"Prueba: {prueba.get('test', 'N/A')}")
-            interp.append(f"Estadistico: {prueba.get('estadistico', 'N/A')}")
-            interp.append(f"p-value: {prueba.get('p_valor', 'N/A')}")
-            interp.append(f"Tamano del efecto: {prueba.get('tamano_efecto', 'N/A')}")
-            interp.append(f"Significativo: {'Si' if str(prueba.get('significativo', '')).lower() == 'true' else 'No'}")
-            interp.append("")
-
-            # Mostrar grupos
-            interp.append("--- Datos por grupo ---")
-            estadisticos_grupo = result.get("estadisticos_por_grupo", {})
-            if estadisticos_grupo:
-                for key, val in estadisticos_grupo.items():
-                    interp.append(f"  - {key}: n={val.get('n', 'N/A')}, media={val.get('media', 'N/A')}, SD={val.get('desv_std', 'N/A')}")
-            else:
-                # Fallback: buscar en el resultado directamente
-                for key, val in result.items():
-                    if isinstance(val, dict) and "n" in val:
-                        interp.append(f"  - {key}: n={val['n']}, media={val['media']}, SD={val['desv_std']}")
+            interp.extend(self._lineas_comparacion(result))
 
         elif plan.analysis_type == AnalysisType.PROFILE:
             perfil = result
@@ -1701,6 +1825,69 @@ Incluye:
             interp.append("Analisis completado.")
 
         return "\n".join(interp)
+
+    @staticmethod
+    def _ic(valor) -> str:
+        """' (IC 95%: a - b)' si hay intervalo; '' si no."""
+        if isinstance(valor, (list, tuple)) and len(valor) == 2:
+            return f" (IC 95%: {valor[0]} - {valor[1]})"
+        return ""
+
+    def _lineas_resumen(self, result: Dict) -> List[str]:
+        lineas = ["--- Resultados ---"]
+        poblacional = "ic_95" in result
+        etiqueta = "Media T-score poblacional" if poblacional else "Media T-score"
+        lineas.append(f"{etiqueta}: {result.get('media', 'N/A')}{self._ic(result.get('ic_95'))}")
+        lineas.append(f"Clasificacion: {result.get('clasificacion', 'N/A')}")
+        lineas.append(f"En riesgo (T<40): {result.get('pct_bajo', 0)}%"
+                      f"{self._ic(result.get('pct_bajo_ic_95'))}")
+        lineas.append(f"Bienestar alto (T>=60): {result.get('pct_alto', 0)}%"
+                      f"{self._ic(result.get('pct_alto_ic_95'))}")
+        if poblacional:
+            lineas.append(
+                f"n = {result.get('n')} estudiantes que representan N = "
+                f"{result.get('N_poblacion')}; deff = {result.get('deff')}")
+            lineas.append(
+                f"(Media muestral sin ponderar: "
+                f"{result.get('media_muestral_sin_ponderar')})")
+        return lineas
+
+    def _lineas_comparacion(self, result: Dict) -> List[str]:
+        lineas = ["--- Resultados ---"]
+        prueba = result.get("prueba_estadistica") or {}
+        lineas.append(f"Prueba: {prueba.get('test', 'N/A')}")
+        if prueba.get("diferencia") is not None:
+            lineas.append(f"Diferencia: {prueba['diferencia']}"
+                          f"{self._ic(prueba.get('ic_95_diferencia'))}")
+        if prueba.get("estadistico") is not None:
+            lineas.append(f"Estadistico: {prueba.get('estadistico')}")
+        lineas.append(f"p-value: {prueba.get('p_valor', 'N/A')}")
+        if prueba.get("tamano_efecto") is not None:
+            lineas.append(f"Tamano del efecto: {prueba.get('tamano_efecto')}")
+        lineas.append(f"Significativo: {'Si' if str(prueba.get('significativo', '')).lower() == 'true' else 'No'}")
+        lineas.append("")
+
+        lineas.append("--- Datos por grupo ---")
+        grupos = result.get("estadisticos_por_grupo")
+        if grupos is None:
+            # group_comparison devuelve los grupos en la raiz del resultado
+            grupos = {k: v for k, v in result.items()
+                      if isinstance(v, dict) and "n" in v and "media" in v}
+        for key, val in grupos.items():
+            lineas.append(
+                f"  - {key}: n={val.get('n', 'N/A')}, media={val.get('media', 'N/A')}"
+                f"{self._ic(val.get('ic_95'))}, SD={val.get('desv_std', 'N/A')}")
+
+        comparaciones = result.get("comparaciones") or []
+        if len(comparaciones) > 1:
+            lineas.append("")
+            lineas.append("--- Comparaciones por pares (Bonferroni) ---")
+            for c in comparaciones:
+                marca = "*" if c.get("significativo") else " "
+                lineas.append(
+                    f"  {marca} {c['grupo_1']} - {c['grupo_2']}: "
+                    f"{c['diferencia']:+} (p ajustado = {c['p_ajustado_bonferroni']})")
+        return lineas
 
     def _suggest_visualization(self, plan: AnalysisPlan) -> Optional[str]:
         if plan.analysis_type == AnalysisType.OVERVIEW:

@@ -199,8 +199,10 @@ class SurveyWeightValidator:
 
     def _compute_deff(self, weights: pd.Series) -> float:
         """
-        Calcula el Design Effect (DEFF).
-        DEFF = (Σ w_i)² / (Σ w_i²)
+        Calcula el Design Effect de Kish (DEFF).
+        DEFF = n·Σw_i² / (Σw_i)²
+
+        (Antes devolvía (Σw)²/Σw², que es la muestra efectiva n/DEFF.)
         """
         w = weights.dropna().values
-        return float(np.sum(w) ** 2 / np.sum(w ** 2))
+        return float(len(w) * np.sum(w ** 2) / np.sum(w) ** 2)
