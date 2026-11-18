@@ -70,6 +70,7 @@ PAGINAS = [
             icon=":material/compare_arrows:"),
     st.Page(APP / "paginas" / "dimensiones.py", title="Dimensiones", icon=":material/radar:"),
     st.Page(APP / "paginas" / "hallazgos.py", title="Hallazgos", icon=":material/lab_research:"),
+    st.Page(APP / "paginas" / "en_vivo.py", title="Encuesta en vivo", icon=":material/sensors:"),
     st.Page(APP / "paginas" / "chat.py", title="Pregúntale al agente", icon=":material/forum:"),
     st.Page(APP / "paginas" / "metodologia.py", title="Metodología", icon=":material/menu_book:"),
 ]

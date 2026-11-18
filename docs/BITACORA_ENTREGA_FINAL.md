@@ -1,0 +1,108 @@
+# Bitácora de la entrega final
+
+Registro de todo lo nuevo, lo que cambió y lo que mejoró en la entrega final,
+para documentarla y exponerla. Rama de trabajo: `entrega-final` (sale de
+`entrega-2`). Cada entrada dice qué se hizo, por qué y cómo se verificó.
+
+---
+
+## 1. Encuesta en vivo
+
+**Objetivo.** Que los resultados de la app se actualicen solos a medida que
+llegan respuestas nuevas al formulario, con la misma metodología del estudio.
+
+### Cómo funciona
+
+```
+Formulario (Google Forms o Microsoft Forms)
+   └─> hoja de respuestas (CSV publicado o Excel)
+         └─> GitHub Action, cada hora (.github/workflows/encuesta_viva.yml)
+               └─> python -m agent.encuesta_viva.actualizar
+                     1. normalizar_formulario  acomoda las columnas al formulario original
+                     2. preparar               depuración, ítems invertidos, dimensiones,
+                                               factores de expansión y calibración por género
+                     3. estandarizar           θ EAP con los parámetros GRM fijos del estudio
+                     4. entrega2.calcular      IC con varianza del diseño, comparaciones,
+                                               brecha, multinivel
+               └─> datos_vivos/hallazgos.json (solo agregados) -> commit
+                     └─> Render vuelve a desplegar -> página «Encuesta en vivo»
+```
+
+### Qué se hizo
+
+| Fecha | Cambio | Archivos |
+|---|---|---|
+| 2026-11-18 | Los notebooks 01 (preparación y diseño muestral) y 03 (IRT) pasan a código reutilizable y probado. | `agent/encuesta_viva/pipeline.py` |
+| 2026-11-18 | Catálogos de programas → NBC copiados textualmente del notebook 01. | `agent/encuesta_viva/catalogos.py` |
+| 2026-11-18 | Totales de población por estrato guardados como constantes agregadas: el pipeline corre sin los marcos muestrales (que no se pueden publicar). | `catalogos.py` (`POBLACION_ESTRATOS`) |
+| 2026-11-18 | Parámetros GRM del estudio (global + 6 dimensiones) guardados para calificar con parámetros fijos. | `agent/encuesta_viva/parametros_grm.json` |
+| 2026-11-18 | El formulario nuevo puede tener otro orden de columnas, columnas extra (p. ej. «Marca temporal» de Google) o no tener ID ni correo: se acomoda solo. Si falta una pregunta del análisis, avisa cuál. | `pipeline.normalizar_formulario` |
+| 2026-11-18 | Script de actualización: lee CSV o Excel de un enlace o archivo, no reescribe si nada cambió, nunca guarda el enlace ni respuestas individuales. | `agent/encuesta_viva/actualizar.py` |
+| 2026-11-18 | Página nueva en la app: «Encuesta en vivo» (KPIs, comparación con el estudio, distribución, niveles y comparaciones por grupo). | `app/paginas/en_vivo.py`, `app/dashboard.py` |
+| 2026-11-18 | Tarea programada en GitHub cada hora. | `.github/workflows/encuesta_viva.yml` |
+| 2026-11-18 | 8 pruebas nuevas, incluida la reproducción exacta del estudio. | `tests/test_encuesta_viva.py` |
+
+### Decisiones metodológicas (para exponer)
+
+1. **Parámetros IRT fijos, no reestimados.** Cada respuesta nueva se califica
+   con los parámetros GRM estimados en el estudio (θ EAP, misma cuadratura que
+   `girth`). Así el T de la encuesta viva está en la **misma escala** que el
+   estudio y se puede comparar directamente (la app muestra la diferencia).
+   Reestimar con pocas respuestas daría parámetros inestables y una escala que
+   cambia cada hora. Sigue disponible: `estandarizar(prep, parametros={})`.
+2. **Mismo diseño muestral.** Los factores de expansión se recalculan con las
+   respuestas nuevas: N del estrato (constante) / respondentes del estrato, y
+   luego la calibración por género. El ajuste por no respuesta se actualiza solo.
+3. **Privacidad.** El JSON solo tiene agregados; los grupos con menos de 30
+   casos no se muestran. El enlace de la hoja va en un secreto de GitHub.
+4. **Pocas respuestas.** Con menos de 30 respuestas la página muestra un aviso
+   de inestabilidad. El pipeline funciona desde 15 respuestas (probado).
+
+### Hallazgos al pasar los notebooks a código
+
+Estos dos puntos no estaban documentados y salieron al exigir que el código
+reprodujera **exactamente** los datos del estudio:
+
+1. **Calibración por género de los factores de expansión.** El
+   `factor_expansion` que usan todos los análisis no es el del notebook 01: está
+   calibrado por *raking* a dos márgenes (estrato seccional × modalidad, y
+   seccional × género). Ese paso no aparece en ningún notebook; el peso sin
+   calibrar quedó en `factor_expansion_original`. Se reconstruyó y reproduce los
+   pesos con error < 1e-12 (`pipeline.calibrar_genero`).
+2. **Conversión a T-score.** El notebook 03 describe T = 50 + 10·(θ − μ_w)/σ_w
+   (normalización ponderada), pero `03_dataset_IRT_ponderado.xlsx` contiene
+   T = 50 + 10·θ: con la normalización ponderada la media poblacional sería
+   exactamente 50, y la reportada es 50,7. El pipeline usa la conversión que
+   realmente produjo los datos (`pipeline.a_t`) y lo deja documentado.
+
+### Verificación
+
+- Excel crudo → pipeline → JSON de la app: **0 diferencias en 2.438 valores**
+  frente al JSON publicado de la entrega 2.
+- `01_dataset_preparado.xlsx`: 73 columnas iguales y en el mismo orden, 0 diferencias.
+- `03_dataset_IRT_ponderado.xlsx`: T y niveles idénticos en las 7 escalas; θ
+  difiere a lo sumo 1e-4 (redondeo a 4 decimales).
+- EAP propio con parámetros fijos vs. `girth`: diferencia 0,0.
+- Formulario de Google simulado (otro orden, sin ID, columnas extra): mismo resultado.
+- Tiempo: ~22 s por actualización.
+
+### Pendiente para dejarla funcionando (lo hace la dueña del repositorio)
+
+1. Crear el formulario con **exactamente las mismas preguntas** del original
+   (mismo texto; el orden no importa). Recomendado: no pedir correo ni nombre.
+2. En la hoja de respuestas: Archivo > Compartir > Publicar en la web > CSV, y
+   copiar el enlace.
+3. En GitHub: Settings > Secrets and variables > Actions > New secret
+   `ENCUESTA_FUENTE` con ese enlace.
+4. Llevar `.github/workflows/encuesta_viva.yml` a `main` (GitHub solo programa
+   los workflows de la rama por defecto) y probar con «Run workflow».
+
+---
+
+## 2. Anotaciones del profesor sobre la app
+
+_Pendiente: registrar aquí cada anotación, el cambio hecho y cómo se verificó._
+
+| Anotación | Cambio | Verificación |
+|---|---|---|
+| | | |

@@ -30,7 +30,7 @@ pytestmark = pytest.mark.skipif(not _hay_insumos(),
 
 
 PAGINAS = ["inicio", "estudio", "resultados", "comparaciones", "dimensiones",
-           "hallazgos", "chat", "metodologia"]
+           "hallazgos", "en_vivo", "chat", "metodologia"]
 
 
 def _abrir(pagina=None, timeout=300):

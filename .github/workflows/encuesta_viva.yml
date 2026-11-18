@@ -1,0 +1,63 @@
+# Encuesta en vivo: cada hora descarga las respuestas del formulario, corre
+# el pipeline (agent/encuesta_viva) y, si los resultados cambiaron, sube
+# datos_vivos/hallazgos.json. Render vuelve a desplegar la app con el commit.
+#
+# Configuración (Settings del repositorio en GitHub):
+#   - Secrets > Actions > ENCUESTA_FUENTE: enlace CSV publicado de la hoja de
+#     respuestas (Google Sheets: Archivo > Compartir > Publicar en la web > CSV).
+#   - Variables > Actions > RAMA_APP (opcional): rama que despliega Render.
+#     Por defecto, entrega-2.
+#
+# GitHub solo ejecuta los "schedule" del archivo que está en la rama por
+# defecto (main); el botón "Run workflow" sirve desde cualquier rama.
+name: Encuesta en vivo
+
+on:
+  schedule:
+    - cron: "0 * * * *"        # cada hora, en punto
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: encuesta-viva
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ vars.RAMA_APP || 'entrega-2' }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"     # la misma de Render
+
+      - name: Dependencias (solo las del pipeline)
+        run: pip install "pandas>=2.0" "numpy>=1.24" "scipy>=1.10" "statsmodels>=0.14" openpyxl
+
+      - name: Actualizar resultados
+        env:
+          ENCUESTA_FUENTE: ${{ secrets.ENCUESTA_FUENTE }}
+        run: |
+          if [ -z "$ENCUESTA_FUENTE" ]; then
+            echo "::warning::Falta el secreto ENCUESTA_FUENTE; no se actualiza nada."
+            exit 0
+          fi
+          python -m agent.encuesta_viva.actualizar
+
+      - name: Subir si cambió
+        run: |
+          git add datos_vivos/hallazgos.json 2>/dev/null || exit 0
+          if git diff --cached --quiet; then
+            echo "Sin cambios."
+            exit 0
+          fi
+          git config user.name "encuesta-viva[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Encuesta viva: actualiza resultados"
+          git push
