@@ -41,6 +41,7 @@ Formulario (Google Forms o Microsoft Forms)
 | 2026-11-18 | Página nueva en la app: «Encuesta en vivo» (KPIs, comparación con el estudio, distribución, niveles y comparaciones por grupo). | `app/paginas/en_vivo.py`, `app/dashboard.py` |
 | 2026-11-18 | Tarea programada en GitHub cada hora. | `.github/workflows/encuesta_viva.yml` |
 | 2026-11-18 | 8 pruebas nuevas, incluida la reproducción exacta del estudio. | `tests/test_encuesta_viva.py` |
+| 2026-11-18 | Formulario en Google Forms generado desde el catálogo: script de Apps Script que lo crea completo (secciones, saltos por sede, 29 escalas 1–6 y hoja de respuestas) y guía con todas las preguntas exactas. El original era de Microsoft Forms; se elige Google porque su hoja se publica como CSV y la GitHub Action la lee sin iniciar sesión. 2 pruebas más: la hoja que produce el formulario la acepta el pipeline y las guías están al día. | `agent/encuesta_viva/formulario.py`, `docs/encuesta_viva/` |
 
 ### Decisiones metodológicas (para exponer)
 
@@ -88,8 +89,7 @@ reprodujera **exactamente** los datos del estudio:
 
 ### Pendiente para dejarla funcionando (lo hace la dueña del repositorio)
 
-1. Crear el formulario con **exactamente las mismas preguntas** del original
-   (mismo texto; el orden no importa). Recomendado: no pedir correo ni nombre.
+1. Crear el formulario: pegar `docs/encuesta_viva/crear_formulario.gs` en script.google.com y ejecutar `crearFormulario` (o armarlo a mano con `docs/encuesta_viva/FORMULARIO.md`). Pegar el texto del consentimiento y la autorización del formulario original.
 2. En la hoja de respuestas: Archivo > Compartir > Publicar en la web > CSV, y
    copiar el enlace.
 3. En GitHub: Settings > Secrets and variables > Actions > New secret

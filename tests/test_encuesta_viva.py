@@ -167,3 +167,32 @@ def test_reproduce_preparado_e_irt_del_estudio():
         np.testing.assert_allclose(irt[f"θ_{esc}"], r3[f"θ_{esc}"], atol=1.5e-4)
         np.testing.assert_allclose(irt[f"T_{esc}"], r3[f"T_{esc}"], atol=1e-9)
         assert (irt[f"Nivel_{esc}"] == r3[f"Nivel_{esc}"]).all(), esc
+
+
+# ── Formulario generado (docs/encuesta_viva) ──────────────────────────
+def test_hoja_del_formulario_generado_es_aceptada():
+    """Las columnas que crea crear_formulario.gs bastan para el pipeline."""
+    import re
+    from agent.encuesta_viva import formulario as F
+    from agent.encuesta_viva.catalogos import PROGRAMA_A_NBC, PROGRAMAS_POR_SEDE
+    gs = F.apps_script()
+    titulos = (["Marca temporal", "Consentimiento informado",
+                "Autorización expresa para el tratamiento de datos personales",
+                "¿Soy mayor de edad?"]
+               + [t for t, *_ in F.DATOS_PERSONALES]
+               + ["Sede o seccional", "Centro de Atención Universitaria CAU"]
+               + list(PROGRAMAS_POR_SEDE) + F.ITEMS)
+    for t in titulos[1:]:
+        assert json.dumps(t, ensure_ascii=False) in gs or f"'{t}'" in gs, t
+    P.normalizar_formulario(pd.DataFrame([[None] * len(titulos)], columns=titulos))
+    # Toda opción de programa tiene núcleo básico de conocimiento
+    assert all(p in PROGRAMA_A_NBC for ps in PROGRAMAS_POR_SEDE.values() for p in ps)
+    assert len(re.findall(r"addScaleItem", gs)) == 1 and len(F.ITEMS) == 29
+
+
+def test_guia_del_formulario_esta_al_dia():
+    from agent.encuesta_viva import formulario as F
+    for nombre, texto in (("crear_formulario.gs", F.apps_script()), ("FORMULARIO.md", F.guia())):
+        ruta = F.DESTINO / nombre
+        assert ruta.read_text(encoding="utf-8") == texto, (
+            f"{nombre} desactualizado: python -m agent.encuesta_viva.formulario")
