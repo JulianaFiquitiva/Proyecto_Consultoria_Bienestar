@@ -23,6 +23,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 from agent.core.query_planner import classify_scope
+from agent.core.sinonimos import normalizar_pregunta
 
 MODOS = ("publico", "completo")
 
@@ -102,7 +103,7 @@ class MotorChat:
         if ruta == "busqueda":
             return self._busqueda(pregunta)
         if ruta == "abstencion":
-            scope, motivo = classify_scope(pregunta)
+            scope, motivo = classify_scope(normalizar_pregunta(pregunta))
             if scope == "ambigua":
                 # En el chat todo se pregunta sobre el estudio de bienestar:
                 # "¿hay diferencias entre hombres y mujeres?" no nombra el

@@ -19,13 +19,8 @@ c.kpis([
      "puntos T: los intervalos se solapan", ""),
 ])
 
-col1, col2 = st.columns(2)
-with col1:
-    c.mostrar(c.radar([("Población", {k: D[k]["media"] for k in D})],
-                      "Perfil de la población"))
-with col2:
-    c.mostrar(c.forest(orden, [D[k]["media"] for k in orden], [D[k]["ic"] for k in orden],
-                       "Puntaje T por dimensión (IC 95 %)", referencia=50, alto=420))
+c.mostrar(c.radar([("Población", {k: D[k]["media"] for k in D})],
+                  "Perfil de la población"))
 st.caption("Las seis dimensiones están muy cerca de 50 y sus intervalos se solapan: no hay una "
            "dimensión claramente más débil en la población.")
 

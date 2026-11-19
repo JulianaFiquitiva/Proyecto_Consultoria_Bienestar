@@ -37,6 +37,7 @@ from agent.core.config import (
     REPORTED_RESULTS,
 )
 from agent.core.query_planner import classify_scope, pregunta_sobre_documento_indexado
+from agent.core.sinonimos import normalizar_pregunta
 
 
 class AnalysisType(Enum):
@@ -530,7 +531,9 @@ class StatisticalAgent:
             return "busqueda"
         if pregunta_sobre_documento_indexado(question):
             return "corpus"
-        scope, _motivo = classify_scope(question)
+        # Los sinonimos ("felicidad", "campus", "chicas"...) se traducen al
+        # vocabulario de las reglas solo para clasificar el ambito.
+        scope, _motivo = classify_scope(normalizar_pregunta(question))
         return "encuesta" if scope == "en_dominio" else "abstencion"
 
     def _generate_plan(self, question: str) -> AnalysisPlan:
@@ -896,14 +899,17 @@ class StatisticalAgent:
 
     def _fallback_plan(self, question: str) -> AnalysisPlan:
         """Plan de respaldo basado en reglas simples."""
-        q = question.lower()
+        # Minusculas, sin tildes y con los sinonimos traducidos
+        # (agent/core/sinonimos.py): "dimensión" -> "dimension",
+        # "las chicas" -> "mujeres", "campus" -> "seccional"...
+        q = normalizar_pregunta(question)
 
         # Busqueda web explicita (red de seguridad si se llega por esta via)
         if self._is_search_request(question):
             return self._search_plan(question)
 
         # Fuera de dominio / ambigua (red de seguridad)
-        scope, motivo = classify_scope(question)
+        scope, motivo = classify_scope(q)
         if scope != "en_dominio":
             return self._abstain_plan(scope, motivo)
 
@@ -975,6 +981,14 @@ class StatisticalAgent:
                 variables_needed=["T_Global", "modalidad_exp", "Edad", "Género",
                                   "Estrato socioeconómico", "seccional"],
                 confidence=0.85,
+            )
+        elif "nivel de formacion" in q:
+            return AnalysisPlan(
+                analysis_type=AnalysisType.COMPARISON,
+                description="Comparacion por nivel de formacion",
+                function_to_call="design_comparison",
+                parameters={"value_col": "T_Global", "group_col": "Nivel de formacion"},
+                variables_needed=["T_Global", "Nivel de formacion"], confidence=0.8,
             )
         elif any(w in q for w in ["genero", "hombre", "mujer", "sexo", "masculino", "femenino"]):
             return AnalysisPlan(
@@ -1049,6 +1063,20 @@ class StatisticalAgent:
                 function_to_call="regression_analysis",
                 parameters={"value_col": "T_Global", "group_col": "Edad"},
                 variables_needed=["T_Global", "Edad"], confidence=0.7,
+            )
+        # Preguntas por el estado general sin nombrar un grupo:
+        # "¿cuantos estudiantes estan en riesgo?", "¿cual es el puntaje promedio?"
+        elif (any(w in q for w in ["como esta", "como se encuentra", "que tan",
+                                    "promedio", "puntaje", "en riesgo", "bienestar alto",
+                                    "porcentaje", "proporcion", "cuantos", "cuantas",
+                                    "nivel de bienestar"])
+              or re.search(r"\bmedia\b", q)
+              or re.search(r"\bcual es (?:el|la) (?:bienestar|puntaje|indice)\b", q)):
+            return AnalysisPlan(
+                analysis_type=AnalysisType.OVERVIEW,
+                description="Resumen general del bienestar",
+                function_to_call="descriptive_overview",
+                parameters={}, variables_needed=["T_Global"], confidence=0.6,
             )
         else:
             # La rama por defecto YA NO es descriptive_overview.

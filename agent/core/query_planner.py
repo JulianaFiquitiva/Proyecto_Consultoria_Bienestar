@@ -201,7 +201,7 @@ OUT_OF_DOMAIN_RULES: List[Tuple[str, str]] = [
 DOMAIN_TERMS_RE = re.compile(
     r"\b(?:t[_\s-]?score|t_global|tscore|puntuaci[oó]n|puntaje|"
     r"dimension(?:es)?|escala|ryff|i[té]tems?|genero|sexo|hombre|mujer|"
-    r"edad|estrato|sede|seccional|modalidad|programa|carrera|semestre|"
+    r"edad|estrato|sede|seccional|modalidad|programa|carrera|semestre|nivel\s+de\s+formaci[oó]n|"
     r"n[uú]cleo|nbc|bienestar|felicidad|riesgo|autoaceptaci[oó]n|autonom[ií]a|"
     r"crecimiento|prop[oó]sito|dominio|relaciones\s+positivas|"
     r"alpha|cronbach|pregrado|posgrado|especializaci[oó]n|maestr[ií]a|"

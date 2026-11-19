@@ -78,7 +78,12 @@ hitos = [
                "documento y página; sin fuente, se abstiene.", ""),
     ("Entrega 2", "Estimaciones con el diseño muestral, reproducción del estudio anterior, DIF, "
                   "brecha ajustada, modelo multinivel y esta app con el agente en línea.", ""),
-    ("Entrega final", "Encuesta viva: respuestas nuevas que actualizan los resultados.", "futuro"),
+    ("Entrega final", "Aplicación con agente de inteligencia artificial en línea: un asistente "
+                      "virtual que explica los métodos usados en el estudio, responde preguntas "
+                      "sobre la investigación con respuestas contextualizadas, consulta el "
+                      "corpus documental que sirve como base de conocimiento y permite "
+                      "conversar en línea para resolver inquietudes y profundizar en los "
+                      "resultados.", ""),
 ]
 st.markdown('<div class="linea">' + "".join(
     f'<div class="hito {clase}"><b>{t}</b><br><span>{d}</span></div>' for t, d, clase in hitos)

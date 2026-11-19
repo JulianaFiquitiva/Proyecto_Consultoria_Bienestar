@@ -122,3 +122,42 @@ def test_grupos_traen_niveles_y_dimensiones():
         for g in datos["grupos"].values():
             assert {"riesgo", "alto", "dimensiones"} <= set(g)
             assert 0 <= g["riesgo"]["media"] <= 1 and 0 <= g["alto"]["media"] <= 1
+
+
+# ── Ajustes de la entrega final (docs/BITACORA_ENTREGA_FINAL.md, sección 2) ──
+
+def _graficos(at):
+    """Texto (JSON) de cada gráfico plotly de la página."""
+    return [g.proto.spec for g in at.get("plotly_chart")]
+
+
+def test_comparaciones_por_seccional_solo_muestra_el_mapa(publica):
+    at = _abrir("comparaciones")
+    assert not at.exception
+    specs = _graficos(at)
+    assert not any("Puntaje T por seccional" in s for s in specs)
+    assert any("scattergeo" in s for s in specs)
+
+
+def test_comparaciones_otras_variables_conservan_sus_graficos(publica):
+    at = _abrir("comparaciones")
+    at.segmented_control(key="comp_variable").set_value("Género").run()
+    assert not at.exception
+    specs = _graficos(at)
+    assert any("Puntaje T por género" in s for s in specs)
+    assert any("Peso de cada grupo" in s for s in specs)
+
+
+def test_dimensiones_sin_grafico_puntaje_por_dimension(publica):
+    at = _abrir("dimensiones")
+    assert not at.exception
+    specs = _graficos(at)
+    assert not any("Puntaje T por dimensión (IC 95" in s for s in specs)
+    assert any("Perfil de la población" in s for s in specs)
+
+
+def test_estudio_presenta_el_agente_como_entrega_final(publica):
+    at = _abrir("estudio")
+    html = " ".join(m.value for m in at.markdown)
+    assert "Encuesta viva" not in html
+    assert "agente de inteligencia artificial en línea" in html

@@ -101,8 +101,18 @@ reprodujera **exactamente** los datos del estudio:
 
 ## 2. Anotaciones del profesor sobre la app
 
-_Pendiente: registrar aquí cada anotación, el cambio hecho y cómo se verificó._
+Estado de la encuesta en vivo: el código queda listo y probado, pero por ahora
+no se activa (no se puede aplicar la encuesta todavía). Por eso la app ya no la
+anuncia como entregable; la página «Encuesta en vivo» sigue disponible y muestra
+un aviso mientras no haya respuestas.
 
-| Anotación | Cambio | Verificación |
-|---|---|---|
-| | | |
+| Fecha | Anotación | Cambio | Archivos | Verificación |
+|---|---|---|---|---|
+| 2026-11-18 | **Estudio**: quitar «Entrega final – Encuesta viva» de los entregables y presentar la app con el agente de IA en línea. | El hito «Entrega final» del recorrido ahora describe la aplicación con agente de inteligencia artificial en línea: explica los métodos del estudio, responde preguntas con respuestas contextualizadas, consulta el corpus documental y permite conversar en línea para profundizar en los resultados. Se quita la marca de «futuro» (ya está entregado). | `app/paginas/estudio.py` | Prueba `test_estudio_presenta_el_agente_como_entrega_final`. |
+| 2026-11-18 | **Comparaciones**: conservar solo el mapa y quitar la gráfica «Puntaje T por seccional». | Con «Seccional» seleccionada la página muestra solo el mapa, a todo el ancho y con una nota de lectura (tamaño del punto = estudiantes; el T se ve al pasar el cursor). Las demás variables (pregrado/posgrado, género, estrato, nivel de formación) conservan sus dos gráficos sin cambios. | `app/paginas/comparaciones.py` | Pruebas `test_comparaciones_por_seccional_solo_muestra_el_mapa` y `test_comparaciones_otras_variables_conservan_sus_graficos`. |
+| 2026-11-18 | **Dimensiones**: quitar la gráfica «Puntaje T por dimensión». | Se quita esa gráfica; el radar «Perfil de la población» pasa a ocupar todo el ancho (ya no hay columnas con huecos). KPIs, nota, mapa de calor por grupo y perfiles comparados no cambian. | `app/paginas/dimensiones.py` | Prueba `test_dimensiones_sin_grafico_puntaje_por_dimension`. |
+| 2026-11-18 | **Agente**: que entienda sinónimos para ampliar las preguntas que responde. | Capa nueva de sinónimos: antes de clasificar la pregunta la pasa a minúsculas, le quita las tildes y traduce sinónimos al vocabulario del agente (felicidad, salud mental, satisfacción con la vida → bienestar; alumnos → estudiantes; chicas/chicos → mujeres/hombres; campus, ciudad, sede → seccional; maestría, especialización → posgrado; condición socioeconómica, ricos/pobres → estrato; nivel educativo → nivel de formación; autoestima, sentido de vida, relaciones con los demás → su dimensión de Ryff; aspecto más débil → dimensión más baja; sesgo en los ítems, escala justa → DIF; coinciden con el informe original → reproducibilidad; teniendo en cuenta → controlando). Además: comparación por **nivel de formación** (estaba precalculada pero el agente no la reconocía) y preguntas generales sin grupo («¿cuántos están en riesgo?», «¿cuál es el puntaje promedio?») → resumen. No cambia ningún cálculo; el corpus y la búsqueda reciben la pregunta original. Para añadir un sinónimo basta una línea en `SINONIMOS`. | `agent/core/sinonimos.py` (nuevo), `agent/core/orchestrator.py`, `agent/core/chat.py`, `agent/core/query_planner.py` | Banco de 46 preguntas redactadas con otras palabras: **antes 17 respondidas, ahora 43**; las 3 restantes se abstienen a propósito (presencial/virtual no está en los resultados públicos; «¿es confiable?» es ambigua). Las rutas a corpus, búsqueda y abstención fuera de tema no cambian. 29 pruebas nuevas en `tests/test_sinonimos.py`. |
+
+**Verificación general:** 367 pruebas pasan (todas las páginas de la app abren
+sin errores); los datos, cálculos y resultados no se tocaron; el log protegido
+del RAG conserva su huella.

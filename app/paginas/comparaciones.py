@@ -31,19 +31,21 @@ c.kpis([
      f"T = {min(g['media'] for g in grupos.values()):.1f}", "riesgo"),
 ])
 
-col1, col2 = st.columns([3, 2])
-with col1:
-    c.mostrar(c.forest(list(grupos), [g["media"] for g in grupos.values()],
-                       [g["ic"] for g in grupos.values()],
-                       f"Puntaje T por {datos['etiqueta'].lower()} (IC 95 %)",
-                       referencia=R["T_global"]["media"]))
-    st.caption("La línea punteada es el promedio de toda la población.")
-with col2:
-    if clave == "seccional":
-        fig = c.mapa_seccionales(grupos)
-        if fig:
-            c.mostrar(fig)
-    else:
+mapa = c.mapa_seccionales(grupos) if clave == "seccional" else None
+if mapa:
+    # Por seccional solo se muestra el mapa, a todo el ancho.
+    c.mostrar(mapa)
+    st.caption("El tamaño de cada punto es proporcional al número de estudiantes. Pase el "
+               "cursor sobre una seccional para ver su puntaje T.")
+else:
+    col1, col2 = st.columns([3, 2])
+    with col1:
+        c.mostrar(c.forest(list(grupos), [g["media"] for g in grupos.values()],
+                           [g["ic"] for g in grupos.values()],
+                           f"Puntaje T por {datos['etiqueta'].lower()} (IC 95 %)",
+                           referencia=R["T_global"]["media"]))
+        st.caption("La línea punteada es el promedio de toda la población.")
+    with col2:
         c.mostrar(c.peso_grupos(grupos))
 
 fig = c.barras_niveles(grupos, f"Niveles de bienestar por {datos['etiqueta'].lower()}")
