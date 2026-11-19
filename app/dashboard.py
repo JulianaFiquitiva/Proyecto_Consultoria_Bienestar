@@ -70,8 +70,15 @@ PAGINAS = [
             icon=":material/compare_arrows:"),
     st.Page(APP / "paginas" / "dimensiones.py", title="Dimensiones", icon=":material/radar:"),
     st.Page(APP / "paginas" / "hallazgos.py", title="Hallazgos", icon=":material/lab_research:"),
-    st.Page(APP / "paginas" / "en_vivo.py", title="Encuesta en vivo", icon=":material/sensors:"),
     st.Page(APP / "paginas" / "chat.py", title="Pregúntale al agente", icon=":material/forum:"),
     st.Page(APP / "paginas" / "metodologia.py", title="Metodología", icon=":material/menu_book:"),
 ]
+# «Encuesta en vivo» solo aparece cuando ya hay respuestas procesadas
+# (datos_vivos/hallazgos.json); mientras la encuesta no se aplique, no se ve.
+from agent.encuesta_viva import actualizar as _viva  # noqa: E402
+
+if _viva.SALIDA.exists():
+    PAGINAS.insert(6, st.Page(APP / "paginas" / "en_vivo.py", title="Encuesta en vivo",
+                              icon=":material/sensors:"))
+
 st.navigation(PAGINAS, position="top").run()

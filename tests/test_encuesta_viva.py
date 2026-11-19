@@ -132,14 +132,18 @@ def test_pagina_en_vivo(salida_viva, monkeypatch, tmp_path):
         pytest.skip("sin hallazgos del estudio")
     monkeypatch.delenv("APP_PASSWORD", raising=False)
 
+    # Sin respuestas procesadas la página no está en el menú
     monkeypatch.setattr(A, "SALIDA", tmp_path / "no_existe.json")
     at = AppTest.from_file(APP, default_timeout=300)
     at.run()
-    at.switch_page("paginas/en_vivo.py").run()
     assert not at.exception, [e.value for e in at.exception]
-    assert any("Todavía no hay respuestas" in i.value for i in at.info)
+    at.switch_page("paginas/en_vivo.py").run()     # no registrada: no se abre
+    assert not any("Todavía no hay respuestas" in i.value for i in at.info)
 
+    # Con respuestas aparece y muestra los resultados
     monkeypatch.setattr(A, "SALIDA", salida_viva[1])
+    at = AppTest.from_file(APP, default_timeout=300)
+    at.run()
     at.switch_page("paginas/en_vivo.py").run()
     assert not at.exception, [e.value for e in at.exception]
     assert any("Última actualización" in x.value for x in at.caption)
