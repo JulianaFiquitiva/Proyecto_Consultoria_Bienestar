@@ -1,0 +1,20 @@
+<section id="hallazgos" class="light" data-transition="fade">
+<div class="head">
+<p class="eyebrow">Trabajo adicional · Reproducibilidad</p>
+<h2 class="title">Del notebook al código, sin perder un valor</h2>
+</div>
+<div style="display:flex;gap:72px;flex:1;align-items:center">
+<div class="stat" style="width:560px;display:flex;flex-direction:column;gap:16px">
+<p class="big">0</p>
+<p class="body">diferencias en <b>2.438 valores</b> al reproducir el estudio desde el Excel crudo</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<p class="note">Dos pasos que no estaban documentados, ahora reconstruidos:</p>
+<div class="card" style="--i:1"><h3>Calibración por género</h3><p class="txt">Los factores de expansión tenían un ajuste por raking (seccional × modalidad y seccional × género) que no aparece en ningún notebook.</p></div>
+<div class="card accent" style="--i:2"><h3>T = 50 + 10·θ</h3><p class="txt">El puntaje T de los datos no usa la normalización ponderada que describe el notebook. Por eso la media es 50,7 y no 50.</p></div>
+</div>
+</div>
+<p class="footer">Entrega final · Índice de Bienestar Estudiantil USTA</p>
+<p class="pagenum">10</p>
+<aside>Para lograr la encuesta en vivo pasamos los notebooks de preparación e IRT a código reutilizable y probado. Ese código reproduce exactamente el estudio: 0 diferencias en 2.438 valores. En el proceso descubrimos dos pasos que no estaban documentados. Primero, los factores de expansión tenían una calibración por género, por raking a dos márgenes; la reconstruimos con error menor a 1e-12. Segundo, el puntaje T de los datos es 50 + 10·θ, no la normalización ponderada que describe el notebook: con esa normalización la media sería exactamente 50, y la reportada es 50,7. Los dos quedaron documentados.</aside>
+</section>

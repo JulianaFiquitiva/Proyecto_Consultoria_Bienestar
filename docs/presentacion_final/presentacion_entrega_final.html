@@ -1,0 +1,295 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Índice de Bienestar USTA — Entrega final</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:wght@400..700&display=swap">
+<style>:root {
+  --navy: #1B3A5C;
+  --paper: #F6F4EF;
+  --card: #FFFDF8;
+  --line: #E2DED4;
+  --ink: #3D4A5C;
+  --muted: #5A6575;
+  --faint: #6B7684;
+  --gold: #F2B544;
+  --amber: #9A5A00;
+  --mist: #C9D6E3;
+  --band: #E9EEF3;
+}
+body { font-family: 'IBM Plex Sans', Arial, sans-serif; }
+section { counter-increment: page; }
+
+/* Fondos */
+.dark { background: var(--navy); color: var(--paper); padding: 128px; display: flex; flex-direction: column; justify-content: space-between; }
+.light { background: var(--paper); color: var(--ink); padding: 128px 128px 160px; display: flex; flex-direction: column; gap: 48px; }
+
+/* Tipografía */
+.kicker { font-size: 24px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); }
+.eyebrow { font-size: 24px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); }
+.head { display: flex; flex-direction: column; gap: 12px; }
+.title { font-family: 'Source Serif 4', Georgia, serif; font-size: 64px; font-weight: 600; line-height: 1.15; color: var(--navy); }
+.hero { font-family: 'Source Serif 4', Georgia, serif; font-size: 104px; font-weight: 600; line-height: 1.05; color: var(--paper); }
+.lede { font-size: 40px; line-height: 1.3; color: var(--mist); width: 1300px; }
+.body { font-size: 30px; line-height: 1.4; color: var(--ink); }
+.note { font-size: 26px; line-height: 1.4; color: var(--muted); }
+.byline { font-size: 30px; color: var(--paper); }
+.meta { font-size: 26px; color: var(--mist); }
+.foot { display: flex; justify-content: space-between; align-items: end; }
+
+/* Pie de página */
+.footer { position: absolute; left: 128px; bottom: 64px; width: 1400px; font-size: 24px; color: var(--faint); }
+.pagenum { position: absolute; right: 128px; bottom: 64px; width: 100px; text-align: right; font-size: 24px; color: var(--faint); }
+
+/* Tarjetas */
+.cards { display: grid; gap: 32px; flex: 1; }
+.cols2 { grid-template-columns: 1fr 1fr; }
+.cols3 { grid-template-columns: 1fr 1fr 1fr; }
+.cols4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.card { background: var(--card); border: 1px solid var(--line); border-top: 6px solid var(--navy); padding: 36px; display: flex; flex-direction: column; gap: 16px; }
+.card.accent { border-top-color: var(--gold); }
+.card h3 { font-family: 'Source Serif 4', Georgia, serif; font-size: 40px; font-weight: 600; line-height: 1.15; color: var(--navy); }
+.card .txt { font-size: 26px; line-height: 1.4; color: var(--ink); }
+.card .tag { font-size: 24px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); }
+.card .q { font-family: 'Source Serif 4', Georgia, serif; font-size: 32px; font-style: italic; line-height: 1.3; color: var(--navy); }
+.card .ico { width: 56px; height: 56px; color: var(--amber); }
+
+/* Cifras grandes */
+.big { font-family: 'Source Serif 4', Georgia, serif; font-size: 160px; font-weight: 600; line-height: 1; color: var(--navy); }
+.num { font-family: 'Source Serif 4', Georgia, serif; font-size: 88px; font-weight: 600; line-height: 1; color: var(--navy); }
+
+/* Tablas */
+.tbl { width: 100%; font-size: 26px; color: var(--ink); background: var(--card); border: 1px solid var(--line); }
+.tbl .hd { background: var(--band); }
+
+/* Movimiento */
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+.card, .stat { animation: rise 500ms ease-out both; animation-delay: calc(var(--i, 0) * 120ms); }
+
+html,body{margin:0;height:100%;background:#111;overflow:hidden}
+*{box-sizing:border-box;margin:0}
+section{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;display:none !important}
+section.on{display:flex !important}
+aside{display:none}
+.tbl td,.tbl th{padding:12px 22px;text-align:left;border-bottom:1px solid var(--line)}
+.tbl{border-collapse:collapse}
+.arrow{align-self:center;width:56px;text-align:center;font-size:44px;color:var(--amber)}
+#notes{display:none;position:fixed;bottom:0;left:0;right:0;background:#222;color:#eee;font:18px/1.4 sans-serif;padding:12px 20px;max-height:30%;overflow:auto}
+</style></head><body>
+<section id="cover" class="dark" data-transition="fade">
+<p class="kicker">Consultoría e Investigación · Entrega final</p>
+<div style="display:flex;flex-direction:column;gap:32px">
+<h1 class="hero">Un agente que entiende cómo pregunta la gente</h1>
+<p class="lede">La app del Índice de Bienestar Estudiantil USTA con un agente de IA en línea: sinónimos, anotaciones del profesor y una encuesta en vivo lista para activarse</p>
+</div>
+<div class="foot">
+<p class="byline">Juliana Fiquitiva · Luisa Martínez U.</p>
+<p class="meta">Universidad Santo Tomás · Noviembre 2026</p>
+</div>
+<aside>En esta entrega cerramos el proyecto con una aplicación web con un agente de inteligencia artificial en línea. El agente explica los métodos del estudio, responde preguntas sobre los resultados y consulta el corpus de documentos académicos. Ahora entiende muchas más formas de preguntar, porque reconoce sinónimos, y atendimos las anotaciones del profesor para simplificar la app. Además dejamos construida y probada la encuesta en vivo, que puede actualizar los resultados sola en cuanto se aplique el formulario.</aside>
+</section>
+<section id="recorrido" class="light" data-transition="fade">
+<div class="head">
+<p class="eyebrow">Recorrido</p>
+<h2 class="title">De dónde venimos</h2>
+</div>
+<div class="cards" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr">
+<div class="card" style="--i:0"><p class="tag">Feb 2026</p><h3>El estudio</h3><p class="txt">Escala de Ryff: 29 ítems, 6 dimensiones, puntajes T y diseño muestral por seccional y modalidad.</p></div>
+<div class="card" style="--i:1"><p class="tag">Entrega 1</p><h3>El agente</h3><p class="txt">Recibe una pregunta, elige el método, revisa supuestos, lo ejecuta y lo interpreta.</p></div>
+<div class="card" style="--i:2"><p class="tag">Avance</p><h3>RAG</h3><p class="txt">Responde sobre 20 documentos académicos citando documento y página. Sin fuente, se abstiene.</p></div>
+<div class="card" style="--i:3"><p class="tag">Entrega 2</p><h3>Rigor</h3><p class="txt">Diseño muestral, reproducción del estudio, DIF, brecha ajustada, multinivel y app publicada.</p></div>
+<div class="card accent" style="--i:4"><p class="tag">Hoy</p><h3>Entrega final</h3><p class="txt">La app con el agente de IA en línea, sinónimos y encuesta en vivo lista.</p></div>
+</div>
+<p class="footer">Entrega final · Índice de Bienestar Estudiantil USTA</p>
+<p class="pagenum">2</p>
+<aside>El estudio original, del Consultorio de Estadística USTA en febrero de 2026, midió el bienestar con la escala de Ryff: 29 ítems y 6 dimensiones, con puntajes T (centro 50, desviación 10) y un diseño muestral por seccional y modalidad. En la entrega 1 construimos un agente estadístico que recibe una pregunta en lenguaje natural, elige el método, revisa los supuestos, lo ejecuta y lo interpreta. En el avance agregamos el RAG: el agente responde sobre 20 documentos académicos y cita documento y página; si no tiene fuente, se abstiene. En la entrega 2: estimaciones con el diseño muestral, reproducción del estudio anterior, DIF, brecha ajustada, modelo multinivel y la app publicada. Mostrar: la página «El estudio», sección Recorrido.</aside>
+</section>
+<section id="app" class="light" data-transition="fade">
+<div class="head">
+<p class="eyebrow">La entrega final</p>
+<h2 class="title">La app con el agente de IA en línea</h2>
+</div>
+<div class="cards cols4" style="flex:0">
+<div class="card" style="--i:0"><h3>Explica los métodos</h3><p class="txt">Consulta los métodos usados en el estudio y recibe una explicación.</p></div>
+<div class="card" style="--i:1"><h3>Responde sobre el estudio</h3><p class="txt">Respuestas contextualizadas, con la fuente y el método que eligió («Cómo decidió»).</p></div>
+<div class="card" style="--i:2"><h3>Consulta el corpus</h3><p class="txt">20 documentos académicos como base de conocimiento, siempre con cita.</p></div>
+<div class="card" style="--i:3"><h3>Conversa en línea</h3><p class="txt">Resuelve dudas y profundiza en los resultados en una conversación.</p></div>
+</div>
+<p class="note"><b>Privacidad:</b> la versión publicada usa solo resultados agregados; los grupos con menos de 30 casos no se muestran.</p>
+<p class="footer">proyecto-consultoria-bienestar.onrender.com</p>
+<p class="pagenum">3</p>
+<aside>La app es el producto final. El agente virtual permite: uno, consultar los métodos usados en el estudio y recibir una explicación; dos, preguntar sobre el estudio y recibir respuestas contextualizadas, con la fuente y el método que eligió, que se ve en «Cómo decidió»; tres, consultar el corpus de documentos que sirve como base de conocimiento; cuatro, conversar en línea para resolver dudas y profundizar en los resultados. La versión publicada usa solo resultados agregados: no expone respuestas individuales.</aside>
+</section>
+<section id="demo" class="light" data-transition="fade">
+<div class="head">
+<p class="eyebrow">Demostración · «Pregúntale al agente»</p>
+<h2 class="title">Cuatro preguntas, cuatro comportamientos</h2>
+</div>
+<div class="cards cols2">
+<div class="card" style="--i:0"><p class="tag">Resumen</p><p class="q">«¿Cómo está el bienestar general?»</p><p class="txt">Puntaje T con su intervalo de confianza.</p></div>
+<div class="card" style="--i:1"><p class="tag">Comparación</p><p class="q">«¿Hay diferencias entre hombres y mujeres?»</p><p class="txt">Comparación con la varianza del diseño muestral.</p></div>
+<div class="card" style="--i:2"><p class="tag">Corpus</p><p class="q">«¿Qué dicen los documentos sobre el bienestar psicológico?»</p><p class="txt">Respuesta del corpus con documento y página.</p></div>
+<div class="card accent" style="--i:3"><p class="tag">Se abstiene</p><p class="q">«¿Cuál es la capital de Francia?»</p><p class="txt">No inventa fuera del estudio: explica el motivo.</p></div>
+</div>
+<p class="footer">Entrega final · Índice de Bienestar Estudiantil USTA</p>
+<p class="pagenum">4</p>
+<aside>Demostración en vivo en la página «Pregúntale al agente». Las cuatro preguntas están verificadas. La primera da un resumen con intervalo de confianza; la segunda, una comparación con la varianza del diseño; la tercera responde desde el corpus con la cita; y la cuarta muestra que el agente se abstiene: no inventa fuera del estudio.</aside>
+</section>
+<section id="sinonimos" class="light" data-transition="fade">
+<div class="head">
+<p class="eyebrow">Mejora del agente · El problema</p>
+<h2 class="title">El agente solo reconocía un vocabulario fijo y sin tildes</h2>
+</div>
+<div class="cards cols3">
+<div class="card" style="--i:0"><p class="q">«¿Cómo está la felicidad de los alumnos?»</p><p class="txt">No sabía que «felicidad» es bienestar ni que «alumnos» son estudiantes.</p></div>
+<div class="card" style="--i:1"><p class="q">«¿Qué campus tiene mejor bienestar?»</p><p class="txt">Esperaba «seccional», no «campus», «sede» ni «ciudad».</p></div>
+<div class="card" style="--i:2"><p class="q">«¿Cuál es la dimensión más baja?»</p><p class="txt">No reconocía «dimensión» escrita con tilde.</p></div>
+</div>
+<p class="body"><b>La solución:</b> una capa de sinónimos. Antes de interpretar la pregunta, el agente la pasa a minúsculas, le quita las tildes y traduce los sinónimos a las palabras que ya conoce.</p>
+<p class="footer">Entrega final · Índice de Bienestar Estudiantil USTA</p>
+<p class="pagenum">5</p>
+<aside>El agente reconocía un vocabulario fijo y sin tildes. Por eso no respondía «¿Cómo está la felicidad de los alumnos?», ni «¿Qué campus tiene mejor bienestar?», ni «¿Cuál es la dimensión más baja?», porque no reconocía «dimensión» con tilde. La solución es una capa de sinónimos: antes de interpretar la pregunta, el agente la pasa a minúsculas, le quita las tildes y traduce los sinónimos a las palabras que ya conoce.</aside>
+</section>
+<section id="diccionario" class="light" data-transition="fade">
+<div class="head">
+<p class="eyebrow">Mejora del agente · La solución</p>
+<h2 class="title">Lo que la persona dice y lo que el agente entiende</h2>
+</div>
+<div style="display:flex;gap:40px;align-items:flex-start">
+<table class="tbl">
+<tr class="hd"><th style="width:58%;color:#1B3A5C;padding:14px 24px">La persona dice</th><th style="width:42%;color:#1B3A5C">El agente entiende</th></tr>
+<tr><td>felicidad, salud mental, satisfacción con la vida</td><td>bienestar</td></tr>
+<tr><td>alumnos, universitarios</td><td>estudiantes</td></tr>
+<tr><td>chicas / chicos</td><td>mujeres / hombres</td></tr>
+<tr><td>campus, ciudad, sede</td><td>seccional</td></tr>
+<tr><td>maestría, especialización</td><td>posgrado</td></tr>
+<tr><td>condición socioeconómica, ricos / pobres</td><td>estrato</td></tr>
+</table>
+<table class="tbl">
+<tr class="hd"><th style="width:58%;color:#1B3A5C;padding:14px 24px">La persona dice</th><th style="width:42%;color:#1B3A5C">El agente entiende</th></tr>
+<tr><td>nivel educativo</td><td>nivel de formación</td></tr>
+<tr><td>autoestima, sentido de vida</td><td>su dimensión de Ryff</td></tr>
+<tr><td>aspecto más débil</td><td>dimensión más baja</td></tr>
+<tr><td>sesgo en los ítems, ¿la escala es justa?</td><td>DIF</td></tr>
+<tr><td>¿coinciden con el informe original?</td><td>reproducibilidad</td></tr>
+</table>
+</div>
+<p class="note">Agregar un sinónimo nuevo es añadir una línea al diccionario.</p>
+<p class="footer">Entrega final · Índice de Bienestar Estudiantil USTA</p>
+<p class="pagenum">6</p>
+<aside>Algunos ejemplos del diccionario de sinónimos. Felicidad, salud mental o satisfacción con la vida se entienden como bienestar; alumnos y universitarios como estudiantes; chicas y chicos como mujeres y hombres; campus, ciudad o sede como seccional; maestría o especialización como posgrado; condición socioeconómica como estrato. También reconoce nivel educativo, las dimensiones de Ryff por su nombre común, «aspecto más débil», preguntas sobre sesgo en los ítems, que van a DIF, y si los resultados coinciden con el informe original, que van a reproducibilidad. Añadir un sinónimo nuevo es una línea.</aside>
+</section>
+<section id="resultado" class="light" data-transition="fade">
+<div class="head">
+<p class="eyebrow">Mejora del agente · El resultado</p>
+<h2 class="title">Ahora responde casi todas las preguntas reformuladas</h2>
+</div>
+<div style="display:flex;gap:72px;flex:1;align-items:center">
+<div class="stat" style="width:640px;display:flex;flex-direction:column;gap:16px">
+<p class="big">17 → 43</p>
+<p class="body">de <b>46 preguntas</b> redactadas con otras palabras, antes y después de los sinónimos</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<div class="card" style="--i:1"><h3>Las 3 restantes se abstienen a propósito</h3><p class="txt">Presencial frente a virtual (2): no está en los resultados públicos. «¿Es confiable el análisis?»: demasiado ambigua.</p></div>
+<div class="card accent" style="--i:2"><h3>No cambió ningún cálculo</h3><p class="txt">El agente sigue absteniéndose fuera del estudio. Ahora también acepta comparaciones por nivel de formación.</p></div>
+</div>
+</div>
+<p class="footer">Entrega final · Índice de Bienestar Estudiantil USTA</p>
+<p class="pagenum">7</p>
+<aside>Lo medimos con un banco de 46 preguntas redactadas con otras palabras: antes respondía 17, ahora responde 43. Las 3 restantes se abstienen a propósito: presencial frente a virtual, dos preguntas, porque no está en los resultados públicos; y «¿Es confiable el análisis?», porque es demasiado ambigua. Lo importante: no cambió ningún cálculo y el agente sigue absteniéndose fuera del estudio. Demostración: «¿Las chicas tienen más bienestar que los chicos?», «¿Qué campus tiene mejor bienestar?», «¿Cuál es el aspecto más débil del bienestar?» y «¿Hay diferencias por nivel de formación?», que estaba calculada pero antes no se podía preguntar.</aside>
+</section>
+<section id="profesor" class="light" data-transition="fade">
+<div class="head">
+<p class="eyebrow">Anotaciones del profesor</p>
+<h2 class="title">Una app más simple, centrada en el agente</h2>
+</div>
+<table class="tbl" style="font-size:28px">
+<tr class="hd"><th style="width:18%;color:#1B3A5C;padding:20px 28px">Sección</th><th style="width:37%;color:#1B3A5C">Anotación</th><th style="width:45%;color:#1B3A5C">Qué hicimos</th></tr>
+<tr><td>El estudio</td><td>Quitar «Encuesta viva» de los entregables y presentar el agente</td><td>El hito «Entrega final» describe la app con el agente de IA en línea</td></tr>
+<tr><td>Comparaciones</td><td>Dejar solo el mapa</td><td>Por seccional se ve solo el mapa, a todo el ancho y con una nota de lectura</td></tr>
+<tr><td>Dimensiones</td><td>Quitar «Puntaje T por dimensión»</td><td>El radar del perfil ocupa todo el ancho; el resto no cambia</td></tr>
+<tr><td>Agente</td><td>Que entienda sinónimos</td><td>Capa de sinónimos: de 17 a 43 de 46 preguntas</td></tr>
+</table>
+<p class="note">Cada cambio tiene su prueba automática. Las demás páginas y variables no cambian.</p>
+<p class="footer">Entrega final · Índice de Bienestar Estudiantil USTA</p>
+<p class="pagenum">8</p>
+<aside>Atendimos las anotaciones del profesor. En «El estudio», el hito «Entrega final» ahora describe la app con el agente de IA en línea y ya no anuncia la encuesta viva como entregable. En «Comparaciones», con «Seccional» seleccionada se ve solo el mapa, a todo el ancho y con una nota de lectura; las demás variables conservan sus dos gráficos. En «Dimensiones» quitamos la gráfica «Puntaje T por dimensión» y el radar ocupa todo el ancho. Y la capa de sinónimos que acabamos de ver. Mostrar: Comparaciones con «Seccional» seleccionada, y luego Dimensiones.</aside>
+</section>
+<section id="flujo" class="light" data-transition="fade">
+<div class="head">
+<p class="eyebrow">Trabajo adicional · Encuesta en vivo</p>
+<h2 class="title">La app puede actualizarse sola con respuestas nuevas</h2>
+</div>
+<div style="display:flex;align-items:stretch">
+<div class="card" style="--i:0;flex:1"><p class="tag">1</p><h3>Formulario</h3><p class="txt">Google Forms, generado desde el catálogo</p></div>
+<div class="arrow">→</div>
+<div class="card" style="--i:1;flex:1"><p class="tag">2</p><h3>Hoja</h3><p class="txt">Respuestas publicadas como CSV</p></div>
+<div class="arrow">→</div>
+<div class="card" style="--i:2;flex:1"><p class="tag">3</p><h3>GitHub</h3><p class="txt">Tarea automática cada hora</p></div>
+<div class="arrow">→</div>
+<div class="card" style="--i:3;flex:1"><p class="tag">4</p><h3>Análisis</h3><p class="txt">La misma metodología del estudio</p></div>
+<div class="arrow">→</div>
+<div class="card accent" style="--i:4;flex:1"><p class="tag">5</p><h3>App</h3><p class="txt">Se vuelve a publicar en ~22&#160;s</p></div>
+</div>
+<div style="display:flex;gap:56px">
+<p class="body" style="flex:1"><b>Misma escala:</b> cada respuesta nueva se califica con los parámetros IRT del estudio, así que es comparable.</p>
+<p class="body" style="flex:1"><b>Lista, no activada:</b> la página «Encuesta en vivo» aparece sola en el menú cuando lleguen las primeras respuestas.</p>
+</div>
+<p class="footer">Entrega final · Índice de Bienestar Estudiantil USTA</p>
+<p class="pagenum">9</p>
+<aside>Dejamos construido el flujo para que la app se actualice sola con respuestas nuevas: formulario de Google, hoja de respuestas, una tarea automática en GitHub cada hora, el mismo análisis del estudio, y la app se vuelve a publicar. Cada actualización tarda unos 22 segundos. Las respuestas nuevas se califican con los parámetros IRT del estudio, así que quedan en la misma escala y se pueden comparar. ¿Por qué no reestimar los parámetros con cada respuesta? Con pocas respuestas serían inestables y la escala cambiaría cada hora. Está lista pero no activada, porque la encuesta todavía no se aplica.</aside>
+</section>
+<section id="hallazgos" class="light" data-transition="fade">
+<div class="head">
+<p class="eyebrow">Trabajo adicional · Reproducibilidad</p>
+<h2 class="title">Del notebook al código, sin perder un valor</h2>
+</div>
+<div style="display:flex;gap:72px;flex:1;align-items:center">
+<div class="stat" style="width:560px;display:flex;flex-direction:column;gap:16px">
+<p class="big">0</p>
+<p class="body">diferencias en <b>2.438 valores</b> al reproducir el estudio desde el Excel crudo</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<p class="note">Dos pasos que no estaban documentados, ahora reconstruidos:</p>
+<div class="card" style="--i:1"><h3>Calibración por género</h3><p class="txt">Los factores de expansión tenían un ajuste por raking (seccional × modalidad y seccional × género) que no aparece en ningún notebook.</p></div>
+<div class="card accent" style="--i:2"><h3>T = 50 + 10·θ</h3><p class="txt">El puntaje T de los datos no usa la normalización ponderada que describe el notebook. Por eso la media es 50,7 y no 50.</p></div>
+</div>
+</div>
+<p class="footer">Entrega final · Índice de Bienestar Estudiantil USTA</p>
+<p class="pagenum">10</p>
+<aside>Para lograr la encuesta en vivo pasamos los notebooks de preparación e IRT a código reutilizable y probado. Ese código reproduce exactamente el estudio: 0 diferencias en 2.438 valores. En el proceso descubrimos dos pasos que no estaban documentados. Primero, los factores de expansión tenían una calibración por género, por raking a dos márgenes; la reconstruimos con error menor a 1e-12. Segundo, el puntaje T de los datos es 50 + 10·θ, no la normalización ponderada que describe el notebook: con esa normalización la media sería exactamente 50, y la reportada es 50,7. Los dos quedaron documentados.</aside>
+</section>
+<section id="cifras" class="light" data-transition="fade">
+<div class="head">
+<p class="eyebrow">En cifras</p>
+<h2 class="title">La entrega final, en cinco números</h2>
+</div>
+<div class="cards" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr;flex:0">
+<div class="card" style="--i:0"><p class="num">43/46</p><p class="txt">preguntas reformuladas respondidas (antes 17)</p></div>
+<div class="card" style="--i:1"><p class="num">366</p><p class="txt">pruebas automáticas, todas pasan</p></div>
+<div class="card" style="--i:2"><p class="num">0</p><p class="txt">diferencias en 2.438 valores al reproducir el estudio</p></div>
+<div class="card" style="--i:3"><p class="num">~22 s</p><p class="txt">por actualización de la encuesta en vivo</p></div>
+<div class="card accent" style="--i:4"><p class="num">20</p><p class="txt">documentos académicos en el corpus del agente</p></div>
+</div>
+<p class="footer">Entrega final · Índice de Bienestar Estudiantil USTA</p>
+<p class="pagenum">11</p>
+<aside>Resumen en cifras: el agente pasó de responder 17 a 43 de 46 preguntas reformuladas; hay 366 pruebas automáticas y todas pasan; reproducimos el estudio desde el Excel crudo sin diferencias en 2.438 valores; una actualización de la encuesta en vivo tarda unos 22 segundos; y el corpus del agente tiene 20 documentos académicos.</aside>
+</section>
+<section id="cierre" class="dark" data-transition="fade">
+<p class="kicker">Entrega final · Índice de Bienestar USTA</p>
+<div style="display:flex;flex-direction:column;gap:32px">
+<h1 class="hero">Gracias</h1>
+<p class="lede">Un agente que explica, responde, cita sus fuentes y se abstiene cuando no sabe. Ahora entiende cómo pregunta la gente.</p>
+</div>
+<div class="foot">
+<p class="byline">Juliana Fiquitiva · Luisa Martínez U.</p>
+<p class="meta">¿Preguntas?</p>
+</div>
+<aside>El resultado es una aplicación pública con un agente que explica, responde, cita sus fuentes y se abstiene cuando no sabe. Ahora entiende cómo pregunta la gente, y está preparada para actualizarse con nuevas aplicaciones de la encuesta. Todo cambio quedó probado, con 366 pruebas automáticas, y registrado en la bitácora. Posibles preguntas: ¿el agente puede inventar? Solo responde con resultados precalculados o documentos citados; si no corresponde, se abstiene. ¿Qué pasa con lo no precalculado? Lo dice y lista los temas que sí cubre. ¿Privacidad? Solo agregados; grupos de menos de 30 no se muestran.</aside>
+</section>
+
+<div id="notes"></div>
+<script>
+const S=[...document.querySelectorAll('section')];let i=0;const N=document.getElementById('notes');
+function fit(){const k=Math.min(innerWidth/1920,innerHeight/1080);S.forEach(s=>{s.style.transform=`translate(${(innerWidth-1920*k)/2}px,${(innerHeight-1080*k)/2}px) scale(${k})`})}
+function go(n){i=Math.max(0,Math.min(S.length-1,n));S.forEach((s,j)=>s.classList.toggle('on',j===i));const a=S[i].querySelector('aside');N.textContent=a?a.textContent:'';location.hash=i+1}
+addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key))go(i+1);if(['ArrowLeft','PageUp'].includes(e.key))go(i-1);if(e.key==='n')N.style.display=N.style.display==='block'?'none':'block';if(e.key==='f')document.documentElement.requestFullscreen()});
+addEventListener('click',e=>go(i+(e.clientX>innerWidth/2?1:-1)));addEventListener('resize',fit);
+fit();go((parseInt(location.hash.slice(1))||1)-1);
+</script></body></html>

@@ -1,0 +1,61 @@
+:root {
+  --navy: #1B3A5C;
+  --paper: #F6F4EF;
+  --card: #FFFDF8;
+  --line: #E2DED4;
+  --ink: #3D4A5C;
+  --muted: #5A6575;
+  --faint: #6B7684;
+  --gold: #F2B544;
+  --amber: #9A5A00;
+  --mist: #C9D6E3;
+  --band: #E9EEF3;
+}
+body { font-family: 'IBM Plex Sans', Arial, sans-serif; }
+section { counter-increment: page; }
+
+/* Fondos */
+.dark { background: var(--navy); color: var(--paper); padding: 128px; display: flex; flex-direction: column; justify-content: space-between; }
+.light { background: var(--paper); color: var(--ink); padding: 128px 128px 160px; display: flex; flex-direction: column; gap: 48px; }
+
+/* Tipografía */
+.kicker { font-size: 24px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); }
+.eyebrow { font-size: 24px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); }
+.head { display: flex; flex-direction: column; gap: 12px; }
+.title { font-family: 'Source Serif 4', Georgia, serif; font-size: 64px; font-weight: 600; line-height: 1.15; color: var(--navy); }
+.hero { font-family: 'Source Serif 4', Georgia, serif; font-size: 104px; font-weight: 600; line-height: 1.05; color: var(--paper); }
+.lede { font-size: 40px; line-height: 1.3; color: var(--mist); width: 1300px; }
+.body { font-size: 30px; line-height: 1.4; color: var(--ink); }
+.note { font-size: 26px; line-height: 1.4; color: var(--muted); }
+.byline { font-size: 30px; color: var(--paper); }
+.meta { font-size: 26px; color: var(--mist); }
+.foot { display: flex; justify-content: space-between; align-items: end; }
+
+/* Pie de página */
+.footer { position: absolute; left: 128px; bottom: 64px; width: 1400px; font-size: 24px; color: var(--faint); }
+.pagenum { position: absolute; right: 128px; bottom: 64px; width: 100px; text-align: right; font-size: 24px; color: var(--faint); }
+
+/* Tarjetas */
+.cards { display: grid; gap: 32px; flex: 1; }
+.cols2 { grid-template-columns: 1fr 1fr; }
+.cols3 { grid-template-columns: 1fr 1fr 1fr; }
+.cols4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.card { background: var(--card); border: 1px solid var(--line); border-top: 6px solid var(--navy); padding: 36px; display: flex; flex-direction: column; gap: 16px; }
+.card.accent { border-top-color: var(--gold); }
+.card h3 { font-family: 'Source Serif 4', Georgia, serif; font-size: 40px; font-weight: 600; line-height: 1.15; color: var(--navy); }
+.card .txt { font-size: 26px; line-height: 1.4; color: var(--ink); }
+.card .tag { font-size: 24px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); }
+.card .q { font-family: 'Source Serif 4', Georgia, serif; font-size: 32px; font-style: italic; line-height: 1.3; color: var(--navy); }
+.card .ico { width: 56px; height: 56px; color: var(--amber); }
+
+/* Cifras grandes */
+.big { font-family: 'Source Serif 4', Georgia, serif; font-size: 160px; font-weight: 600; line-height: 1; color: var(--navy); }
+.num { font-family: 'Source Serif 4', Georgia, serif; font-size: 88px; font-weight: 600; line-height: 1; color: var(--navy); }
+
+/* Tablas */
+.tbl { width: 100%; font-size: 26px; color: var(--ink); background: var(--card); border: 1px solid var(--line); }
+.tbl .hd { background: var(--band); }
+
+/* Movimiento */
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+.card, .stat { animation: rise 500ms ease-out both; animation-delay: calc(var(--i, 0) * 120ms); }

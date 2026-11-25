@@ -1,0 +1,21 @@
+{
+  "v": 5,
+  "createdOnFiles": {"v": 1, "at": "2026-11-24T15:00:00Z"},
+  "lists": "css",
+  "format": {"v": 1, "shared": ["project/deck.css"]},
+  "title": "Índice de Bienestar USTA — Entrega final",
+  "order": ["cover", "recorrido", "app", "demo", "sinonimos", "diccionario", "resultado", "profesor", "flujo", "hallazgos", "cifras", "cierre"],
+  "sections": {
+    "s1": {"description": "Portada y recorrido del proyecto hasta la entrega final", "start": "cover"},
+    "s2": {"description": "La app con el agente de IA en línea y la demostración", "start": "app"},
+    "s3": {"description": "Mejora del agente: entiende sinónimos (17 → 43 de 46)", "start": "sinonimos"},
+    "s4": {"description": "Anotaciones del profesor atendidas", "start": "profesor"},
+    "s5": {"description": "Trabajo adicional: la encuesta en vivo, lista para activarse", "start": "flujo"},
+    "s6": {"description": "Cifras de la entrega y cierre", "start": "cifras"}
+  },
+  "faces": {
+    "ibm-plex-sans": {"family": "IBM Plex Sans", "href": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap"},
+    "source-serif-4": {"family": "Source Serif 4", "href": "https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400..700&display=swap"}
+  },
+  "designSystems": []
+}
